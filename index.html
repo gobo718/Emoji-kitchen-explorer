@@ -3,35 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#7457e8">
+<meta name="theme-color" content="#080817">
 <title>Emoji Kitchen Explorer</title>
 <style>
 :root {
-  color-scheme: light dark;
-  --bg:#f8f4ff;
-  --panel:rgba(255,255,255,.88);
-  --panel-strong:#fff;
-  --text:#201b2d;
-  --muted:#716a7e;
-  --accent:#7457e8;
-  --accent2:#ff8ab3;
-  --accent3:#ffd36e;
-  --border:rgba(84,62,120,.16);
-  --shadow:0 18px 45px rgba(74,50,120,.12);
-}
-@media (prefers-color-scheme:dark) {
-  :root {
-    --bg:#15111d;
-    --panel:rgba(34,28,44,.92);
-    --panel-strong:#241d2e;
-    --text:#f8f3ff;
-    --muted:#bdb4c9;
-    --accent:#b59cff;
-    --accent2:#ff9fc1;
-    --accent3:#ffd983;
-    --border:rgba(223,209,255,.14);
-    --shadow:0 18px 45px rgba(0,0,0,.24);
-  }
+  color-scheme: dark;
+  --bg:#050613;
+  --panel:#0d1023e8;
+  --panel2:#15132b;
+  --text:#fff;
+  --muted:#c6bfd4;
+  --purple:#8b4cff;
+  --pink:#ff59a8;
+  --blue:#2ea8ff;
+  --green:#17c96b;
+  --orange:#ff8b18;
+  --border:#7f5cff55;
+  --shadow:0 18px 50px #0008;
 }
 * { box-sizing:border-box; }
 html { scroll-behavior:smooth; }
@@ -41,188 +29,263 @@ body {
   font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
   color:var(--text);
   background:
-    radial-gradient(circle at 10% 0%, color-mix(in srgb,var(--accent) 25%,transparent), transparent 24rem),
-    radial-gradient(circle at 90% 7%, color-mix(in srgb,var(--accent2) 18%,transparent), transparent 22rem),
-    radial-gradient(circle at 50% 42%, color-mix(in srgb,var(--accent3) 12%,transparent), transparent 29rem),
-    var(--bg);
+    radial-gradient(circle at 15% 0%, #7828a933, transparent 24rem),
+    radial-gradient(circle at 85% 12%, #1c7bd42b, transparent 26rem),
+    linear-gradient(#060714,#03040d 72%);
 }
-a { color:inherit; }
-.shell { max-width:1040px; margin:auto; padding:20px 16px 50px; }
-.hero { text-align:center; padding:22px 0 18px; }
+a { color:inherit; text-decoration:none; }
+.shell { max-width:1080px; margin:auto; padding:22px 16px 44px; }
+
+.hero {
+  position:relative;
+  text-align:center;
+  padding:10px 0 18px;
+}
 .brand {
-  display:inline-flex;
-  align-items:center;
-  gap:12px;
-  font-size:clamp(1.8rem,7vw,3rem);
-  font-weight:950;
-  letter-spacing:-.04em;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  gap:14px;
 }
-.mark {
+.brand-icon {
+  flex:0 0 auto;
   display:grid;
   place-items:center;
-  width:62px;
-  height:62px;
-  border-radius:20px;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
-  box-shadow:var(--shadow);
+  width:74px;
+  height:74px;
+  border-radius:22px;
+  font-size:2.55rem;
+  background:linear-gradient(145deg,#a65cff,#ff70ae);
+  box-shadow:0 0 28px #a54cff44;
+}
+.brand-copy { text-align:left; line-height:.93; }
+.brand-top {
+  display:block;
+  font-size:clamp(2rem,7vw,3.65rem);
+  font-weight:950;
+  letter-spacing:-.05em;
+  color:#fff;
+}
+.brand-bottom {
+  display:block;
+  margin-top:8px;
+  font-size:clamp(2rem,7vw,3.65rem);
+  font-weight:950;
+  letter-spacing:-.05em;
+  background:linear-gradient(90deg,#ff9e72,#ff64bb 48%,#765dff);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
 }
 .tagline {
-  margin:10px auto 0;
-  max-width:620px;
+  margin:18px auto 0;
   color:var(--muted);
-  font-size:1.05rem;
+  font-size:1.03rem;
 }
-.hero-note {
-  display:inline-block;
-  margin-top:12px;
-  padding:6px 10px;
-  border:1px solid var(--border);
-  border-radius:999px;
-  background:var(--panel);
-  color:var(--muted);
-  font-size:.8rem;
-}
-.featured {
-  display:grid;
-  grid-template-columns:1.2fr .8fr;
-  gap:16px;
-  align-items:stretch;
-  margin-top:18px;
-}
-.today {
-  position:relative;
-  overflow:hidden;
-  border:1px solid var(--border);
-  border-radius:28px;
-  background:var(--panel);
-  box-shadow:var(--shadow);
-  padding:18px;
-}
-.today::after {
-  content:"";
-  position:absolute;
-  width:190px;
-  height:190px;
-  right:-70px;
-  top:-70px;
-  border-radius:50%;
-  background:color-mix(in srgb,var(--accent2) 18%,transparent);
-}
-.eyebrow {
-  color:var(--muted);
-  font-size:.8rem;
-  font-weight:800;
-  text-transform:uppercase;
-  letter-spacing:.08em;
-}
-.today-grid {
-  display:grid;
-  grid-template-columns:180px 1fr;
-  gap:18px;
+.count-pill {
+  display:inline-flex;
+  gap:8px;
   align-items:center;
-  margin-top:8px;
+  margin-top:18px;
+  padding:9px 16px;
+  border:1px solid #7d54d55c;
+  border-radius:999px;
+  background:#111126bb;
+  color:var(--muted);
 }
-.today-art {
-  position:relative;
-  z-index:1;
-  border-radius:22px;
+.count-pill strong { color:#42ef83; }
+
+.daily {
+  margin-top:18px;
+  padding:18px;
+  border:2px solid transparent;
+  border-radius:28px;
   background:
-    linear-gradient(145deg,
-      color-mix(in srgb,var(--accent) 10%,var(--panel-strong)),
-      color-mix(in srgb,var(--accent2) 9%,var(--panel-strong)));
-  padding:10px;
+    linear-gradient(var(--panel),var(--panel)) padding-box,
+    linear-gradient(100deg,var(--pink),var(--purple),var(--blue)) border-box;
+  box-shadow:var(--shadow);
 }
-.today-art img {
-  display:block;
-  width:100%;
+.daily-head {
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:center;
+  margin-bottom:14px;
+}
+.daily-label {
+  padding:7px 13px;
+  border-radius:999px;
+  background:linear-gradient(90deg,#4920b9,#6f2dd4);
+  font-weight:900;
+  font-size:.88rem;
+}
+.daily-date { color:var(--muted); font-size:.85rem; }
+.daily-grid {
+  display:grid;
+  grid-template-columns:minmax(220px,.9fr) minmax(220px,1.1fr);
+  gap:24px;
+  align-items:center;
+}
+.art-wrap {
+  display:grid;
+  place-items:center;
   aspect-ratio:1;
+  border-radius:50%;
+  padding:11px;
+  background:
+    radial-gradient(circle,#fff0 55%,#a64cff33 72%,#1ba7ff33 100%),
+    linear-gradient(135deg,#b34cff,#1ba7ff);
+  box-shadow:0 0 24px #a74cff77;
+}
+.art-inner {
+  width:100%;
+  height:100%;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  background:radial-gradient(circle,#3a174e,#17102a);
+}
+.art-inner img {
+  width:100%;
+  height:100%;
   object-fit:contain;
 }
-.today-copy h2 { margin:0; font-size:1.45rem; }
-.today-pair { font-size:2rem; margin:6px 0 3px; }
-.today-name { color:var(--muted); }
-.today-date { margin-top:8px; font-size:.82rem; color:var(--muted); }
+.daily-copy { text-align:left; }
+.pair { font-size:2.3rem; }
+.daily-copy h2 {
+  margin:10px 0 5px;
+  font-size:clamp(1.7rem,5vw,2.5rem);
+}
+.name { color:var(--muted); font-size:1rem; }
+.release { margin-top:8px; color:#9f97ad; font-size:.8rem; }
 .billyism {
-  margin-top:10px;
-  color:color-mix(in srgb,var(--muted) 82%,var(--accent));
+  margin-top:9px;
+  color:#bcb2c9;
   font-size:.74rem;
   font-style:italic;
-  opacity:0;
-  transform:translateY(3px);
-  transition:opacity .55s ease .45s, transform .55s ease .45s;
+  opacity:.82;
 }
-.billyism.show {
-  opacity:.88;
-  transform:translateY(0);
-}
-
-.actions {
-  display:grid;
-  gap:12px;
-}
-.action {
-  display:flex;
+.explore-button {
+  display:inline-flex;
   align-items:center;
-  gap:13px;
-  min-height:86px;
-  padding:16px;
-  border:1px solid var(--border);
-  border-radius:22px;
-  background:var(--panel);
-  text-decoration:none;
-  box-shadow:var(--shadow);
-  transition:transform .16s ease;
+  gap:9px;
+  margin-top:18px;
+  padding:12px 20px;
+  border-radius:999px;
+  font-weight:850;
+  background:linear-gradient(90deg,#5223b5,#7e2ddd);
+  box-shadow:0 8px 20px #0005;
 }
-.action:hover { transform:translateY(-2px); }
-.action.primary {
-  background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 68%,var(--accent2)));
-  color:#fff;
-  border:0;
-}
-.action-icon { font-size:2rem; }
-.action strong { display:block; font-size:1.05rem; }
-.action span { display:block; margin-top:2px; color:var(--muted); font-size:.82rem; }
-.action.primary span { color:rgba(255,255,255,.82); }
 
+.tiles {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:12px;
+  margin-top:18px;
+}
+.tile {
+  min-height:190px;
+  border-radius:22px;
+  padding:18px 14px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  text-align:center;
+  box-shadow:var(--shadow);
+}
+.tile-icon { font-size:3.4rem; }
+.tile strong { margin-top:10px; font-size:1rem; }
+.tile span { margin-top:9px; font-size:.82rem; line-height:1.35; color:#fffddd; }
+.pink { background:linear-gradient(155deg,#ed5ba1,#9f1b64); }
+.orange { background:linear-gradient(155deg,#ffad28,#bf3518); }
+.green { background:linear-gradient(155deg,#27d873,#087e3d); }
+.blue { background:linear-gradient(155deg,#28b9ff,#123ca7); }
+
+.quick-title {
+  margin:28px 0 14px;
+  text-align:center;
+  font-size:1.35rem;
+}
 .quick {
   display:grid;
   grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:12px;
-  margin-top:18px;
+  gap:11px;
 }
 .quick-card {
-  border:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  gap:11px;
+  min-height:82px;
+  padding:14px;
+  border:1px solid #6c4fa94a;
   border-radius:20px;
-  background:var(--panel);
-  padding:16px;
-  text-decoration:none;
+  background:#0f1024;
 }
-.quick-card strong { display:block; margin-top:6px; }
-.quick-card span { color:var(--muted); font-size:.8rem; }
+.quick-card .icon { font-size:2.2rem; }
+.quick-card strong { display:block; }
+.quick-card span { display:block; margin-top:3px; color:var(--muted); font-size:.78rem; }
 
-.footer {
-  margin-top:24px;
-  text-align:center;
-  color:var(--muted);
-  font-size:.8rem;
+.continue {
+  margin-top:20px;
+  padding:17px;
+  border-radius:22px;
+  background:linear-gradient(90deg,#5d4ac8,#8c3fc2);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
 }
-.loading {
-  min-height:230px;
+.continue-copy { display:flex; align-items:center; gap:12px; }
+.continue-icon { font-size:3rem; }
+.continue strong { display:block; font-size:1.1rem; }
+.continue span { display:block; margin-top:3px; color:#e5dcf1; font-size:.82rem; }
+.continue-button {
+  padding:11px 17px;
+  border-radius:999px;
+  background:#7437ff;
+  font-weight:850;
+  white-space:nowrap;
+}
+
+footer {
+  margin-top:22px;
+  padding-top:18px;
+  border-top:1px solid #ffffff16;
   display:grid;
-  place-items:center;
-  color:var(--muted);
+  grid-template-columns:1fr 1fr 1fr;
+  gap:14px;
+  align-items:end;
 }
+.footer-left, .footer-center, .footer-right { color:var(--muted); font-size:.78rem; }
+.footer-center { text-align:center; }
+.footer-right { text-align:right; }
+.lab {
+  color:#fff;
+  font-size:1.1rem;
+  font-weight:850;
+}
+.tag { margin-top:4px; font-style:italic; color:#d8cee3; }
 
-@media (max-width:780px) {
-  .featured { grid-template-columns:1fr; }
-}
-@media (max-width:560px) {
-  .today-grid { grid-template-columns:1fr; }
-  .today-art { max-width:260px; margin:auto; }
-  .today-copy { text-align:center; }
+.loading { color:var(--muted); text-align:center; padding:50px 10px; }
+
+@media (max-width:760px) {
+  .daily-grid { grid-template-columns:1fr; }
+  .art-wrap { max-width:340px; margin:auto; }
+  .daily-copy { text-align:center; }
+  .tiles { grid-template-columns:repeat(2,minmax(0,1fr)); }
   .quick { grid-template-columns:1fr; }
-  .brand { align-items:flex-start; }
-  .mark { width:54px; height:54px; }
+  footer { grid-template-columns:1fr; text-align:center; }
+  .footer-center,.footer-right { text-align:center; }
+}
+@media (max-width:520px) {
+  .brand-icon { width:62px; height:62px; font-size:2.1rem; }
+  .daily { padding:14px; border-radius:22px; }
+  .daily-head { align-items:flex-start; }
+  .daily-date { font-size:.74rem; text-align:right; }
+  .tile { min-height:170px; }
+  .continue { align-items:flex-start; flex-direction:column; }
+  .continue-button { align-self:stretch; text-align:center; }
 }
 </style>
 </head>
@@ -230,70 +293,107 @@ a { color:inherit; }
 <div class="shell">
   <header class="hero">
     <div class="brand">
-      <span class="mark">🧪</span>
-      <span>Emoji Kitchen Explorer</span>
+      <div class="brand-icon">🧪</div>
+      <div class="brand-copy">
+        <span class="brand-top">Emoji Kitchen</span>
+        <span class="brand-bottom">Explorer ✨</span>
+      </div>
     </div>
-    <p class="tagline">Come see the weird little things Google made.</p>
-    <span class="hero-note">147,000 creations waiting to be discovered</span>
+    <div class="tagline">Come see the weird little things Google made.</div>
+    <div class="count-pill">🧑‍🤝‍🧑 <strong>147,000</strong> creations waiting to be discovered</div>
   </header>
 
   <main>
-    <section class="featured">
-      <article class="today" id="todayCard">
-        <div class="eyebrow">✨ Billy’s Daily Pick</div>
-        <div class="loading" id="loading">Choosing something strange…</div>
-        <div class="today-grid" id="todayContent" hidden>
-          <div class="today-art">
-            <img id="todayImage" alt="">
-          </div>
-          <div class="today-copy">
-            <h2>Your daily discovery</h2>
-            <div class="today-pair" id="todayPair"></div>
-            <div class="today-name" id="todayName"></div>
-            <div class="today-date" id="todayDate"></div>
-            <div class="billyism" id="billyism" hidden></div>
+    <section class="daily">
+      <div class="daily-head">
+        <div class="daily-label">✨ BILLY’S DAILY PICK</div>
+        <div class="daily-date" id="newPick">New pick tomorrow</div>
+      </div>
+
+      <div id="loading" class="loading">Choosing something strange…</div>
+
+      <div class="daily-grid" id="dailyContent" hidden>
+        <div class="art-wrap">
+          <div class="art-inner">
+            <img id="dailyImage" alt="">
           </div>
         </div>
-      </article>
-
-      <nav class="actions" aria-label="Main activities">
-        <a class="action primary" href="explorer.html?mode=unseen">
-          <span class="action-icon">👀</span>
-          <span><strong>Show Me Something New</strong><span>Jump to something you haven’t discovered.</span></span>
-        </a>
-        <a class="action" href="explorer.html">
-          <span class="action-icon">📚</span>
-          <span><strong>Browse Everything</strong><span>Search and explore all 147,000 mashups.</span></span>
-        </a>
-        <a class="action" href="explorer.html?mode=favorites">
-          <span class="action-icon">❤️</span>
-          <span><strong>My Favorites</strong><span>Return to the creations you saved.</span></span>
-        </a>
-      </nav>
+        <div class="daily-copy">
+          <div class="pair" id="dailyPair"></div>
+          <h2 id="dailyTitle"></h2>
+          <div class="name" id="dailyName"></div>
+          <div class="release" id="dailyRelease"></div>
+          <div class="billyism" id="dailyBillyism" hidden></div>
+          <a class="explore-button" id="viewPick" href="explorer.html">View in Explorer →</a>
+        </div>
+      </div>
     </section>
+
+    <section class="tiles">
+      <a class="tile pink" href="explorer.html?mode=unseen">
+        <div class="tile-icon">🎁</div>
+        <strong>Discovery Pack</strong>
+        <span>Five random creations you haven’t seen</span>
+      </a>
+      <a class="tile orange" href="explorer.html?sort=unseen">
+        <div class="tile-icon">😂</div>
+        <strong>Make Me Laugh</strong>
+        <span>The funniest Emoji Kitchen creations</span>
+      </a>
+      <a class="tile green" href="explorer.html?sort=newest">
+        <div class="tile-icon">🎉</div>
+        <strong>What’s New?</strong>
+        <span>See the latest additions</span>
+      </a>
+      <a class="tile blue" href="explorer.html">
+        <div class="tile-icon">🔎</div>
+        <strong>Browse Everything</strong>
+        <span>Explore all 147,000+ creations</span>
+      </a>
+    </section>
+
+    <h2 class="quick-title">⚡ Quick Links ⚡</h2>
 
     <section class="quick">
       <a class="quick-card" href="explorer.html?search=🤪">
-        <span>🤪</span>
-        <strong>Complete Zany</strong>
-        <span>Browse every zany-face creation.</span>
+        <div class="icon">🤪</div>
+        <div><strong>Complete Zany</strong><span>Browse every zany-face creation</span></div>
       </a>
       <a class="quick-card" href="explorer.html?search=🪵">
-        <span>🪵</span>
-        <strong>Wooden Wonders</strong>
-        <span>Enter the baffling world of carved mashups.</span>
+        <div class="icon">🪵</div>
+        <div><strong>Wooden Things</strong><span>Enter the baffling world of carved mashups</span></div>
       </a>
       <a class="quick-card" href="explorer.html?sort=newest">
-        <span>🆕</span>
-        <strong>What’s New</strong>
-        <span>Start with Google’s latest additions.</span>
+        <div class="icon">🆕</div>
+        <div><strong>Newest Additions</strong><span>See what’s new</span></div>
       </a>
+    </section>
+
+    <section class="continue">
+      <div class="continue-copy">
+        <div class="continue-icon">🧭</div>
+        <div><strong>Pick up where you left off?</strong><span id="continueText">Return to the explorer</span></div>
+      </div>
+      <a class="continue-button" href="explorer.html">Continue Exploring →</a>
     </section>
   </main>
 
-  <div class="footer">
-    Built for discovery, not doomscrolling.
-  </div>
+  <footer>
+    <div class="footer-left">
+      <div>👨‍🍳 <strong>Happy exploring!</strong></div>
+      <div>Every mashup is a tiny experiment.</div>
+    </div>
+
+    <div class="footer-center">
+      <div class="lab">🧪 Billy Labs ✨</div>
+      <div class="tag">Obsessively solving problems nobody has.</div>
+    </div>
+
+    <div class="footer-right">
+      <div>Made by Billy 💜 · v0.7</div>
+      <div>Made with 🧪 and 💜</div>
+    </div>
+  </footer>
 </div>
 
 <script src="emoji-data.js"></script>
@@ -301,19 +401,24 @@ a { color:inherit; }
 <script>
 (() => {
   const all = window.EMOJI_KITCHEN_DATA || [];
+  const notes = window.BILLYISMS || {};
   const $ = id => document.getElementById(id);
   const prettyDate = s => `${s.slice(0,4)}-${s.slice(4,6)}-${s.slice(6,8)}`;
+  const titleCase = value => value
+    .replace(/_/g," ")
+    .replace(/\s*\+\s*/g," + ")
+    .replace(/\b\w/g, letter => letter.toUpperCase());
 
-  function prettyName(raw) {
-    return raw
-      .replace(/_/g, " ")
-      .replace(/\s*\+\s*/g, " + ")
-      .replace(/\b\w/g, letter => letter.toUpperCase());
+  function getNote(a,b) {
+    return notes[a+b] || notes[b+a] || "";
   }
-  const notes = window.BILLYISMS || {};
 
-  function findBillyism(left, right) {
-    return notes[left + right] || notes[right + left] || "";
+  function dailyIndex(length) {
+    const now = new Date();
+    const seed = Number(
+      `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,"0")}${String(now.getDate()).padStart(2,"0")}`
+    );
+    return (seed * 2654435761 >>> 0) % length;
   }
 
   if (!all.length) {
@@ -321,28 +426,26 @@ a { color:inherit; }
     return;
   }
 
-  const today = new Date();
-  const seed = Number(
-    `${today.getFullYear()}${String(today.getMonth()+1).padStart(2,"0")}${String(today.getDate()).padStart(2,"0")}`
-  );
-  const index = (seed * 2654435761 >>> 0) % all.length;
-  const row = all[index];
+  const row = all[dailyIndex(all.length)];
+  $("dailyImage").src = row[4];
+  $("dailyImage").alt = `${row[0]} plus ${row[1]} Emoji Kitchen mashup`;
+  $("dailyPair").textContent = `${row[0]} + ${row[1]}`;
+  $("dailyTitle").textContent = titleCase(row[2]);
+  $("dailyName").textContent = "One tiny experiment, completely overproduced.";
+  $("dailyRelease").textContent = `Released ${prettyDate(row[3])}`;
+  $("viewPick").href = `explorer.html?search=${encodeURIComponent(row[0] + " " + row[1])}`;
 
-  $("todayImage").src = row[4];
-  $("todayImage").alt = `${row[0]} plus ${row[1]} Emoji Kitchen mashup`;
-  $("todayPair").textContent = `${row[0]} + ${row[1]}`;
-  $("todayName").textContent = prettyName(row[2]);
-  $("todayDate").textContent = `Released ${prettyDate(row[3])}`;
-
-  const note = findBillyism(row[0], row[1]);
+  const note = getNote(row[0],row[1]);
   if (note) {
-    $("billyism").textContent = note;
-    $("billyism").hidden = false;
-    requestAnimationFrame(() => $("billyism").classList.add("show"));
+    $("dailyBillyism").textContent = note;
+    $("dailyBillyism").hidden = false;
   }
 
+  const lastPage = localStorage.getItem("ek-last-page");
+  if (lastPage) $("continueText").textContent = `You were on page ${Number(lastPage)+1}`;
+
   $("loading").hidden = true;
-  $("todayContent").hidden = false;
+  $("dailyContent").hidden = false;
 })();
 </script>
 </body>
