@@ -142,6 +142,19 @@ a { color:inherit; }
 .today-pair { font-size:2rem; margin:6px 0 3px; }
 .today-name { color:var(--muted); }
 .today-date { margin-top:8px; font-size:.82rem; color:var(--muted); }
+.billyism {
+  margin-top:10px;
+  color:color-mix(in srgb,var(--muted) 82%,var(--accent));
+  font-size:.74rem;
+  font-style:italic;
+  opacity:0;
+  transform:translateY(3px);
+  transition:opacity .55s ease .45s, transform .55s ease .45s;
+}
+.billyism.show {
+  opacity:.88;
+  transform:translateY(0);
+}
 
 .actions {
   display:grid;
@@ -238,6 +251,7 @@ a { color:inherit; }
             <div class="today-pair" id="todayPair"></div>
             <div class="today-name" id="todayName"></div>
             <div class="today-date" id="todayDate"></div>
+            <div class="billyism" id="billyism" hidden></div>
           </div>
         </div>
       </article>
@@ -283,11 +297,17 @@ a { color:inherit; }
 </div>
 
 <script src="emoji-data.js"></script>
+<script src="billyisms.js"></script>
 <script>
 (() => {
   const all = window.EMOJI_KITCHEN_DATA || [];
   const $ = id => document.getElementById(id);
   const prettyDate = s => `${s.slice(0,4)}-${s.slice(4,6)}-${s.slice(6,8)}`;
+  const notes = window.BILLYISMS || {};
+
+  function findBillyism(left, right) {
+    return notes[left + right] || notes[right + left] || "";
+  }
 
   if (!all.length) {
     $("loading").textContent = "The kitchen data could not be loaded.";
@@ -306,6 +326,13 @@ a { color:inherit; }
   $("todayPair").textContent = `${row[0]} + ${row[1]}`;
   $("todayName").textContent = row[2];
   $("todayDate").textContent = `Released ${prettyDate(row[3])}`;
+
+  const note = findBillyism(row[0], row[1]);
+  if (note) {
+    $("billyism").textContent = note;
+    $("billyism").hidden = false;
+    requestAnimationFrame(() => $("billyism").classList.add("show"));
+  }
 
   $("loading").hidden = true;
   $("todayContent").hidden = false;
