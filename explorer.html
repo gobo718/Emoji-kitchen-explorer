@@ -382,6 +382,21 @@ footer {
   .discovery-panel .discovery-stat:last-child { grid-column:1/-1; }
 }
 
+
+.card-link {
+  display:block;
+  color:inherit;
+  text-decoration:none;
+}
+.card-link:focus-visible {
+  outline:3px solid var(--accent);
+  outline-offset:3px;
+  border-radius:14px;
+}
+.card-link:hover .name {
+  text-decoration:underline;
+}
+
 </style>
 </head>
 <body>
@@ -550,15 +565,20 @@ footer {
       const key = keyOf(row);
       const isSeen = seen.has(key);
       const isFavorite = favorites.has(key);
+      const detailUrl = `mashup.html?left=${encodeURIComponent(row[0])}&right=${encodeURIComponent(row[1])}`;
       return `<article class="card ${isSeen ? "seen" : ""}" data-key="${escapeHtml(key)}">
         <div class="art">
           <div class="rank">#${(start + index + 1).toLocaleString()}</div>
           <button class="favorite ${isFavorite ? "active" : ""}" type="button" data-action="favorite" aria-label="Favorite">${isFavorite ? "★" : "☆"}</button>
-          <img loading="lazy" src="${escapeHtml(row[4])}" alt="${escapeHtml(row[0] + " plus " + row[1] + " Emoji Kitchen mashup")}">
+          <a class="card-link" href="${detailUrl}" aria-label="Open ${escapeHtml(row[0] + " plus " + row[1])}">
+            <img loading="lazy" src="${escapeHtml(row[4])}" alt="${escapeHtml(row[0] + " plus " + row[1] + " Emoji Kitchen mashup")}">
+          </a>
         </div>
-        <div class="pair">${escapeHtml(row[0])} + ${escapeHtml(row[1])}</div>
-        <div class="name">${escapeHtml(row[2])}</div>
-        <div class="meta"><span>${prettyDate(row[3])}</span><span>${isSeen ? "Discovered" : "Unseen"}</span></div>
+        <a class="card-link" href="${detailUrl}">
+          <div class="pair">${escapeHtml(row[0])} + ${escapeHtml(row[1])}</div>
+          <div class="name">${escapeHtml(row[2])}</div>
+          <div class="meta"><span>${prettyDate(row[3])}</span><span>${isSeen ? "Discovered" : "Unseen"}</span></div>
+        </a>
         <button class="seen-btn" type="button" data-action="seen">${isSeen ? "✓ Seen" : "Mark as seen"}</button>
       </article>`;
     }).join("");
