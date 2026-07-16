@@ -240,7 +240,7 @@ a { color:inherit; }
   <main>
     <section class="featured">
       <article class="today" id="todayCard">
-        <div class="eyebrow">✨ Today’s Pick</div>
+        <div class="eyebrow">✨ Billy’s Daily Pick</div>
         <div class="loading" id="loading">Choosing something strange…</div>
         <div class="today-grid" id="todayContent" hidden>
           <div class="today-art">
@@ -303,6 +303,13 @@ a { color:inherit; }
   const all = window.EMOJI_KITCHEN_DATA || [];
   const $ = id => document.getElementById(id);
   const prettyDate = s => `${s.slice(0,4)}-${s.slice(4,6)}-${s.slice(6,8)}`;
+
+  function prettyName(raw) {
+    return raw
+      .replace(/_/g, " ")
+      .replace(/\s*\+\s*/g, " + ")
+      .replace(/\b\w/g, letter => letter.toUpperCase());
+  }
   const notes = window.BILLYISMS || {};
 
   function findBillyism(left, right) {
@@ -324,7 +331,7 @@ a { color:inherit; }
   $("todayImage").src = row[4];
   $("todayImage").alt = `${row[0]} plus ${row[1]} Emoji Kitchen mashup`;
   $("todayPair").textContent = `${row[0]} + ${row[1]}`;
-  $("todayName").textContent = row[2];
+  $("todayName").textContent = prettyName(row[2]);
   $("todayDate").textContent = `Released ${prettyDate(row[3])}`;
 
   const note = findBillyism(row[0], row[1]);

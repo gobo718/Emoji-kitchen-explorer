@@ -5,6 +5,7 @@
 // "🦆🍕": "Already has tenure."
 
 window.BILLYISMS = {
+  "🖼️😄": "Already hanging in the lobby.",
   "🦆🍕": "Already has tenure.",
   "🐸👑": "Nobody questioned it.",
   "🤪🪵": "Somehow got promoted.",
