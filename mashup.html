@@ -99,14 +99,81 @@ button, .action-link {
   .info { text-align:center; }
   .related-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
 }
+
+.site-brand {
+  text-align:center;
+  padding:8px 0 18px;
+}
+.site-brand-row {
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  gap:14px;
+}
+.site-brand-icon {
+  flex:0 0 auto;
+  display:grid;
+  place-items:center;
+  width:74px;
+  height:74px;
+  border-radius:22px;
+  font-size:2.55rem;
+  background:linear-gradient(145deg,#8e55ff,#ff6db2);
+  box-shadow:0 0 28px #a54cff44;
+}
+.site-brand-copy {
+  text-align:left;
+  line-height:.93;
+}
+.site-brand-top,
+.site-brand-bottom {
+  display:block;
+  font-size:clamp(2rem,7vw,3.65rem);
+  font-weight:950;
+  letter-spacing:-.05em;
+}
+.site-brand-top {
+  color:#fff;
+}
+.site-brand-bottom {
+  margin-top:8px;
+  background:linear-gradient(90deg,#ff9e72,#ff64bb 48%,#765dff);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+.site-brand-tagline {
+  margin:18px auto 0;
+  color:var(--muted);
+  font-size:1.03rem;
+}
+@media (max-width:520px) {
+  .site-brand-icon {
+    width:62px;
+    height:62px;
+    font-size:2.1rem;
+  }
+}
+
 </style>
 </head>
 <body>
 <div class="shell">
   <div class="topbar">
     <a class="back" href="explorer.html">← Explorer</a>
-    <div class="brand">🧪 Billy Labs</div>
+    <a class="back" href="index.html">Home</a>
   </div>
+
+<header class="site-brand">
+  <div class="site-brand-row">
+    <div class="site-brand-icon">🧪</div>
+    <div class="site-brand-copy">
+      <span class="site-brand-top">Emoji Kitchen</span>
+      <span class="site-brand-bottom">Explorer ✨</span>
+    </div>
+  </div>
+  <div class="site-brand-tagline">Come see the weird little things Google made.</div>
+</header>
 
   <main id="loading" class="empty">Finding that mashup…</main>
 
