@@ -3,142 +3,394 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#6c4ad3">
+<meta name="theme-color" content="#7457e8">
 <title>Emoji Kitchen Explorer</title>
 <style>
 :root {
   color-scheme: light dark;
-  --bg:#f6f4fb; --panel:#ffffffde; --text:#1d1b20; --muted:#6e6876;
-  --accent:#6c4ad3; --accent2:#efe9ff; --border:#705d8b2c; --danger:#b3261e;
+  --bg:#f8f4ff;
+  --panel:rgba(255,255,255,.86);
+  --panel-strong:#ffffff;
+  --text:#201b2d;
+  --muted:#716a7e;
+  --accent:#7457e8;
+  --accent-2:#ff8ab3;
+  --accent-3:#ffd36e;
+  --border:rgba(84,62,120,.16);
+  --shadow:0 14px 35px rgba(74,50,120,.10);
 }
 @media (prefers-color-scheme:dark) {
   :root {
-    --bg:#15121b; --panel:#241f2dea; --text:#f6f1ff; --muted:#bcb3c9;
-    --accent:#bca3ff; --accent2:#34284d; --border:#ddcfff26; --danger:#ffb4ab;
+    --bg:#15111d;
+    --panel:rgba(34,28,44,.90);
+    --panel-strong:#241d2e;
+    --text:#f8f3ff;
+    --muted:#bdb4c9;
+    --accent:#b59cff;
+    --accent-2:#ff9fc1;
+    --accent-3:#ffd983;
+    --border:rgba(223,209,255,.14);
+    --shadow:0 14px 35px rgba(0,0,0,.22);
   }
 }
 * { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
 body {
-  margin:0; font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
-  background:radial-gradient(circle at top, color-mix(in srgb,var(--accent) 18%,transparent),transparent 30rem),var(--bg);
+  margin:0;
+  font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
   color:var(--text);
+  background:
+    radial-gradient(circle at 12% 0%, color-mix(in srgb,var(--accent) 24%,transparent), transparent 24rem),
+    radial-gradient(circle at 88% 10%, color-mix(in srgb,var(--accent-2) 18%,transparent), transparent 22rem),
+    radial-gradient(circle at 50% 40%, color-mix(in srgb,var(--accent-3) 12%,transparent), transparent 28rem),
+    var(--bg);
 }
-header {
-  position:sticky; top:0; z-index:20; padding:14px 14px 12px;
-  background:color-mix(in srgb,var(--bg) 89%,transparent);
-  backdrop-filter:blur(18px); border-bottom:1px solid var(--border);
+button,input,select { font:inherit; }
+button { cursor:pointer; }
+.shell { max-width:1180px; margin:auto; padding:0 14px; }
+
+.hero {
+  padding:24px 0 16px;
+  text-align:center;
 }
-.wrap { max-width:1180px; margin:auto; }
-h1 { margin:0; font-size:clamp(1.4rem,5vw,2rem); }
-.subtitle { color:var(--muted); margin:3px 0 11px; font-size:.9rem; }
-.metrics { display:flex; gap:7px; overflow:auto; padding-bottom:10px; scrollbar-width:none; }
-.metric { white-space:nowrap; border:1px solid var(--border); border-radius:999px; padding:5px 9px; background:var(--panel); font-size:.8rem; }
-.controls { display:grid; grid-template-columns:minmax(0,1fr) auto auto; gap:8px; }
-input,select,button {
-  min-height:43px; border:1px solid var(--border); border-radius:12px;
-  font:inherit; color:var(--text); background:var(--panel);
+.logo {
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  font-size:clamp(1.7rem,7vw,2.8rem);
+  font-weight:900;
+  letter-spacing:-.03em;
 }
-input,select { padding:0 11px; min-width:0; }
-button { padding:0 13px; font-weight:700; cursor:pointer; }
-button.primary { background:var(--accent); color:white; border:0; }
-button:disabled { opacity:.4; cursor:not-allowed; }
-main { padding:14px; }
+.logo-mark {
+  display:grid;
+  place-items:center;
+  width:54px;
+  height:54px;
+  border-radius:18px;
+  background:linear-gradient(135deg,var(--accent),var(--accent-2));
+  box-shadow:var(--shadow);
+}
+.tagline {
+  margin:8px auto 0;
+  max-width:620px;
+  color:var(--muted);
+  font-size:1rem;
+}
+.hero-actions {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+  margin:20px auto 0;
+  max-width:760px;
+}
+.hero-button {
+  min-height:58px;
+  border:1px solid var(--border);
+  border-radius:18px;
+  background:var(--panel);
+  color:var(--text);
+  font-weight:800;
+  box-shadow:var(--shadow);
+}
+.hero-button.primary {
+  background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 70%,var(--accent-2)));
+  color:white;
+  border:0;
+}
+.hero-button:hover { transform:translateY(-1px); }
+
+.stats {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+  margin:18px 0;
+}
+.stat {
+  padding:13px;
+  border:1px solid var(--border);
+  border-radius:18px;
+  background:var(--panel);
+  text-align:center;
+}
+.stat strong {
+  display:block;
+  font-size:1.15rem;
+}
+.stat span {
+  color:var(--muted);
+  font-size:.78rem;
+}
+
+.browser {
+  border:1px solid var(--border);
+  border-radius:24px;
+  background:color-mix(in srgb,var(--panel) 96%,transparent);
+  padding:14px;
+  box-shadow:var(--shadow);
+}
+.browser-head {
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:flex-end;
+  margin-bottom:12px;
+  flex-wrap:wrap;
+}
+.browser-head h2 {
+  margin:0;
+  font-size:1.25rem;
+}
+.browser-head p {
+  margin:3px 0 0;
+  color:var(--muted);
+  font-size:.9rem;
+}
+
+.controls {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 180px;
+  gap:9px;
+  margin-bottom:12px;
+}
+input,select {
+  min-height:46px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:0 12px;
+  color:var(--text);
+  background:var(--panel-strong);
+  min-width:0;
+}
+
 .toolbar {
-  display:flex; align-items:center; justify-content:space-between; gap:10px;
-  margin-bottom:12px; flex-wrap:wrap;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin:8px 0 12px;
+  flex-wrap:wrap;
 }
-.page-info { font-weight:650; }
-.pager { display:flex; gap:7px; }
+.page-copy strong { display:block; }
+.page-copy span {
+  color:var(--muted);
+  font-size:.8rem;
+}
+.pager { display:flex; gap:8px; }
+.pager button {
+  min-height:42px;
+  border:1px solid var(--border);
+  border-radius:13px;
+  padding:0 13px;
+  background:var(--panel-strong);
+  color:var(--text);
+  font-weight:800;
+}
+.pager button.next {
+  background:var(--accent);
+  color:white;
+  border:0;
+}
+.pager button:disabled { opacity:.42; cursor:not-allowed; }
+
 .grid {
-  display:grid; grid-template-columns:repeat(auto-fill,minmax(145px,1fr)); gap:11px;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(155px,1fr));
+  gap:12px;
 }
 .card {
-  position:relative; background:var(--panel); border:1px solid var(--border);
-  border-radius:17px; padding:10px; text-align:center; overflow:hidden;
+  position:relative;
+  overflow:hidden;
+  border:1px solid var(--border);
+  border-radius:20px;
+  background:var(--panel-strong);
+  padding:10px;
+  transition:transform .16s ease, box-shadow .16s ease, opacity .16s ease;
 }
-.card.seen { opacity:.72; }
+.card:hover {
+  transform:translateY(-2px);
+  box-shadow:var(--shadow);
+}
+.card.seen { opacity:.70; }
+.art {
+  position:relative;
+  border-radius:15px;
+  background:
+    linear-gradient(145deg,
+      color-mix(in srgb,var(--accent) 8%,var(--panel-strong)),
+      color-mix(in srgb,var(--accent-2) 7%,var(--panel-strong)));
+}
 .card img {
-  width:100%; aspect-ratio:1; object-fit:contain; border-radius:11px;
-  background:color-mix(in srgb,var(--panel) 85%,var(--accent2));
+  display:block;
+  width:100%;
+  aspect-ratio:1;
+  object-fit:contain;
+  padding:4px;
 }
 .rank {
-  position:absolute; top:8px; left:8px; z-index:2; border:1px solid var(--border);
-  background:var(--panel); border-radius:999px; padding:3px 7px;
-  font-size:.7rem; font-weight:800;
+  position:absolute;
+  top:8px;
+  left:8px;
+  z-index:2;
+  padding:4px 7px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  background:var(--panel);
+  backdrop-filter:blur(10px);
+  font-size:.68rem;
+  font-weight:900;
 }
 .favorite {
-  position:absolute; top:7px; right:7px; z-index:2; width:36px; height:36px;
-  padding:0; border-radius:50%; font-size:1.15rem;
+  position:absolute;
+  right:8px;
+  top:8px;
+  z-index:2;
+  width:37px;
+  height:37px;
+  border-radius:50%;
+  border:1px solid var(--border);
+  background:var(--panel);
+  color:var(--text);
+  font-size:1.15rem;
 }
-.favorite.active { background:var(--accent); color:white; }
-.pair { font-size:1.22rem; margin-top:6px; }
-.name { font-size:.78rem; font-weight:650; line-height:1.2; min-height:2em; margin-top:2px; }
-.date { color:var(--muted); font-size:.72rem; margin-top:5px; }
-.seen-btn { width:100%; min-height:35px; margin-top:8px; font-size:.76rem; }
+.favorite.active {
+  background:var(--accent-2);
+  color:#fff;
+  border:0;
+}
+.pair {
+  margin-top:8px;
+  text-align:center;
+  font-size:1.3rem;
+}
+.name {
+  margin-top:3px;
+  min-height:2.2em;
+  text-align:center;
+  font-size:.78rem;
+  font-weight:750;
+  line-height:1.2;
+}
+.meta {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-top:8px;
+  color:var(--muted);
+  font-size:.72rem;
+}
+.seen-btn {
+  width:100%;
+  min-height:36px;
+  margin-top:8px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:transparent;
+  color:var(--text);
+  font-weight:750;
+}
 .empty {
-  text-align:center; padding:45px 15px; color:var(--muted); border:1px dashed var(--border);
+  grid-column:1/-1;
+  padding:48px 15px;
+  text-align:center;
+  color:var(--muted);
+  border:1px dashed var(--border);
   border-radius:18px;
 }
-footer { color:var(--muted); text-align:center; padding:25px 14px 35px; font-size:.78rem; }
-.loading { padding:70px 15px; text-align:center; color:var(--muted); }
-@media (max-width:590px) {
-  .controls { grid-template-columns:1fr 1fr; }
-  .controls input { grid-column:1/-1; }
+.loading {
+  padding:70px 20px;
+  text-align:center;
+  color:var(--muted);
+}
+footer {
+  padding:28px 14px 42px;
+  text-align:center;
+  color:var(--muted);
+  font-size:.8rem;
+}
+
+@media (max-width:720px) {
+  .hero-actions { grid-template-columns:1fr; }
+  .stats { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .controls { grid-template-columns:1fr; }
+}
+@media (max-width:520px) {
   .grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
-  .toolbar { align-items:flex-start; }
+  .browser { border-radius:20px; padding:10px; }
+  .logo-mark { width:48px; height:48px; }
 }
 </style>
 </head>
 <body>
-<header>
-  <div class="wrap">
-    <h1>🧪 Emoji Kitchen Explorer</h1>
-    <div class="subtitle">Browse every current mashup, 100 at a time.</div>
-    <div class="metrics">
-      <div class="metric" id="totalMetric">Loading…</div>
-      <div class="metric" id="seenMetric">Seen: 0</div>
-      <div class="metric" id="favoriteMetric">Favorites: 0</div>
-      <div class="metric" id="dateMetric">Newest: —</div>
+<div class="shell">
+  <section class="hero">
+    <div class="logo">
+      <span class="logo-mark">🧪</span>
+      <span>Emoji Kitchen Explorer</span>
     </div>
+    <p class="tagline">Come see the weird little things Google made.</p>
+
+    <div class="hero-actions">
+      <button id="surpriseHero" class="hero-button primary" type="button">🎲 Surprise Me</button>
+      <button id="unseenHero" class="hero-button" type="button">👀 Show Me Something New</button>
+      <button id="favoritesHero" class="hero-button" type="button">❤️ My Favorites</button>
+    </div>
+  </section>
+
+  <section class="stats" aria-label="Explorer statistics">
+    <div class="stat"><strong id="totalMetric">—</strong><span>Total mashups</span></div>
+    <div class="stat"><strong id="seenMetric">0</strong><span>Seen</span></div>
+    <div class="stat"><strong id="favoriteMetric">0</strong><span>Favorites</span></div>
+    <div class="stat"><strong id="dateMetric">—</strong><span>Newest release</span></div>
+  </section>
+
+  <section class="browser" id="browser">
+    <div class="browser-head">
+      <div>
+        <h2>Browse Everything</h2>
+        <p>One hundred delightful oddities at a time.</p>
+      </div>
+    </div>
+
     <div class="controls">
-      <input id="search" type="search" placeholder="Search emoji, name, or date…" aria-label="Search">
-      <select id="sort" aria-label="Sort results">
+      <input id="search" type="search" placeholder="Search emoji, name, or date…" aria-label="Search mashups">
+      <select id="sort" aria-label="Sort mashups">
         <option value="newest">Newest first</option>
         <option value="oldest">Oldest first</option>
         <option value="unseen">Unseen first</option>
         <option value="favorites">Favorites only</option>
       </select>
-      <button class="primary" id="random" type="button">🎲 Surprise me</button>
     </div>
-  </div>
-</header>
 
-<main class="wrap">
-  <div id="loading" class="loading">Opening the kitchen…</div>
-  <section id="app" hidden>
-    <div class="toolbar">
-      <div>
-        <div class="page-info" id="pageInfo"></div>
-        <div class="subtitle" id="rangeInfo"></div>
+    <div id="loading" class="loading">Opening the kitchen…</div>
+
+    <div id="app" hidden>
+      <div class="toolbar">
+        <div class="page-copy">
+          <strong id="pageInfo"></strong>
+          <span id="rangeInfo"></span>
+        </div>
+        <div class="pager">
+          <button id="previousTop" type="button">← Previous</button>
+          <button id="nextTop" class="next" type="button">Next →</button>
+        </div>
       </div>
-      <div class="pager">
-        <button id="previousTop" type="button" aria-label="Previous 100">← Previous</button>
-        <button id="nextTop" class="primary" type="button" aria-label="Next 100">Next →</button>
-      </div>
-    </div>
-    <section class="grid" id="grid"></section>
-    <div class="toolbar" style="margin-top:15px">
-      <div class="page-info" id="pageInfoBottom"></div>
-      <div class="pager">
-        <button id="previousBottom" type="button">← Previous</button>
-        <button id="nextBottom" class="primary" type="button">Next →</button>
+
+      <section class="grid" id="grid"></section>
+
+      <div class="toolbar" style="margin-top:14px">
+        <div class="page-copy"><strong id="pageInfoBottom"></strong></div>
+        <div class="pager">
+          <button id="previousBottom" type="button">← Previous</button>
+          <button id="nextBottom" class="next" type="button">Next →</button>
+        </div>
       </div>
     </div>
   </section>
-</main>
+</div>
 
 <footer>
-  Artwork loads from Google’s public Emoji Kitchen image servers. Seen items and favorites stay on this device.
+  Artwork loads from Google’s public Emoji Kitchen image servers. Favorites and seen items stay on this device.
 </footer>
 
 <script src="emoji-data.js"></script>
@@ -162,104 +414,139 @@ footer { color:var(--muted); text-align:center; padding:25px 14px 35px; font-siz
     "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
   })[c]);
 
+  function updateMetrics() {
+    $("totalMetric").textContent = all.length.toLocaleString();
+    $("seenMetric").textContent = seen.size.toLocaleString();
+    $("favoriteMetric").textContent = favorites.size.toLocaleString();
+    $("dateMetric").textContent = all.length ? prettyDate(all[0][3]) : "—";
+  }
+
   function applyFilters() {
     const query = $("search").value.trim().toLowerCase();
     const sort = $("sort").value;
+
     filtered = all.filter(row => {
       if (sort === "favorites" && !favorites.has(keyOf(row))) return false;
       if (!query) return true;
       return `${row[0]} ${row[1]} ${row[2]} ${row[3]} ${prettyDate(row[3])}`
-        .toLowerCase().includes(query);
+        .toLowerCase()
+        .includes(query);
     });
+
     if (sort === "oldest") filtered.reverse();
+
     if (sort === "unseen") {
-      filtered.sort((a,b) => Number(seen.has(keyOf(a))) - Number(seen.has(keyOf(b))) || b[3].localeCompare(a[3]));
+      filtered.sort((a,b) =>
+        Number(seen.has(keyOf(a))) - Number(seen.has(keyOf(b))) ||
+        b[3].localeCompare(a[3])
+      );
     }
+
     page = 0;
     render();
-  }
-
-  function updateMetrics() {
-    $("totalMetric").textContent = `${all.length.toLocaleString()} mashups`;
-    $("seenMetric").textContent = `Seen: ${seen.size.toLocaleString()}`;
-    $("favoriteMetric").textContent = `Favorites: ${favorites.size.toLocaleString()}`;
-    $("dateMetric").textContent = all.length ? `Newest: ${prettyDate(all[0][3])}` : "Newest: —";
   }
 
   function render() {
     const pages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
     page = Math.min(page, pages - 1);
+
     const start = page * PAGE_SIZE;
     const visible = filtered.slice(start, start + PAGE_SIZE);
     const end = start + visible.length;
-    const info = `Page ${page + 1} of ${pages.toLocaleString()}`;
-    const range = filtered.length
-      ? `Showing ${start + 1}–${end} of ${filtered.length.toLocaleString()} results`
+
+    $("pageInfo").textContent = `Page ${page + 1} of ${pages.toLocaleString()}`;
+    $("pageInfoBottom").textContent = `Page ${page + 1} of ${pages.toLocaleString()}`;
+    $("rangeInfo").textContent = filtered.length
+      ? `Showing ${start + 1}–${end} of ${filtered.length.toLocaleString()}`
       : "No results";
-    $("pageInfo").textContent = info;
-    $("pageInfoBottom").textContent = info;
-    $("rangeInfo").textContent = range;
 
     ["previousTop","previousBottom"].forEach(id => $(id).disabled = page === 0);
     ["nextTop","nextBottom"].forEach(id => $(id).disabled = page >= pages - 1);
 
     if (!visible.length) {
-      $("grid").innerHTML = `<div class="empty" style="grid-column:1/-1">Nothing matched that search.</div>`;
+      $("grid").innerHTML = `<div class="empty">Nothing matched that search.</div>`;
       updateMetrics();
       return;
     }
 
-    $("grid").innerHTML = visible.map((row, i) => {
+    $("grid").innerHTML = visible.map((row, index) => {
       const key = keyOf(row);
       const isSeen = seen.has(key);
       const isFavorite = favorites.has(key);
+
       return `<article class="card ${isSeen ? "seen" : ""}" data-key="${escapeHtml(key)}">
-        <div class="rank">#${(start + i + 1).toLocaleString()}</div>
-        <button class="favorite ${isFavorite ? "active" : ""}" type="button"
-          data-action="favorite" aria-label="Favorite">${isFavorite ? "★" : "☆"}</button>
-        <img loading="lazy" src="${escapeHtml(row[4])}"
-          alt="${escapeHtml(row[0] + " plus " + row[1] + " Emoji Kitchen mashup")}">
+        <div class="art">
+          <div class="rank">#${(start + index + 1).toLocaleString()}</div>
+          <button class="favorite ${isFavorite ? "active" : ""}" type="button"
+            data-action="favorite" aria-label="Favorite">${isFavorite ? "★" : "☆"}</button>
+          <img loading="lazy" src="${escapeHtml(row[4])}"
+            alt="${escapeHtml(row[0] + " plus " + row[1] + " Emoji Kitchen mashup")}">
+        </div>
         <div class="pair">${escapeHtml(row[0])} + ${escapeHtml(row[1])}</div>
         <div class="name">${escapeHtml(row[2])}</div>
-        <div class="date">${prettyDate(row[3])}</div>
-        <button class="seen-btn" type="button" data-action="seen">${isSeen ? "✓ Seen" : "Mark as seen"}</button>
+        <div class="meta">
+          <span>${prettyDate(row[3])}</span>
+          <span>${isSeen ? "Discovered" : "Unseen"}</span>
+        </div>
+        <button class="seen-btn" type="button" data-action="seen">
+          ${isSeen ? "✓ Seen" : "Mark as seen"}
+        </button>
       </article>`;
     }).join("");
+
     updateMetrics();
-    window.scrollTo({top:0, behavior:"smooth"});
   }
 
   function turnPage(delta) {
     page += delta;
     render();
+    document.getElementById("browser").scrollIntoView({behavior:"smooth", block:"start"});
+  }
+
+  function showRandom(source) {
+    if (!source.length) return;
+    const row = source[Math.floor(Math.random() * source.length)];
+    $("search").value = `${row[0]} ${row[1]}`;
+    $("sort").value = "newest";
+    applyFilters();
+    document.getElementById("browser").scrollIntoView({behavior:"smooth", block:"start"});
   }
 
   $("grid").addEventListener("click", event => {
     const button = event.target.closest("button[data-action]");
     if (!button) return;
+
     const card = button.closest(".card");
     const key = card.dataset.key;
+
     if (button.dataset.action === "favorite") {
       favorites.has(key) ? favorites.delete(key) : favorites.add(key);
     } else {
       seen.has(key) ? seen.delete(key) : seen.add(key);
     }
+
     save();
     render();
   });
 
   $("search").addEventListener("input", applyFilters);
   $("sort").addEventListener("change", applyFilters);
-  $("random").addEventListener("click", () => {
-    const source = filtered.length ? filtered : all;
-    if (!source.length) return;
-    const row = source[Math.floor(Math.random() * source.length)];
-    $("search").value = `${row[0]} ${row[1]}`;
-    $("sort").value = "newest";
+
+  $("surpriseHero").addEventListener("click", () => showRandom(all));
+  $("unseenHero").addEventListener("click", () => showRandom(all.filter(row => !seen.has(keyOf(row)))));
+  $("favoritesHero").addEventListener("click", () => {
+    $("search").value = "";
+    $("sort").value = "favorites";
     applyFilters();
+    document.getElementById("browser").scrollIntoView({behavior:"smooth", block:"start"});
   });
-  ["previousTop","previousBottom"].forEach(id => $(id).addEventListener("click", () => turnPage(-1)));
-  ["nextTop","nextBottom"].forEach(id => $(id).addEventListener("click", () => turnPage(1)));
+
+  ["previousTop","previousBottom"].forEach(id =>
+    $(id).addEventListener("click", () => turnPage(-1))
+  );
+  ["nextTop","nextBottom"].forEach(id =>
+    $(id).addEventListener("click", () => turnPage(1))
+  );
 
   $("loading").hidden = true;
   $("app").hidden = false;
