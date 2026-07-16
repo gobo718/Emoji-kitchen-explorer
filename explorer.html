@@ -410,6 +410,12 @@ footer {
     <div class="stat"><strong id="dateMetric">—</strong><span>Newest release</span></div>
   </section>
 
+  <section class="discovery-panel" aria-label="Discovery progress">
+    <div class="discovery-stat"><strong id="discoveredCount">0</strong><span>Discovered</span></div>
+    <div class="discovery-stat"><strong id="remainingCount">0</strong><span>Remaining</span></div>
+    <div class="discovery-stat"><strong id="completionPercent">0%</strong><span>Complete</span></div>
+  </section>
+
   <section class="browser" id="browser">
     <div class="browser-head">
       <div>
@@ -426,6 +432,7 @@ footer {
         <option value="unseen">Unseen first</option>
         <option value="favorites">Favorites only</option>
       </select>
+      <button class="discover-button" id="discover" type="button">👀 Show me something new</button>
     </div>
 
     <div id="loading" class="loading">Opening the kitchen…</div>
@@ -471,112 +478,90 @@ footer {
   let filtered = all.slice();
 
   const $ = id => document.getElementById(id);
-  const keyOf = row => row[0] + "|" + row[1] + "|" + row[3];
+  const keyOf = row => `${row[0]}|${row[1]}|${row[3]}`;
   const prettyDate = s => `${s.slice(0,4)}-${s.slice(4,6)}-${s.slice(6,8)}`;
-  const updateProgress = () => {
-    const discovered = seen.size;
-    const remaining = Math.max(0, all.length - discovered);
-    const percent = all.length ? (discovered / all.length) * 100 : 0;
-    $("discoveredCount").textContent = discovered.toLocaleString();
-    $("remainingCount").textContent = remaining.toLocaleString();
-    $("completionPercent").textContent = `${percent.toFixed(discovered ? 2 : 0)}%`;
-  };
-
-  const celebrate = () => {
-    const toast = $("toast");
-    toast.classList.add("show");
-    clearTimeout(window.__ekToastTimer);
-    window.__ekToastTimer = setTimeout(() => toast.classList.remove("show"), 1400);
-  };
-
-  const save = () => {
-    localStorage.setItem("ek-seen", JSON.stringify([...seen]));
-    localStorage.setItem("ek-favorites", JSON.stringify([...favorites]));
-  };
   const escapeHtml = s => String(s).replace(/[&<>"']/g, c => ({
     "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
   })[c]);
 
-  function updateMetrics() {
-    $("totalMetric").textContent = all.length.toLocaleString();
-    $("seenMetric").textContent = seen.size.toLocaleString();
-    $("favoriteMetric").textContent = favorites.size.toLocaleString();
-    $("dateMetric").textContent = all.length ? prettyDate(all[0][3]) : "—";
+  function save() {
+    localStorage.setItem("ek-seen", JSON.stringify([...seen]));
+    localStorage.setItem("ek-favorites", JSON.stringify([...favorites]));
   }
 
-  function applyFilters() {
+  function celebrate(message = "✨ Discovered!") {
+    const toast = $("toast");
+    toast.textContent = message;
+    toast.classList.add("show");
+    clearTimeout(window.__ekToastTimer);
+    window.__ekToastTimer = setTimeout(() => toast.classList.remove("show"), 1400);
+  }
+
+  function updateMetrics() {
+    const discovered = seen.size;
+    const remaining = Math.max(0, all.length - discovered);
+    const percent = all.length ? discovered / all.length * 100 : 0;
+    $("totalMetric").textContent = all.length.toLocaleString();
+    $("seenMetric").textContent = discovered.toLocaleString();
+    $("favoriteMetric").textContent = favorites.size.toLocaleString();
+    $("dateMetric").textContent = all.length ? prettyDate(all[0][3]) : "—";
+    $("discoveredCount").textContent = discovered.toLocaleString();
+    $("remainingCount").textContent = remaining.toLocaleString();
+    $("completionPercent").textContent = `${percent.toFixed(discovered ? 2 : 0)}%`;
+  }
+
+  function applyFilters(resetPage = true) {
     const query = $("search").value.trim().toLowerCase();
     const sort = $("sort").value;
-
     filtered = all.filter(row => {
       if (sort === "favorites" && !favorites.has(keyOf(row))) return false;
       if (!query) return true;
       return `${row[0]} ${row[1]} ${row[2]} ${row[3]} ${prettyDate(row[3])}`
-        .toLowerCase()
-        .includes(query);
+        .toLowerCase().includes(query);
     });
-
     if (sort === "oldest") filtered.reverse();
-
     if (sort === "unseen") {
-      filtered.sort((a,b) =>
-        Number(seen.has(keyOf(a))) - Number(seen.has(keyOf(b))) ||
-        b[3].localeCompare(a[3])
-      );
+      filtered.sort((a,b) => Number(seen.has(keyOf(a))) - Number(seen.has(keyOf(b))) || b[3].localeCompare(a[3]));
     }
-
-    page = 0;
+    if (resetPage) page = 0;
     render();
   }
 
   function render() {
     const pages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-    page = Math.min(page, pages - 1);
-
+    page = Math.max(0, Math.min(page, pages - 1));
     const start = page * PAGE_SIZE;
     const visible = filtered.slice(start, start + PAGE_SIZE);
     const end = start + visible.length;
 
     $("pageInfo").textContent = `Page ${page + 1} of ${pages.toLocaleString()}`;
     $("pageInfoBottom").textContent = `Page ${page + 1} of ${pages.toLocaleString()}`;
-    $("rangeInfo").textContent = filtered.length
-      ? `Showing ${start + 1}–${end} of ${filtered.length.toLocaleString()}`
-      : "No results";
-
+    $("rangeInfo").textContent = filtered.length ? `Showing ${start + 1}–${end} of ${filtered.length.toLocaleString()}` : "No results";
     ["previousTop","previousBottom"].forEach(id => $(id).disabled = page === 0);
     ["nextTop","nextBottom"].forEach(id => $(id).disabled = page >= pages - 1);
 
     if (!visible.length) {
-      $("grid").innerHTML = `<div class="empty">Nothing matched that search.</div>`;
+      $("grid").innerHTML = '<div class="empty">Nothing matched that search.</div>';
       updateMetrics();
       return;
     }
 
-    $("grid").innerHTML = visible.map((row, index) => {
+    $("grid").innerHTML = visible.map((row,index) => {
       const key = keyOf(row);
       const isSeen = seen.has(key);
       const isFavorite = favorites.has(key);
-
       return `<article class="card ${isSeen ? "seen" : ""}" data-key="${escapeHtml(key)}">
         <div class="art">
           <div class="rank">#${(start + index + 1).toLocaleString()}</div>
-          <button class="favorite ${isFavorite ? "active" : ""}" type="button"
-            data-action="favorite" aria-label="Favorite">${isFavorite ? "★" : "☆"}</button>
-          <img loading="lazy" src="${escapeHtml(row[4])}"
-            alt="${escapeHtml(row[0] + " plus " + row[1] + " Emoji Kitchen mashup")}">
+          <button class="favorite ${isFavorite ? "active" : ""}" type="button" data-action="favorite" aria-label="Favorite">${isFavorite ? "★" : "☆"}</button>
+          <img loading="lazy" src="${escapeHtml(row[4])}" alt="${escapeHtml(row[0] + " plus " + row[1] + " Emoji Kitchen mashup")}">
         </div>
         <div class="pair">${escapeHtml(row[0])} + ${escapeHtml(row[1])}</div>
         <div class="name">${escapeHtml(row[2])}</div>
-        <div class="meta">
-          <span>${prettyDate(row[3])}</span>
-          <span>${isSeen ? "Discovered" : "Unseen"}</span>
-        </div>
-        <button class="seen-btn" type="button" data-action="seen">
-          ${isSeen ? "✓ Seen" : "Mark as seen"}
-        </button>
+        <div class="meta"><span>${prettyDate(row[3])}</span><span>${isSeen ? "Discovered" : "Unseen"}</span></div>
+        <button class="seen-btn" type="button" data-action="seen">${isSeen ? "✓ Seen" : "Mark as seen"}</button>
       </article>`;
     }).join("");
-
     updateMetrics();
   }
 
@@ -584,53 +569,63 @@ footer {
     page += delta;
     localStorage.setItem("ek-last-page", String(page));
     render();
-    document.getElementById("browser").scrollIntoView({behavior:"smooth", block:"start"});
+    $("browser").scrollIntoView({behavior:"smooth", block:"start"});
+  }
+
+  function focusRow(row) {
+    $("search").value = `${row[0]} ${row[1]}`;
+    $("sort").value = "newest";
+    applyFilters();
+    $("browser").scrollIntoView({behavior:"smooth", block:"start"});
   }
 
   function showRandom(source) {
     if (!source.length) return;
-    const row = source[Math.floor(Math.random() * source.length)];
-    $("search").value = `${row[0]} ${row[1]}`;
-    $("sort").value = "newest";
-    applyFilters();
-    document.getElementById("browser").scrollIntoView({behavior:"smooth", block:"start"});
+    focusRow(source[Math.floor(Math.random() * source.length)]);
+  }
+
+  function showUnseen() {
+    const unseen = all.filter(row => !seen.has(keyOf(row)));
+    if (!unseen.length) {
+      celebrate("🏆 You discovered everything!");
+      return;
+    }
+    const row = unseen[Math.floor(Math.random() * unseen.length)];
+    seen.add(keyOf(row));
+    save();
+    focusRow(row);
+    celebrate();
   }
 
   $("grid").addEventListener("click", event => {
     const button = event.target.closest("button[data-action]");
     if (!button) return;
-
-    const card = button.closest(".card");
-    const key = card.dataset.key;
-
+    const key = button.closest(".card").dataset.key;
     if (button.dataset.action === "favorite") {
       favorites.has(key) ? favorites.delete(key) : favorites.add(key);
+    } else if (seen.has(key)) {
+      seen.delete(key);
     } else {
-      seen.has(key) ? seen.delete(key) : seen.add(key);
+      seen.add(key);
+      celebrate();
     }
-
     save();
     render();
   });
 
-  $("search").addEventListener("input", applyFilters);
-  $("sort").addEventListener("change", applyFilters);
-
+  $("search").addEventListener("input", () => applyFilters());
+  $("sort").addEventListener("change", () => applyFilters());
   $("surpriseHero").addEventListener("click", () => showRandom(all));
-  $("unseenHero").addEventListener("click", () => showRandom(all.filter(row => !seen.has(keyOf(row)))));
+  $("unseenHero").addEventListener("click", showUnseen);
+  $("discover").addEventListener("click", showUnseen);
   $("favoritesHero").addEventListener("click", () => {
     $("search").value = "";
     $("sort").value = "favorites";
     applyFilters();
-    document.getElementById("browser").scrollIntoView({behavior:"smooth", block:"start"});
+    $("browser").scrollIntoView({behavior:"smooth", block:"start"});
   });
-
-  ["previousTop","previousBottom"].forEach(id =>
-    $(id).addEventListener("click", () => turnPage(-1))
-  );
-  ["nextTop","nextBottom"].forEach(id =>
-    $(id).addEventListener("click", () => turnPage(1))
-  );
+  ["previousTop","previousBottom"].forEach(id => $(id).addEventListener("click", () => turnPage(-1)));
+  ["nextTop","nextBottom"].forEach(id => $(id).addEventListener("click", () => turnPage(1)));
 
   const params = new URLSearchParams(location.search);
   const requestedSearch = params.get("search");
@@ -639,19 +634,19 @@ footer {
   if (requestedSearch) $("search").value = requestedSearch;
   if (requestedMode === "favorites") $("sort").value = "favorites";
   if (requestedMode === "unseen") $("sort").value = "unseen";
-  if (requestedMode === "discover") setTimeout(showUnseen, 0);
   if (requestedSort === "newest") $("sort").value = "newest";
+
   applyFilters();
   if (!requestedSearch && !requestedMode && !requestedSort) {
-    const savedPage = Number(localStorage.getItem("ek-last-page") || "0");
-    const maxPage = Math.max(0, Math.ceil(filtered.length / PAGE_SIZE) - 1);
-    page = Math.min(savedPage, maxPage);
+    page = Math.min(Number(localStorage.getItem("ek-last-page") || "0"), Math.max(0, Math.ceil(filtered.length / PAGE_SIZE) - 1));
     render();
   }
+
   $("loading").hidden = true;
   $("app").hidden = false;
   updateMetrics();
-  render();
+
+  if (requestedMode === "discover") showUnseen();
 })();
 </script>
 </body>
