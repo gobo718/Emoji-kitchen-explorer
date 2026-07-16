@@ -29,17 +29,17 @@ body {
   font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
   color:var(--text);
   background:
-    radial-gradient(circle at 15% 0%, #7828a933, transparent 24rem),
-    radial-gradient(circle at 85% 12%, #1c7bd42b, transparent 26rem),
+    radial-gradient(circle at 15% 0%, #7e2bb63d, transparent 24rem),
+    radial-gradient(circle at 85% 12%, #1c7bd43a, transparent 26rem),
     linear-gradient(#060714,#03040d 72%);
 }
 a { color:inherit; text-decoration:none; }
-.shell { max-width:1080px; margin:auto; padding:22px 16px 44px; }
+.shell { max-width:1080px; margin:auto; padding:18px 14px 40px; }
 
 .hero {
   position:relative;
   text-align:center;
-  padding:10px 0 18px;
+  padding:8px 0 14px;
 }
 .brand {
   display:flex;
@@ -55,7 +55,7 @@ a { color:inherit; text-decoration:none; }
   height:74px;
   border-radius:22px;
   font-size:2.55rem;
-  background:linear-gradient(145deg,#a65cff,#ff70ae);
+  background:linear-gradient(145deg,#8e55ff,#ff6db2);
   box-shadow:0 0 28px #a54cff44;
 }
 .brand-copy { text-align:left; line-height:.93; }
@@ -86,7 +86,7 @@ a { color:inherit; text-decoration:none; }
   display:inline-flex;
   gap:8px;
   align-items:center;
-  margin-top:18px;
+  margin-top:15px;
   padding:9px 16px;
   border:1px solid #7d54d55c;
   border-radius:999px;
@@ -103,7 +103,7 @@ a { color:inherit; text-decoration:none; }
   background:
     linear-gradient(var(--panel),var(--panel)) padding-box,
     linear-gradient(100deg,var(--pink),var(--purple),var(--blue)) border-box;
-  box-shadow:var(--shadow);
+  box-shadow:0 18px 55px #0009, 0 0 28px #6b4dff22;
 }
 .daily-head {
   display:flex;
@@ -174,7 +174,7 @@ a { color:inherit; text-decoration:none; }
   padding:12px 20px;
   border-radius:999px;
   font-weight:850;
-  background:linear-gradient(90deg,#5223b5,#7e2ddd);
+  background:linear-gradient(90deg,#1468ff,#2458d8);
   box-shadow:0 8px 20px #0005;
 }
 
@@ -197,10 +197,21 @@ a { color:inherit; text-decoration:none; }
 .tile-icon { font-size:3.4rem; }
 .tile strong { margin-top:10px; font-size:1rem; }
 .tile span { margin-top:9px; font-size:.82rem; line-height:1.35; color:#fffddd; }
+
+.tile, .quick-card, .continue-button, .explore-button {
+  transition:transform .16s ease, filter .16s ease, box-shadow .16s ease;
+}
+.tile:hover, .quick-card:hover, .continue-button:hover, .explore-button:hover {
+  transform:translateY(-2px);
+  filter:brightness(1.04);
+}
+.tile:active, .quick-card:active, .continue-button:active, .explore-button:active {
+  transform:translateY(0) scale(.985);
+}
 .pink { background:linear-gradient(155deg,#ed5ba1,#9f1b64); }
 .orange { background:linear-gradient(155deg,#ffad28,#bf3518); }
 .green { background:linear-gradient(155deg,#27d873,#087e3d); }
-.blue { background:linear-gradient(155deg,#28b9ff,#123ca7); }
+.blue { background:linear-gradient(155deg,#22b7ff,#0e48bf); }
 
 .quick-title {
   margin:28px 0 14px;
@@ -390,7 +401,7 @@ footer {
     </div>
 
     <div class="footer-right">
-      <div>Made by Billy 💜 · v0.7</div>
+      <div>Made by Billy 💜 · v0.8</div>
       <div>Made with 🧪 and 💜</div>
     </div>
   </footer>
