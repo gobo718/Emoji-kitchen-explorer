@@ -312,6 +312,7 @@ footer {
     </div>
     <div class="tagline">Come see the weird little things Google made.</div>
     <div class="count-pill">🧑‍🤝‍🧑 <strong>147,000</strong> creations waiting to be discovered</div>
+    <div class="count-pill" id="progressPill">✨ <strong id="homeSeenCount">0</strong> discovered · <span id="homePercent">0%</span></div>
   </header>
 
   <main>
@@ -341,10 +342,10 @@ footer {
     </section>
 
     <section class="tiles">
-      <a class="tile pink" href="explorer.html?mode=unseen">
+      <a class="tile pink" href="explorer.html?mode=discover">
         <div class="tile-icon">🎁</div>
-        <strong>Discovery Pack</strong>
-        <span>Five random creations you haven’t seen</span>
+        <strong>Show Me Something New</strong>
+        <span>One guaranteed unseen creation</span>
       </a>
       <a class="tile orange" href="explorer.html?sort=unseen">
         <div class="tile-icon">😂</div>
@@ -401,7 +402,7 @@ footer {
     </div>
 
     <div class="footer-right">
-      <div>Made by Billy 💜 · v0.8</div>
+      <div>Made by Billy 💜 · v0.9</div>
       <div>Made with 🧪 and 💜</div>
     </div>
   </footer>
@@ -431,6 +432,11 @@ footer {
     );
     return (seed * 2654435761 >>> 0) % length;
   }
+
+
+  const seen = new Set(JSON.parse(localStorage.getItem("ek-seen") || "[]"));
+  $("homeSeenCount").textContent = seen.size.toLocaleString();
+  $("homePercent").textContent = `${((seen.size / all.length) * 100).toFixed(seen.size ? 2 : 0)}%`;
 
   if (!all.length) {
     $("loading").textContent = "The kitchen data could not be loaded.";

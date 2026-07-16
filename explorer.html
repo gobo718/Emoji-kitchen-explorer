@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#7457e8">
-<title>Browse Everything · Emoji Kitchen Explorer</title>
+<title>Discovery Explorer · Emoji Kitchen Explorer</title>
 <style>
 :root {
   color-scheme: light dark;
@@ -319,6 +319,69 @@ footer {
   .browser { border-radius:20px; padding:10px; }
   .logo-mark { width:48px; height:48px; }
 }
+
+.discovery-panel {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+  margin:14px 0;
+}
+.discovery-stat {
+  padding:12px;
+  border:1px solid var(--border);
+  border-radius:16px;
+  background:var(--panel);
+  text-align:center;
+}
+.discovery-stat strong {
+  display:block;
+  font-size:1.15rem;
+}
+.discovery-stat span {
+  color:var(--muted);
+  font-size:.76rem;
+}
+.discover-button {
+  min-height:46px;
+  border:0;
+  border-radius:14px;
+  padding:0 14px;
+  color:white;
+  background:linear-gradient(90deg,#1468ff,#7447ff);
+  font-weight:850;
+}
+.discovery-card {
+  max-width:520px;
+  margin:0 auto;
+}
+.discovery-card .card {
+  opacity:1 !important;
+}
+.toast {
+  position:fixed;
+  left:50%;
+  bottom:24px;
+  transform:translateX(-50%) translateY(18px);
+  z-index:100;
+  padding:11px 16px;
+  border-radius:999px;
+  color:white;
+  background:linear-gradient(90deg,#16b96a,#3aa7ff);
+  box-shadow:0 12px 30px rgba(0,0,0,.3);
+  opacity:0;
+  pointer-events:none;
+  transition:.25s ease;
+  font-weight:850;
+}
+.toast.show {
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+@media (max-width:590px) {
+  .discovery-panel { grid-template-columns:1fr 1fr; }
+  .discovery-panel .discovery-stat:last-child { grid-column:1/-1; }
+}
+
 </style>
 </head>
 <body>
@@ -395,6 +458,7 @@ footer {
 <footer>
   Artwork loads from Google’s public Emoji Kitchen image servers. Favorites and seen items stay on this device.
 </footer>
+<div class="toast" id="toast" role="status" aria-live="polite">✨ Discovered!</div>
 
 <script src="emoji-data.js"></script>
 <script>
@@ -409,6 +473,22 @@ footer {
   const $ = id => document.getElementById(id);
   const keyOf = row => row[0] + "|" + row[1] + "|" + row[3];
   const prettyDate = s => `${s.slice(0,4)}-${s.slice(4,6)}-${s.slice(6,8)}`;
+  const updateProgress = () => {
+    const discovered = seen.size;
+    const remaining = Math.max(0, all.length - discovered);
+    const percent = all.length ? (discovered / all.length) * 100 : 0;
+    $("discoveredCount").textContent = discovered.toLocaleString();
+    $("remainingCount").textContent = remaining.toLocaleString();
+    $("completionPercent").textContent = `${percent.toFixed(discovered ? 2 : 0)}%`;
+  };
+
+  const celebrate = () => {
+    const toast = $("toast");
+    toast.classList.add("show");
+    clearTimeout(window.__ekToastTimer);
+    window.__ekToastTimer = setTimeout(() => toast.classList.remove("show"), 1400);
+  };
+
   const save = () => {
     localStorage.setItem("ek-seen", JSON.stringify([...seen]));
     localStorage.setItem("ek-favorites", JSON.stringify([...favorites]));
@@ -502,6 +582,7 @@ footer {
 
   function turnPage(delta) {
     page += delta;
+    localStorage.setItem("ek-last-page", String(page));
     render();
     document.getElementById("browser").scrollIntoView({behavior:"smooth", block:"start"});
   }
@@ -558,8 +639,15 @@ footer {
   if (requestedSearch) $("search").value = requestedSearch;
   if (requestedMode === "favorites") $("sort").value = "favorites";
   if (requestedMode === "unseen") $("sort").value = "unseen";
+  if (requestedMode === "discover") setTimeout(showUnseen, 0);
   if (requestedSort === "newest") $("sort").value = "newest";
   applyFilters();
+  if (!requestedSearch && !requestedMode && !requestedSort) {
+    const savedPage = Number(localStorage.getItem("ek-last-page") || "0");
+    const maxPage = Math.max(0, Math.ceil(filtered.length / PAGE_SIZE) - 1);
+    page = Math.min(savedPage, maxPage);
+    render();
+  }
   $("loading").hidden = true;
   $("app").hidden = false;
   updateMetrics();
