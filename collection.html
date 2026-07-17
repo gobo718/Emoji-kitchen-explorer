@@ -26,6 +26,7 @@
 <script src="emoji-metadata.js"></script>
 <script>
 (()=>{
+ try{
  const all=window.EMOJI_KITCHEN_DATA||[];
  const profiles=window.EMOJI_PROFILE_METADATA||{};
  const $=id=>document.getElementById(id);
@@ -35,11 +36,26 @@
  const present=new Set();all.forEach(r=>{present.add(r[0]);present.add(r[1]);});
  const fieldMap={'unicode-version':'unicodeVersion','unicode-date':'unicodeRelease','emoji-version':'emojiVersion','category':'category','subgroup':'subgroup'};
  const field=fieldMap[type];
- const collectionDate=type==='unicode-date'&&value?spokenDate(value):'';
- const labelMap={'unicode-version':`Unicode ${value}`,'unicode-date':collectionDate||'Unicode release','emoji-version':`Emoji ${value}`,'category':value,'subgroup':value};
- const descriptionMap={'unicode-version':`Every Emoji Kitchen base emoji in Billy Labs that entered Unicode ${value}.`,'unicode-date':`Every Emoji Kitchen base emoji in Billy Labs with an official Unicode release date of ${collectionDate}.`,'emoji-version':`Every Emoji Kitchen base emoji in Billy Labs that joined the emoji set in Emoji ${value}.`,'category':`The ${value} category, gathered into one explorable Billy Labs collection.`,'subgroup':`Every Emoji Kitchen base emoji in the official ${value} subgroup.`};
- if(!field||!value){$('loading').textContent='That collection link is incomplete.';return;}
- const items=Object.entries(profiles).filter(([e,m])=>present.has(e)&&String(m[field])===value).map(([emoji,meta])=>({emoji,meta,count:all.reduce((n,r)=>n+(r[0]===emoji||r[1]===emoji?1:0),0)}));
+ const normalize=(kind,input)=>{
+   let s=String(input??'').trim().replace(/\s+/g,' ');
+   if(kind==='unicode-version')s=s.replace(/^Unicode\s+/i,'');
+   if(kind==='emoji-version')s=s.replace(/^Emoji\s+/i,'');
+   if(kind==='unicode-date'){
+     const match=s.match(/^(\d{4})-?(\d{2})-?(\d{2})$/);
+     if(match)s=`${match[1]}-${match[2]}-${match[3]}`;
+   }
+   return (kind==='category'||kind==='subgroup')?s.toLocaleLowerCase():s;
+ };
+ const normalizedValue=normalize(type,value);
+ let collectionDate='';
+ if(type==='unicode-date'&&normalizedValue){
+   try{collectionDate=spokenDate(normalizedValue);}catch(error){collectionDate=normalizedValue;}
+ }
+ const displayValue=(type==='category'||type==='subgroup')?value.trim():normalizedValue;
+ const labelMap={'unicode-version':`Unicode ${displayValue}`,'unicode-date':collectionDate||'Unicode release','emoji-version':`Emoji ${displayValue}`,'category':displayValue,'subgroup':displayValue};
+ const descriptionMap={'unicode-version':`Every Emoji Kitchen base emoji in Billy Labs that entered Unicode ${displayValue}.`,'unicode-date':`Every Emoji Kitchen base emoji in Billy Labs with an official Unicode release date of ${collectionDate}.`,'emoji-version':`Every Emoji Kitchen base emoji in Billy Labs that joined the emoji set in Emoji ${displayValue}.`,'category':`The ${displayValue} category, gathered into one explorable Billy Labs collection.`,'subgroup':`Every Emoji Kitchen base emoji in the official ${displayValue} subgroup.`};
+ if(!field||!normalizedValue){$('loading').textContent='That collection link is incomplete.';return;}
+ const items=Object.entries(profiles).filter(([e,m])=>present.has(e)&&normalize(type,m[field])===normalizedValue).map(([emoji,meta])=>({emoji,meta,count:all.reduce((n,r)=>n+(r[0]===emoji||r[1]===emoji?1:0),0)}));
  if(!items.length){$('loading').textContent='Billy Labs could not find any Kitchen emoji in that collection.';return;}
  const members=new Set(items.map(x=>x.emoji));
  const mashups=all.filter(r=>members.has(r[0])||members.has(r[1])).length;
@@ -51,6 +67,11 @@
    $('grid').innerHTML=shown.length?shown.map(x=>`<a class="card" href="emoji.html?emoji=${encodeURIComponent(x.emoji)}"><div class="glyph">${escapeHtml(x.emoji)}</div><div class="name">${escapeHtml(x.meta.name)}</div><div class="meta">${x.count.toLocaleString()} mashup${x.count===1?'':'s'}</div></a>`).join(''):'<div class="empty">Nothing matched that search.</div>';
  }
  $('search').addEventListener('input',render);$('sort').addEventListener('change',render);render();$('loading').hidden=true;$('content').hidden=false;
+ }catch(error){
+   console.error('Billy Labs collection error:',error);
+   const loading=document.getElementById('loading');
+   if(loading)loading.textContent='Billy Labs hit a snag opening this collection. Please try refreshing.';
+ }
 })();
 </script>
 </body>
