@@ -373,6 +373,8 @@ button, .action-link {
 })();
 </script>
 
+
+<section id="publicBlurblet" style="display:none;border-top:1px solid #ddd;margin-top:1rem;padding-top:1rem"><h3>✨ Billy Labs</h3><p id="publicBlurbletText"></p></section>
 <button id="curatorFab" type="button">🔬 Curator</button>
 <aside id="curatorPanel" aria-hidden="true" aria-label="Billy Labs Curator">
   <div class="curator-head">
@@ -437,6 +439,8 @@ button, .action-link {
     renderExhibits(entry.exhibits || []);
     blurblet.value = entry.blurblet || '';
     notes.value = entry.notes || '';
+    const pub=document.getElementById('publicBlurblet'); const pubt=document.getElementById('publicBlurbletText');
+    if(entry.blurblet){pub.style.display='block';pubt.textContent=entry.blurblet;}else{pub.style.display='none';pubt.textContent='';}
     status.textContent = entry.updatedAt ? `Last saved ${new Date(entry.updatedAt).toLocaleString()}` : '';
   }
 
