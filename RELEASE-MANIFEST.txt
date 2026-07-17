@@ -1,13 +1,14 @@
-Billy Labs v1.9.2 — Daily Pick Resilience Hotfix
+Billy Labs v1.9.2a — Branded Action Buttons
 
-Baseline: v1.9.1 Discovery Repair
-
-Modified:
+Modified files:
 - index.html
+- mashup.html
 - PROJECTLOG.md
 - RELEASE-MANIFEST.txt
-- version labels in HTML files
 
-Fixes:
-- Billy’s Daily Pick no longer disappears when progress/favorites storage throws an error.
-- Daily Pick data and artwork initialize before optional progress integrations.
+Scope:
+- Visual-only patch.
+- Copy emojis uses the Explorer pink gradient.
+- Favorite uses the Explorer peach gradient.
+- Applied to the Daily Pick and mashup detail action grids.
+- No JavaScript or data behavior changed.

@@ -181,7 +181,9 @@ a { color:inherit; text-decoration:none; }
   justify-content:center;
 }
 .daily-actions .primary { background:linear-gradient(90deg,var(--blue),#3355d7); border:0; }
+.daily-actions .emoji-action { background:linear-gradient(90deg,#ff64bb,#d83cff); border:0; }
 .daily-actions .secondary { background:linear-gradient(90deg,#6e3bdf,#8d42de); border:0; }
+.daily-actions .favorite-action { background:linear-gradient(90deg,#ff9e72,#ff6d61); border:0; }
 .daily-blurblet {
   width:62%;
   margin:.75rem auto 0 0;
@@ -377,9 +379,9 @@ footer {
           <div class="billyism" id="dailyBillyism" hidden></div>
           <div class="daily-actions">
             <button class="primary" id="dailyCopyImage" type="button">📋 Copy image</button>
-            <button id="dailyCopyPair" type="button">😀 Copy emojis</button>
+            <button class="emoji-action" id="dailyCopyPair" type="button">😀 Copy emojis</button>
             <button class="secondary" id="dailyCopyLink" type="button">🔗 Copy link</button>
-            <button id="dailyFavorite" type="button">☆ Favorite</button>
+            <button class="favorite-action" id="dailyFavorite" type="button">☆ Favorite</button>
           </div>
           <div class="daily-blurblet" id="dailyBlurblet" hidden></div>
           <div class="daily-status" id="dailyStatus" aria-live="polite"></div>
@@ -449,7 +451,7 @@ footer {
     </div>
 
     <div class="footer-right">
-      <div>Made by Billy 💜 · v1.9.2</div>
+      <div>Made by Billy 💜 · v1.9.2a</div>
       <div>Made with 🧪 and 💜</div>
     </div>
   </footer>

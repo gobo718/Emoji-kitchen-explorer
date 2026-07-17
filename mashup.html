@@ -86,7 +86,9 @@ button, .action-link {
   display:flex; align-items:center; justify-content:center; text-decoration:none;
 }
 .primary { background:linear-gradient(90deg,var(--blue),#3355d7); border:0; }
+.emoji-action { background:linear-gradient(90deg,#ff64bb,#d83cff); border:0; }
 .secondary { background:linear-gradient(90deg,#6e3bdf,#8d42de); border:0; }
+.favorite-action { background:linear-gradient(90deg,#ff9e72,#ff6d61); border:0; }
 .status {
   min-height:24px; margin-top:12px; color:#8df0b2;
   font-size:.86rem; font-weight:750;
@@ -225,9 +227,9 @@ button, .action-link {
 
         <div class="actions">
           <button class="primary" id="copyImage" type="button">📋 Copy image</button>
-          <button id="copyPair" type="button">😀 Copy emojis</button>
+          <button class="emoji-action" id="copyPair" type="button">😀 Copy emojis</button>
           <button class="secondary" id="copyLink" type="button">🔗 Copy link</button>
-          <button id="favorite" type="button">☆ Favorite</button>
+          <button class="favorite-action" id="favorite" type="button">☆ Favorite</button>
         </div>
         <div class="public-blurblet" id="publicBlurblet" hidden></div>
         <div class="status" id="status" aria-live="polite"></div>

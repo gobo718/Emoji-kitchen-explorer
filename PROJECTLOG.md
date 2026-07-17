@@ -1,3 +1,12 @@
+# Billy Labs — Project Log
+
+## v1.9.2a — Branded Action Buttons
+
+- Changed **Copy emojis** to a pink gradient drawn from the Explorer wordmark.
+- Changed **Favorite** to a peach gradient drawn from the Explorer wordmark.
+- Applied the same styling to Billy’s Daily Pick and the mashup detail view opened by **View in Explorer**.
+- No JavaScript, storage, collection, or discovery behavior changed.
+
 
 ## v1.9.2 — Daily Pick Resilience Hotfix
 
@@ -6,10 +15,8 @@
 - Added safe fallbacks so a storage migration or progress-engine error cannot hide the entire feature.
 - Preserved the v1.9.1 discovery repair and public/dev Curator separation.
 
-# Billy Labs — Project Log
-
 ## Current Version
-v1.9.1 — Collection Control Room Foundation
+v1.9.2a — Branded Action Buttons
 
 ## Phase Status
 - Phase 1 — Museum: complete
