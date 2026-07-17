@@ -690,7 +690,7 @@ footer {
       const key = keyOf(row);
       const isSeen = seen.has(key);
       const isFavorite = favorites.has(key);
-      const detailUrl = `mashup.html?left=${encodeURIComponent(row[0])}&right=${encodeURIComponent(row[1])}`;
+      const detailUrl = BillyMashups.buildUrl(row);
       const curatorPairKey = [row[0], row[1]].sort().join("|");
       const blurblet = curatorEntries[curatorPairKey]?.blurblet?.trim() || "";
       return `<article class="card ${isSeen ? "seen" : ""}" data-key="${escapeHtml(key)}">
@@ -729,7 +729,7 @@ footer {
 
   function showRandom(source) {
     if (!source.length) return;
-    focusRow(source[Math.floor(Math.random() * source.length)]);
+    BillyMashups.open(source[Math.floor(Math.random() * source.length)]);
   }
 
   function showUnseen() {
@@ -739,7 +739,7 @@ footer {
       return;
     }
     const row = unseen[Math.floor(Math.random() * unseen.length)];
-    location.href = `mashup.html?left=${encodeURIComponent(row[0])}&right=${encodeURIComponent(row[1])}`;
+    BillyMashups.open(row);
   }
 
   $("grid").addEventListener("click", event => {

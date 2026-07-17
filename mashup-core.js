@@ -7,5 +7,11 @@
     return compare(a,b)<=0 ? [a,b] : [b,a];
   };
   const id = (left,right) => canonicalPair(left,right).join('|');
-  window.BillyMashups = {version:1, normalizeEmoji, canonicalPair, id};
+  const buildUrl = (mashup, base='mashup.html') => {
+    const left = Array.isArray(mashup) ? mashup[0] : mashup.left;
+    const right = Array.isArray(mashup) ? mashup[1] : mashup.right;
+    return `${base}?left=${encodeURIComponent(left)}&right=${encodeURIComponent(right)}`;
+  };
+  const open = mashup => { window.location.href = buildUrl(mashup); };
+  window.BillyMashups = {version:1, normalizeEmoji, canonicalPair, id, buildUrl, open};
 })();

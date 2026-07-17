@@ -1,5 +1,13 @@
 # Billy Labs — Project Log
 
+## v1.9.2b — Final UI Polish
+
+- Surprise Me now opens a selected mashup directly.
+- Standardized optical blurblet alignment across the app.
+- Verified branded Copy Emojis and Favorite buttons in all mashup views.
+- Added success feedback to copy actions.
+- Added persistent Favorite/Favorited button states.
+
 ## v1.9.2a — Branded Action Buttons
 
 - Changed **Copy emojis** to a pink gradient drawn from the Explorer wordmark.
@@ -16,7 +24,7 @@
 - Preserved the v1.9.1 discovery repair and public/dev Curator separation.
 
 ## Current Version
-v1.9.2a — Branded Action Buttons
+v1.9.2b — Final UI Polish
 
 ## Phase Status
 - Phase 1 — Museum: complete

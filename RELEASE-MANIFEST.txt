@@ -1,14 +1,18 @@
-Billy Labs v1.9.2a — Branded Action Buttons
+Billy Labs v1.9.2b — Final UI Polish
 
 Modified files:
 - index.html
+- explorer.html
 - mashup.html
+- mashup-core.js
+- action-ui.js
 - PROJECTLOG.md
 - RELEASE-MANIFEST.txt
 
 Scope:
-- Visual-only patch.
-- Copy emojis uses the Explorer pink gradient.
-- Favorite uses the Explorer peach gradient.
-- Applied to the Daily Pick and mashup detail action grids.
-- No JavaScript or data behavior changed.
+- Surprise Me opens its selected mashup detail page directly using the existing random pool.
+- Public action blurblets use shared optical alignment based on Copy emojis and Favorite label endpoints, with a mobile fallback.
+- Branded Copy emojis and Favorite treatments remain consistent in Daily Pick and mashup detail views.
+- Successful copy actions show temporary Copied! feedback without shifting neighboring controls.
+- Favorite/Favorited uses the existing persistent favorite store and exposes aria-pressed state.
+- No collection, trophy, curator-selection, mashup-selection, or data-format changes.

@@ -79,6 +79,14 @@ h1 { margin:10px 0 4px; font-size:clamp(1.8rem,6vw,3rem); }
   display:grid; grid-template-columns:repeat(2,minmax(0,1fr));
   gap:10px; margin-top:20px;
 }
+.button-icon { flex:0 0 auto; }
+.button-label { display:inline-block; white-space:nowrap; }
+.copy-feedback-button { min-width:0; }
+.copy-feedback-button:disabled { cursor:default; opacity:1; }
+.action-blurblet { max-width:100%; }
+@media (max-width:420px) {
+  .action-blurblet { width:100%; margin-left:0 !important; margin-right:0 !important; text-align:center; }
+}
 button, .action-link {
   min-height:46px; border-radius:14px; border:1px solid var(--border);
   background:var(--panel2); color:var(--text); font:inherit;
@@ -226,12 +234,12 @@ button, .action-link {
         <div class="billyism" id="billyism" hidden></div>
 
         <div class="actions">
-          <button class="primary" id="copyImage" type="button">📋 Copy image</button>
-          <button class="emoji-action" id="copyPair" type="button">😀 Copy emojis</button>
-          <button class="secondary" id="copyLink" type="button">🔗 Copy link</button>
-          <button class="favorite-action" id="favorite" type="button">☆ Favorite</button>
+          <button class="primary copy-feedback-button" id="copyImage" type="button"><span class="button-icon" aria-hidden="true">📋</span><span class="button-label">Copy image</span></button>
+          <button class="emoji-action copy-emojis-button copy-feedback-button" id="copyPair" type="button"><span class="button-icon" aria-hidden="true">😀</span><span class="button-label">Copy emojis</span></button>
+          <button class="secondary copy-feedback-button" id="copyLink" type="button"><span class="button-icon" aria-hidden="true">🔗</span><span class="button-label">Copy link</span></button>
+          <button class="favorite-action favorite-button" id="favorite" type="button" aria-pressed="false"><span class="button-icon" aria-hidden="true">☆</span><span class="button-label">Favorite</span></button>
         </div>
-        <div class="public-blurblet" id="publicBlurblet" hidden></div>
+        <div class="public-blurblet action-blurblet" id="publicBlurblet" hidden></div>
         <div class="status" id="status" aria-live="polite"></div>
       </div>
     </section>
@@ -248,6 +256,7 @@ button, .action-link {
 <script src="hidden-categories.js"></script>
 <script src="achievements.js"></script>
 <script src="mashup-core.js"></script>
+<script src="action-ui.js"></script>
 <script src="progress-engine.js"></script>
 <script src="collections-data.js"></script>
 <script>
@@ -315,7 +324,12 @@ button, .action-link {
   }
 
   function updateFavorite() {
-    $("favorite").textContent = BillyProgress.isFavorite(row[0], row[1]) ? "★ Favorited" : "☆ Favorite";
+    const active = BillyProgress.isFavorite(row[0], row[1]);
+    const button = $("favorite");
+    button.querySelector(".button-icon").textContent = active ? "★" : "☆";
+    button.querySelector(".button-label").textContent = active ? "Favorited" : "Favorite";
+    button.setAttribute("aria-pressed", String(active));
+    BillyActionUI.alignBlurblet(button.closest(".info"));
   }
   updateFavorite();
 
@@ -327,8 +341,8 @@ button, .action-link {
 
   $("copyPair").addEventListener("click", async () => {
     try {
-      await navigator.clipboard.writeText(`${row[0]} + ${row[1]}`);
-      say("Emoji pair copied.");
+      await BillyActionUI.runCopyFeedback($("copyPair"), () => navigator.clipboard.writeText(`${row[0]} + ${row[1]}`));
+      say("Emojis copied.");
     } catch {
       say("Your browser blocked copying.", true);
     }
@@ -336,8 +350,8 @@ button, .action-link {
 
   $("copyLink").addEventListener("click", async () => {
     try {
-      await navigator.clipboard.writeText(location.href);
-      say("Page link copied.");
+      await BillyActionUI.runCopyFeedback($("copyLink"), () => navigator.clipboard.writeText(location.href));
+      say("Link copied.");
     } catch {
       say("Your browser blocked copying.", true);
     }
@@ -360,7 +374,7 @@ button, .action-link {
             canvas.getContext("2d").drawImage(bitmap,0,0);
             return new Promise(resolve => canvas.toBlob(resolve,"image/png"));
           });
-      await navigator.clipboard.write([new ClipboardItem({"image/png": pngBlob})]);
+      await BillyActionUI.runCopyFeedback($("copyImage"), () => navigator.clipboard.write([new ClipboardItem({"image/png": pngBlob})]));
       say("Image copied. Paste it wherever images are supported.");
     } catch (error) {
       try {
@@ -382,7 +396,7 @@ button, .action-link {
 
   $("relatedGrid").innerHTML = related.map(item => `
     <a class="related-item"
-       href="mashup.html?left=${encodeURIComponent(item[0])}&right=${encodeURIComponent(item[1])}">
+       href="${BillyMashups.buildUrl(item)}">
       <img loading="lazy" src="${item[4]}" alt="${item[0]} plus ${item[1]} mashup">
       <div>${item[0]} + ${item[1]}</div>
     </a>
@@ -390,6 +404,7 @@ button, .action-link {
 
   $("loading").hidden = true;
   $("content").hidden = false;
+  BillyActionUI.observeBlurblet($("favorite").closest(".info"));
 })();
 </script>
 
