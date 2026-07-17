@@ -163,13 +163,21 @@ button, .action-link {
 </style>
 
 <style>
-#curatorFab{position:fixed;right:18px;bottom:18px;background:#8b4cff;color:#fff;border:none;border-radius:999px;padding:12px 16px;font-weight:bold;box-shadow:0 8px 24px #0008;cursor:pointer;z-index:9999}
-#curatorPanel{position:fixed;top:0;right:-380px;width:340px;height:100%;background:#111428;border-left:1px solid #7f5cff55;padding:18px;transition:right .3s;z-index:9998;overflow:auto}
+#curatorFab{position:fixed;right:18px;bottom:18px;background:#8b4cff;color:#fff;border:none;border-radius:999px;padding:12px 16px;font-weight:bold;box-shadow:0 8px 24px #0008;cursor:pointer;z-index:9999;transition:opacity .2s,transform .2s}
+#curatorFab.hidden{opacity:0;pointer-events:none;transform:translateY(12px)}
+#curatorPanel{position:fixed;top:0;right:-390px;width:min(350px,calc(100vw - 28px));height:100%;box-sizing:border-box;background:#111428;border-left:1px solid #7f5cff55;padding:18px;transition:right .3s;z-index:9998;overflow:auto;box-shadow:-16px 0 40px #0008}
 #curatorPanel.open{right:0}
-#curatorPanel h2{margin-top:0}
-#curatorPanel label{display:block;margin:8px 0}
-#curatorPanel textarea,#curatorPanel input{width:100%;background:#1b203b;color:#fff;border:1px solid #444;padding:8px;border-radius:8px}
-.smallbtn{width:100%;margin:10px 0;padding:8px;border-radius:8px;background:#2d365d;color:#fff;border:none}
+.curator-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.curator-head h2{margin:0}
+#curatorClose{width:40px;height:40px;border-radius:50%;border:1px solid #ffffff22;background:#1b203b;color:#fff;font-size:1.35rem;cursor:pointer}
+#curatorPanel h3{margin:26px 0 12px}
+#exhibitList label{display:flex;align-items:center;gap:10px;margin:10px 0;padding:10px;border-radius:10px;background:#ffffff08}
+#exhibitList input{width:20px;height:20px;flex:0 0 auto;accent-color:#8b4cff}
+#curatorPanel textarea{width:100%;box-sizing:border-box;background:#1b203b;color:#fff;border:1px solid #555b75;padding:10px;border-radius:10px;resize:vertical;font:inherit}
+.smallbtn{width:100%;margin:10px 0;padding:11px;border-radius:10px;background:#2d365d;color:#fff;border:none;font-weight:800;cursor:pointer}
+.smallbtn.primary{background:linear-gradient(90deg,#6d48ff,#a544ef)}
+#curatorStatus{min-height:1.3em;margin:8px 0;color:#8df0b2;font-size:.92rem}
+.curator-note{color:#aaaec1;font-size:.86rem;line-height:1.45}
 </style>
 
 </head>
@@ -365,25 +373,119 @@ button, .action-link {
 })();
 </script>
 
-<button id="curatorFab">🔬 Curator</button>
-<div id="curatorPanel">
-<h2>🔬 Billy Labs Curator</h2>
-<h3>Exhibits</h3>
-<label><input type="checkbox"> 🧬 Mutations</label>
-<label><input type="checkbox"> 🍽️ Forbidden Foods</label>
-<label><input type="checkbox"> 👁️ Extra Eyes</label>
-<label><input type="checkbox"> 👑 Unexpected Royalty</label>
-<button class="smallbtn">➕ Create New Exhibit</button>
-<h3>Blurblet</h3>
-<textarea rows="4" placeholder="Write a Billy Labs Blurblet..."></textarea>
-<h3>Curator Notes</h3>
-<textarea rows="6" placeholder="Private research notes..."></textarea>
-<button class="smallbtn">💾 Save (coming soon)</button>
-</div>
+<button id="curatorFab" type="button">🔬 Curator</button>
+<aside id="curatorPanel" aria-hidden="true" aria-label="Billy Labs Curator">
+  <div class="curator-head">
+    <h2>🔬 Billy Labs Curator</h2>
+    <button id="curatorClose" type="button" aria-label="Close Curator">×</button>
+  </div>
+  <p class="curator-note">Saved privately in this browser on this device.</p>
+  <h3>Exhibits</h3>
+  <div id="exhibitList"></div>
+  <button id="createExhibit" class="smallbtn" type="button">➕ Create New Exhibit</button>
+  <h3>Blurblet</h3>
+  <textarea id="curatorBlurblet" rows="4" placeholder="Write a Billy Labs Blurblet..."></textarea>
+  <h3>Curator Notes</h3>
+  <textarea id="curatorNotes" rows="6" placeholder="Private research notes..."></textarea>
+  <button id="curatorSave" class="smallbtn primary" type="button">💾 Save Curator Entry</button>
+  <div id="curatorStatus" aria-live="polite"></div>
+  <a class="smallbtn" style="display:block;text-align:center;text-decoration:none;box-sizing:border-box" href="curator/">Open Curator Dashboard →</a>
+</aside>
 <script>
-const fab=document.getElementById('curatorFab');
-const panel=document.getElementById('curatorPanel');
-fab.onclick=()=>panel.classList.toggle('open');
+(() => {
+  const fab = document.getElementById('curatorFab');
+  const panel = document.getElementById('curatorPanel');
+  const close = document.getElementById('curatorClose');
+  const list = document.getElementById('exhibitList');
+  const blurblet = document.getElementById('curatorBlurblet');
+  const notes = document.getElementById('curatorNotes');
+  const save = document.getElementById('curatorSave');
+  const create = document.getElementById('createExhibit');
+  const status = document.getElementById('curatorStatus');
+
+  const DEFAULT_EXHIBITS = ['🧬 Mutations','🍽️ Forbidden Foods','👁️ Extra Eyes','👑 Unexpected Royalty'];
+  const EXHIBIT_KEY = 'billy-curator-exhibits-v1';
+  const ENTRY_KEY = 'billy-curator-entries-v1';
+  const params = new URLSearchParams(location.search);
+  const pairKey = [params.get('left') || '', params.get('right') || ''].sort().join('|');
+
+  const readJson = (key, fallback) => {
+    try { return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)); }
+    catch { return fallback; }
+  };
+  const getExhibits = () => {
+    const custom = readJson(EXHIBIT_KEY, []);
+    return [...new Set([...DEFAULT_EXHIBITS, ...custom])];
+  };
+  const getEntries = () => readJson(ENTRY_KEY, {});
+
+  function renderExhibits(selected = []) {
+    list.innerHTML = '';
+    getExhibits().forEach(name => {
+      const label = document.createElement('label');
+      const box = document.createElement('input');
+      box.type = 'checkbox';
+      box.value = name;
+      box.checked = selected.includes(name);
+      label.append(box, document.createTextNode(name));
+      list.appendChild(label);
+    });
+  }
+
+  function loadEntry() {
+    const entry = getEntries()[pairKey] || {};
+    renderExhibits(entry.exhibits || []);
+    blurblet.value = entry.blurblet || '';
+    notes.value = entry.notes || '';
+    status.textContent = entry.updatedAt ? `Last saved ${new Date(entry.updatedAt).toLocaleString()}` : '';
+  }
+
+  function setOpen(open) {
+    panel.classList.toggle('open', open);
+    fab.classList.toggle('hidden', open);
+    panel.setAttribute('aria-hidden', String(!open));
+    if (open) blurblet.focus({preventScroll:true});
+  }
+
+  fab.addEventListener('click', () => setOpen(true));
+  close.addEventListener('click', () => setOpen(false));
+  document.addEventListener('keydown', event => { if (event.key === 'Escape') setOpen(false); });
+
+  create.addEventListener('click', () => {
+    const raw = prompt('Name the new exhibit (emoji optional):');
+    const name = raw && raw.trim();
+    if (!name) return;
+    const custom = readJson(EXHIBIT_KEY, []);
+    if (!getExhibits().includes(name)) {
+      custom.push(name);
+      localStorage.setItem(EXHIBIT_KEY, JSON.stringify(custom));
+    }
+    const selected = [...list.querySelectorAll('input:checked')].map(input => input.value);
+    selected.push(name);
+    renderExhibits([...new Set(selected)]);
+    status.textContent = `Created “${name}”. Save the entry to keep this assignment.`;
+  });
+
+  save.addEventListener('click', () => {
+    if (!pairKey.replace('|','')) {
+      status.textContent = 'This mashup could not be identified.';
+      return;
+    }
+    const entries = getEntries();
+    entries[pairKey] = {
+      left: params.get('left') || '',
+      right: params.get('right') || '',
+      exhibits: [...list.querySelectorAll('input:checked')].map(input => input.value),
+      blurblet: blurblet.value.trim(),
+      notes: notes.value.trim(),
+      updatedAt: new Date().toISOString()
+    };
+    localStorage.setItem(ENTRY_KEY, JSON.stringify(entries));
+    status.textContent = 'Saved on this device. ✓';
+  });
+
+  loadEntry();
+})();
 </script>
 
 </body>
