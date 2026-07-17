@@ -1,152 +1,76 @@
-# Billy Labs Project Log
+# Billy Labs — Project Log
 
-A living record of completed milestones, architectural decisions, and the reasons behind them.
+## Current Version
+v1.9.0 — Collection Control Room Foundation
 
-## Current direction
+## Phase Status
+- Phase 1 — Museum: complete
+- Phase 2 — Progression: foundation active
+- Collection Manager: first functional release
+- Collection Book, living trophies, Trophy Room, achievements, badges, stickers, powers, and community systems: planned
 
-Billy Labs is a living museum of Emoji Kitchen organized around four pillars:
+## v1.9.0 — Collection Control Room Foundation
 
-1. Browse
-2. Learn
-3. Collect
-4. Progress
+### Added
+- `mashup-core.js`: one canonical, unordered two-item mashup ID. Duplicate ingredients remain valid (`🐷|🐷`). Release date is metadata, never identity.
+- `progress-engine.js`: shared seen/favorite storage with migration from legacy date-based IDs.
+- `collections-data.js`: permanent collection IDs, draft data, published snapshots, version numbers, points, tier, secret flag, banner reference, notes, and member lists.
+- Curator Collection Control Room with create, edit, duplicate, delete, backup, import, draft membership editing, and explicit publishing.
+- Versioned publishing: public data changes only when the curator publishes a draft. Further edits remain private until the next publication.
+- Context-preserving collection creation from a mashup page. The current mashup becomes member #1 automatically.
+- Versioned backup filenames and metadata.
 
-Phase 1, the Museum foundation, is complete. Phase 2 focuses on Collections and Trophies.
+### Modified
+- `mashup.html`: canonical seen/favorite progress, collection draft membership, context-preserving creation, and clearer draft/publish language.
+- `curator/index.html`: replaced the simple entry list with the museum control room.
 
----
+### Migration
+- Legacy seen and favorite IDs are normalized into canonical pair IDs.
+- Legacy exhibits become collection drafts on first load.
+- Existing blurblets and private mashup notes remain in the curator entry store.
 
-## 2026-07-17 — v1.8.0 Foundation Release
+## Architectural Decisions
 
-### Canonical mashup identity
+### Canonical Mashup Identity
+A mashup is identified by a normalized two-item pair. Order does not matter; multiplicity does.
 
-Every mashup now has one permanent canonical identity:
+- `🥓 + 🐷` and `🐷 + 🥓` are the same mashup.
+- `🐷 + 🐷` is a valid unique mashup.
+- Dates, image URLs, names, and release batches are metadata.
 
-```text
-normalizedIngredientA|normalizedIngredientB
-```
+### Curator
+The Curator is the museum control room, not a separate duplicate management product. Its eventual sections are Mashups, Collections, Trophies, Import/Export, and Settings.
 
-The two ingredients are sorted into a consistent order. Both positions are preserved, so same-emoji mashups remain valid and distinct:
+### Collections
+- Permanent IDs never change when names change.
+- Editing happens in a private draft.
+- Publishing creates a new immutable public version snapshot.
+- A veteran may earn historical trophy levels tied to versions completed while active. A newcomer begins with the current version and cannot retroactively earn retired version trophies.
 
-```text
-🐷 + 🥓 -> 🐷|🥓
-🥓 + 🐷 -> 🐷|🥓
-🐷 + 🐷 -> 🐷|🐷
-```
+### Reward Ecosystem
+- Collections: what exists in the museum.
+- Trophies: historical collection completion and museum history.
+- Achievements: site milestones, such as first mashup viewed or first collection completed.
+- Badges: community participation, such as voting and writing blurblets.
+- Stars: intentionally reserved until they have a unique purpose.
+- Stickers: playful decorative souvenirs placed anywhere in a Trophy Room.
+- Hidden recognitions: rare acknowledgements whose category may remain unknown until encountered.
 
-Release date is metadata and is no longer part of identity.
+### Mystery and Discovery
+- Unknown recognitions may appear only as shapeless shadows.
+- A player may eventually earn a shrouded trophy case without outsiders knowing its contents or item count.
+- Hidden rewards still contribute points, so score can imply that something unseen happened.
+- Stickers owned by another visitor remain invisible unless the viewer owns them too.
+- Temporary museum powers can alter perception without granting ownership. Example: **Curator's Sight**, which reveals unowned sticker silhouettes for one hour.
+- Goofy easter eggs matter. Example: clicking the Lightning Puppy's nose three times can award a cute sticker and an intentionally arbitrary number of points.
+- Sticker totals and complete secret inventories should not be disclosed.
 
-Dataset verification at the time of this decision:
+### Guiding Principle
+**Wonder is more valuable than information.** Billy Labs should never lie, but it does not need to reveal everything.
 
-- 147,000 mashups checked
-- 413 same-emoji mashups found
-- 0 canonical-ID collisions found
-
-### Existing-progress migration
-
-On first load, legacy Seen and Favorites keys in the format:
-
-```text
-left|right|releaseDate
-```
-
-are automatically converted to canonical pair IDs. Duplicate migrated entries are collapsed without deleting legitimate same-emoji mashups.
-
-### Discovery rule
-
-A mashup is collected only when its full mashup page is opened.
-
-Explorer no longer:
-
-- marks a card as seen directly,
-- permits a discovered mashup to be un-seen,
-- marks a random unseen mashup as collected before its page is opened.
-
-Discovery is append-only during normal browsing. A deliberate full progress reset may be added separately later.
-
-### Shared foundations added
-
-- `mashup-core.js` — canonical identity, local-data migration, and storage helpers
-- `progress-engine.js` — storage-agnostic public progression API
-- `collections-data.js` — initial public collection schema and finalized rarity rules
-
-The progression API is deliberately separated from its current local storage so authenticated accounts and synchronization can replace local storage later without rewriting game rules.
-
-### Finalized collection rarity rules
-
-| Rarity | Reveal rule | Points per collected member | Completion bonus |
-|---|---:|---:|---:|
-| Public | Immediately | 1 | 1 × collection size |
-| Common | After 1 collected | 2 | 2 × collection size |
-| Rare | 25% | 5 | 5 × collection size |
-| Epic | 50% | 10 | 10 × collection size |
-| Legendary | 75% | 25 | 25 × collection size |
-| Mythic | 100% | 50 | 50 × collection size |
-
-A mashup may award points in every collection to which it belongs.
-
-### Living Trophies
-
-Trophy levels are cumulative physical/visual trophies, not replacements. When a collection expands to a new member count, completing that expanded collection earns an additional trophy level and another completion bonus. Earlier trophies remain earned and visible.
-
-### Public progression direction
-
-The Trophy page will publicly display the visitor's points. Future authenticated accounts, synchronized progress, public profiles, and leaderboards remain planned.
-
-### Next milestone
-
-Build the Collection Manager around permanent collection IDs and canonical mashup membership while keeping public collection data separate from private curator notes.
-
----
-
-## 2026-07-17 — v1.8.1 Curator Collections Release
-
-### Curator becomes the museum control room
-
-The Curator dashboard now has three dedicated workspaces:
-
-1. Mashup Editor
-2. Collections
-3. Imports / Exports
-
-The existing mashup-page Curator panel and legacy exhibit assignments remain available. No existing curator workflow was removed.
-
-### Collection Manager added
-
-Curator can now create and edit local collection drafts with:
-
-- permanent collection ID,
-- name,
-- description,
-- rarity,
-- draft or published status,
-- sort order,
-- private curator notes,
-- canonical mashup membership.
-
-Permanent IDs are locked after the collection is first saved. Collection members use the canonical normalized two-ingredient mashup ID established in v1.8.0.
-
-The manager includes mashup search, member addition and removal, collection counts, and membership totals. These drafts remain private in the current browser until exported and added to the published site.
-
-### Public collection export
-
-Curator can export a generated `collections-data.js` containing only collections marked Published. Private curator notes and draft collections are excluded.
-
-### Backup improvements
-
-Private curator backups now:
-
-- use dated descriptive filenames,
-- identify the project and backup format version,
-- include export time and summary counts,
-- include collection drafts,
-- support Merge and Replace import modes.
-
-Example filename:
-
-```text
-BillyLabs-v1.8.1-CuratorBackup-2026-07-17.json
-```
-
-### Next milestone
-
-Test the collection-authoring workflow with the first real curated collection, then connect published collection data to collection progress calculations and the visitor-facing Collection Book.
+## Next Milestones
+1. Test and refine collection draft/publish workflow with real curation.
+2. Build visitor-facing Collection Book from published snapshots only.
+3. Add collection progress and points calculations to the shared progress engine.
+4. Implement living, version-based trophies.
+5. Build the Trophy Room shell and personalization model.

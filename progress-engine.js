@@ -1,39 +1,27 @@
-/* Billy Labs progression API foundation — v1.8.0
-   Storage is local today; the public API is intentionally storage-agnostic for future accounts. */
+/* Billy Labs shared local progress engine — v1 */
 (() => {
-  const core = window.BILLY_MASHUPS;
-  if (!core) throw new Error("mashup-core.js must load before progress-engine.js");
-
-  const SEEN_KEY = "ek-seen";
-  const FAVORITES_KEY = "ek-favorites";
-
-  const readSeen = () => core.readSet(SEEN_KEY);
-  const readFavorites = () => core.readSet(FAVORITES_KEY);
-
-  window.BILLY_PROGRESS = Object.freeze({
-    version: 1,
-    getMashupId: core.canonicalMashupId,
-    getSeen: readSeen,
-    getFavorites: readFavorites,
-    isDiscovered(left, right) {
-      return readSeen().has(core.canonicalMashupId(left, right));
-    },
-    isFavorite(left, right) {
-      return readFavorites().has(core.canonicalMashupId(left, right));
-    },
-    discover(left, right) {
-      const seen = readSeen();
-      const id = core.canonicalMashupId(left, right);
-      seen.add(id);
-      core.writeSet(SEEN_KEY, seen);
-      return id;
-    },
-    setFavorite(left, right, shouldFavorite) {
-      const favorites = readFavorites();
-      const id = core.canonicalMashupId(left, right);
-      if (shouldFavorite) favorites.add(id); else favorites.delete(id);
-      core.writeSet(FAVORITES_KEY, favorites);
-      return shouldFavorite;
-    }
-  });
+  const KEYS={seen:'billy-progress-seen-v1',favorites:'billy-progress-favorites-v1'};
+  const legacy={seen:'ek-seen',favorites:'ek-favorites'};
+  const read=(key,fallback=[])=>{try{return JSON.parse(localStorage.getItem(key)||JSON.stringify(fallback))}catch{return fallback}};
+  const write=(key,value)=>localStorage.setItem(key,JSON.stringify(value));
+  const canonicalizeLegacy = value => {
+    const parts=String(value).split('|');
+    return parts.length>=2 ? BillyMashups.id(parts[0],parts[1]) : value;
+  };
+  function migrate(kind){
+    const current=new Set(read(KEYS[kind],[]));
+    read(legacy[kind],[]).forEach(x=>current.add(canonicalizeLegacy(x)));
+    write(KEYS[kind],[...current]);
+    return current;
+  }
+  const seen=migrate('seen'), favorites=migrate('favorites');
+  const api={
+    version:1,
+    markSeen:(l,r)=>{seen.add(BillyMashups.id(l,r));write(KEYS.seen,[...seen]);},
+    hasSeen:(l,r)=>seen.has(BillyMashups.id(l,r)),
+    toggleFavorite:(l,r)=>{const k=BillyMashups.id(l,r);favorites.has(k)?favorites.delete(k):favorites.add(k);write(KEYS.favorites,[...favorites]);return favorites.has(k)},
+    isFavorite:(l,r)=>favorites.has(BillyMashups.id(l,r)),
+    snapshot:()=>({seen:[...seen],favorites:[...favorites]})
+  };
+  window.BillyProgress=api;
 })();

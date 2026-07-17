@@ -1,0 +1,19 @@
+Billy Labs v1.9.0
+Release: Collection Control Room Foundation
+
+ADDED
+- mashup-core.js
+- progress-engine.js
+- collections-data.js
+- RELEASE-MANIFEST.txt
+
+MODIFIED
+- mashup.html
+- curator/index.html
+- PROJECTLOG.md
+
+CORE BEHAVIOR
+- Canonical unordered pair IDs preserve duplicate ingredients.
+- Legacy seen/favorite IDs migrate automatically.
+- Collections use private drafts and explicit versioned publishing.
+- Creating a collection from a mashup preserves context and adds that mashup first.

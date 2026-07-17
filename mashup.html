@@ -242,12 +242,12 @@ button, .action-link {
 </div>
 
 <script src="emoji-data.js"></script>
-<script src="mashup-core.js"></script>
-<script src="progress-engine.js"></script>
-<script src="collections-data.js"></script>
 <script src="billyisms.js"></script>
 <script src="hidden-categories.js"></script>
 <script src="achievements.js"></script>
+<script src="mashup-core.js"></script>
+<script src="progress-engine.js"></script>
+<script src="collections-data.js"></script>
 <script>
 (() => {
   const all = window.EMOJI_KITCHEN_DATA || [];
@@ -256,9 +256,7 @@ button, .action-link {
   const params = new URLSearchParams(location.search);
   const left = params.get("left") || "";
   const right = params.get("right") || "";
-  const keyOf = row => window.BILLY_PROGRESS.getMashupId(row[0], row[1]);
-  const favorites = window.BILLY_PROGRESS.getFavorites();
-  const seen = window.BILLY_PROGRESS.getSeen();
+  const keyOf = row => BillyMashups.id(row[0], row[1]);
 
   const prettyDate = s => `${s.slice(0,4)}-${s.slice(4,6)}-${s.slice(6,8)}`;
   const prettyName = s => s
@@ -289,8 +287,7 @@ button, .action-link {
   }
 
   const key = keyOf(row);
-  seen.add(key);
-  window.BILLY_MASHUPS.writeSet("ek-seen", seen);
+  BillyProgress.markSeen(row[0], row[1]);
 
   $("image").src = row[4];
   $("image").alt = `${row[0]} plus ${row[1]} Emoji Kitchen mashup`;
@@ -316,15 +313,14 @@ button, .action-link {
   }
 
   function updateFavorite() {
-    $("favorite").textContent = favorites.has(key) ? "★ Favorited" : "☆ Favorite";
+    $("favorite").textContent = BillyProgress.isFavorite(row[0], row[1]) ? "★ Favorited" : "☆ Favorite";
   }
   updateFavorite();
 
   $("favorite").addEventListener("click", () => {
-    favorites.has(key) ? favorites.delete(key) : favorites.add(key);
-    window.BILLY_MASHUPS.writeSet("ek-favorites", favorites);
+    const active = BillyProgress.toggleFavorite(row[0], row[1]);
     updateFavorite();
-    say(favorites.has(key) ? "Added to favorites." : "Removed from favorites.");
+    say(active ? "Added to favorites." : "Removed from favorites.");
   });
 
   $("copyPair").addEventListener("click", async () => {
@@ -399,126 +395,20 @@ button, .action-link {
 
 <button id="curatorFab" type="button">🔬 Curator</button>
 <aside id="curatorPanel" aria-hidden="true" aria-label="Billy Labs Curator">
-  <div class="curator-head">
-    <h2>🔬 Billy Labs Curator</h2>
-    <button id="curatorClose" type="button" aria-label="Close Curator">×</button>
-  </div>
-  <p class="curator-note">Saved privately in this browser on this device.</p>
-  <h3>Exhibits</h3>
-  <div id="exhibitList"></div>
-  <button id="createExhibit" class="smallbtn" type="button">➕ Create New Exhibit</button>
-  <h3>Blurblet</h3>
-  <textarea id="curatorBlurblet" rows="4" placeholder="Write a Billy Labs Blurblet..."></textarea>
-  <h3>Curator Notes</h3>
-  <textarea id="curatorNotes" rows="6" placeholder="Private research notes..."></textarea>
-  <button id="curatorSave" class="smallbtn primary" type="button">💾 Save Curator Entry</button>
-  <div id="curatorStatus" aria-live="polite"></div>
-  <a class="smallbtn" style="display:block;text-align:center;text-decoration:none;box-sizing:border-box" href="curator/">Open Curator Dashboard →</a>
-</aside>
+<div class="curator-head"><h2>🔬 Billy Labs Curator</h2><button id="curatorClose" type="button" aria-label="Close Curator">×</button></div>
+<p class="curator-note">Edit private collection drafts here. Nothing goes public until you publish it from the Curator dashboard.</p>
+<h3>Collection drafts</h3><div id="exhibitList"></div>
+<button id="createExhibit" class="smallbtn" type="button">➕ New Collection with This Mashup</button>
+<h3>Blurblet</h3><textarea id="curatorBlurblet" rows="4" placeholder="Write a public Billy Labs Blurblet..."></textarea>
+<h3>Curator Notes</h3><textarea id="curatorNotes" rows="5" placeholder="Private research notes..."></textarea>
+<button id="curatorSave" class="smallbtn primary" type="button">💾 Save Mashup & Draft Memberships</button><div id="curatorStatus" aria-live="polite"></div>
+<a class="smallbtn" style="display:block;text-align:center;text-decoration:none;box-sizing:border-box" href="curator/">Open Curator Control Room →</a></aside>
 <script>
-(() => {
-  const fab = document.getElementById('curatorFab');
-  const panel = document.getElementById('curatorPanel');
-  const close = document.getElementById('curatorClose');
-  const list = document.getElementById('exhibitList');
-  const blurblet = document.getElementById('curatorBlurblet');
-  const notes = document.getElementById('curatorNotes');
-  const save = document.getElementById('curatorSave');
-  const create = document.getElementById('createExhibit');
-  const status = document.getElementById('curatorStatus');
-
-  const DEFAULT_EXHIBITS = ['🧬 Mutations','🍽️ Forbidden Foods','👁️ Extra Eyes','👑 Unexpected Royalty'];
-  const EXHIBIT_KEY = 'billy-curator-exhibits-v1';
-  const ENTRY_KEY = 'billy-curator-entries-v1';
-  const params = new URLSearchParams(location.search);
-  const pairKey = [params.get('left') || '', params.get('right') || ''].sort().join('|');
-
-  const readJson = (key, fallback) => {
-    try { return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)); }
-    catch { return fallback; }
-  };
-  const getExhibits = () => {
-    const custom = readJson(EXHIBIT_KEY, []);
-    return [...new Set([...DEFAULT_EXHIBITS, ...custom])];
-  };
-  const getEntries = () => readJson(ENTRY_KEY, {});
-
-  function renderExhibits(selected = []) {
-    list.innerHTML = '';
-    getExhibits().forEach(name => {
-      const label = document.createElement('label');
-      const box = document.createElement('input');
-      box.type = 'checkbox';
-      box.value = name;
-      box.checked = selected.includes(name);
-      label.append(box, document.createTextNode(name));
-      list.appendChild(label);
-    });
-  }
-
-  function loadEntry() {
-    const entry = getEntries()[pairKey] || {};
-    renderExhibits(entry.exhibits || []);
-    blurblet.value = entry.blurblet || '';
-    notes.value = entry.notes || '';
-    const pub = document.getElementById('publicBlurblet');
-    const text = (entry.blurblet || '').trim();
-    pub.textContent = text;
-    pub.hidden = !text;
-    status.textContent = entry.updatedAt ? `Last saved ${new Date(entry.updatedAt).toLocaleString()}` : '';
-  }
-
-  function setOpen(open) {
-    panel.classList.toggle('open', open);
-    fab.classList.toggle('hidden', open);
-    panel.setAttribute('aria-hidden', String(!open));
-    if (open) blurblet.focus({preventScroll:true});
-  }
-
-  fab.addEventListener('click', () => setOpen(true));
-  close.addEventListener('click', () => setOpen(false));
-  document.addEventListener('keydown', event => { if (event.key === 'Escape') setOpen(false); });
-
-  create.addEventListener('click', () => {
-    const raw = prompt('Name the new exhibit (emoji optional):');
-    const name = raw && raw.trim();
-    if (!name) return;
-    const custom = readJson(EXHIBIT_KEY, []);
-    if (!getExhibits().includes(name)) {
-      custom.push(name);
-      localStorage.setItem(EXHIBIT_KEY, JSON.stringify(custom));
-    }
-    const selected = [...list.querySelectorAll('input:checked')].map(input => input.value);
-    selected.push(name);
-    renderExhibits([...new Set(selected)]);
-    status.textContent = `Created “${name}”. Save the entry to keep this assignment.`;
-  });
-
-  save.addEventListener('click', () => {
-    if (!pairKey.replace('|','')) {
-      status.textContent = 'This mashup could not be identified.';
-      return;
-    }
-    const entries = getEntries();
-    entries[pairKey] = {
-      left: params.get('left') || '',
-      right: params.get('right') || '',
-      exhibits: [...list.querySelectorAll('input:checked')].map(input => input.value),
-      blurblet: blurblet.value.trim(),
-      notes: notes.value.trim(),
-      updatedAt: new Date().toISOString()
-    };
-    localStorage.setItem(ENTRY_KEY, JSON.stringify(entries));
-    const pub = document.getElementById('publicBlurblet');
-    const text = entries[pairKey].blurblet;
-    pub.textContent = text;
-    pub.hidden = !text;
-    status.textContent = 'Saved on this device. ✓';
-  });
-
-  loadEntry();
-})();
+(()=>{const $=id=>document.getElementById(id),fab=$('curatorFab'),panel=$('curatorPanel'),list=$('exhibitList'),status=$('curatorStatus');const params=new URLSearchParams(location.search),left=params.get('left')||'',right=params.get('right')||'',pairKey=BillyMashups.id(left,right),ENTRY_KEY='billy-curator-entries-v1';const read=(k,f)=>{try{return JSON.parse(localStorage.getItem(k)||JSON.stringify(f))}catch{return f}};const entries=()=>read(ENTRY_KEY,{});
+function collections(){return BillyCollections.list()}function render(){const selected=new Set(collections().filter(c=>(c.draft?.members||[]).includes(pairKey)).map(c=>c.id));list.innerHTML=collections().map(c=>`<label><input type="checkbox" value="${c.id}" ${selected.has(c.id)?'checked':''}> ${c.icon} ${c.name} <small>(${c.status==='published'?'published + draft':'draft'})</small></label>`).join('')||'<p class="curator-note">No collections yet.</p>';const e=entries()[pairKey]||{};$('curatorBlurblet').value=e.blurblet||'';$('curatorNotes').value=e.notes||''}
+function open(v){panel.classList.toggle('open',v);fab.classList.toggle('hidden',v);panel.setAttribute('aria-hidden',String(!v))}fab.onclick=()=>{render();open(true)};$('curatorClose').onclick=()=>open(false);document.addEventListener('keydown',e=>{if(e.key==='Escape')open(false)});
+$('createExhibit').onclick=()=>{const raw=prompt('Name the new collection:');if(!raw?.trim())return;const rows=collections(),c=BillyCollections.blank(raw.trim(),'🗂️');c.draft.members=[pairKey];rows.push(c);BillyCollections.save(rows);render();status.textContent=`Created “${c.name}” as a private draft with this mashup as member #1.`};
+$('curatorSave').onclick=()=>{const rows=collections(),checked=new Set([...list.querySelectorAll('input:checked')].map(x=>x.value));rows.forEach(c=>{c.draft=c.draft||{members:[]};const set=new Set(c.draft.members||[]);checked.has(c.id)?set.add(pairKey):set.delete(pairKey);c.draft.members=[...set];c.updatedAt=new Date().toISOString()});BillyCollections.save(rows);const all=entries();all[pairKey]={left,right,blurblet:$('curatorBlurblet').value.trim(),notes:$('curatorNotes').value.trim(),updatedAt:new Date().toISOString()};localStorage.setItem(ENTRY_KEY,JSON.stringify(all));const pub=$('publicBlurblet'),text=all[pairKey].blurblet;pub.textContent=text;pub.hidden=!text;status.textContent='Saved. Collection changes remain in draft until published.'};})();
 </script>
-
 </body>
 </html>
