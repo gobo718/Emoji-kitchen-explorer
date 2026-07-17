@@ -464,6 +464,10 @@ footer {
   }
 }
 
+
+  .page-jump { width:5.2em; min-height:38px; padding:4px 8px; border:1px solid var(--border); border-radius:10px; background:var(--panel-strong); color:var(--text); font:inherit; font-weight:850; text-align:center; }
+  .page-jump:focus { outline:2px solid var(--accent); outline-offset:2px; }
+  .page-of { color:var(--muted); font-weight:750; }
 </style>
 </head>
 <body>
@@ -528,7 +532,7 @@ footer {
     <div id="app" hidden>
       <div class="toolbar">
         <div class="page-copy">
-          <strong id="pageInfo"></strong><input id="pageJumpTop" type="number" min="1" style="width:5em;margin-left:8px;background:var(--panel-strong);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:2px 6px;">
+          <span>Page <input class="page-jump" id="pageJumpTop" type="number" min="1" inputmode="numeric" aria-label="Jump to page"> <span class="page-of" id="pageInfo"></span></span>
           <span id="rangeInfo"></span>
         </div>
         <div class="pager">
@@ -540,7 +544,7 @@ footer {
       <section class="grid" id="grid"></section>
 
       <div class="toolbar" style="margin-top:14px">
-        <div class="page-copy"><strong id="pageInfoBottom"></strong><input id="pageJumpBottom" type="number" min="1" style="width:5em;margin-left:8px;background:var(--panel-strong);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:2px 6px;"></div>
+        <div class="page-copy"><span>Page <input class="page-jump" id="pageJumpBottom" type="number" min="1" inputmode="numeric" aria-label="Jump to page"> <span class="page-of" id="pageInfoBottom"></span></span></div>
         <div class="pager">
           <button id="previousBottom" type="button">← Previous</button>
           <button id="nextBottom" class="next" type="button">Next →</button>
@@ -639,26 +643,15 @@ footer {
     const visible = filtered.slice(start, start + PAGE_SIZE);
     const end = start + visible.length;
 
-    $("pageInfo").textContent = `Page ${page + 1} of ${pages.toLocaleString()}`;
-    $("pageInfoBottom").textContent = `Page ${page + 1} of ${pages.toLocaleString()}`;
+    $("pageInfo").textContent = `of ${pages.toLocaleString()}`;
+    $("pageInfoBottom").textContent = `of ${pages.toLocaleString()}`;
+    $("pageJumpTop").value = page + 1;
+    $("pageJumpBottom").value = page + 1;
+    $("pageJumpTop").max = pages;
+    $("pageJumpBottom").max = pages;
     $("rangeInfo").textContent = filtered.length ? `Showing ${start + 1}–${end} of ${filtered.length.toLocaleString()}` : "No results";
     ["previousTop","previousBottom"].forEach(id => $(id).disabled = page === 0);
     ["nextTop","nextBottom"].forEach(id => $(id).disabled = page >= pages - 1);
-["pageJumpTop","pageJumpBottom"].forEach(id=>{
- const el=$(id); if(!el)return;
- el.value=page+1; el.max=pages;
- if(!el.dataset.bound){
-  el.dataset.bound=1;
-  el.addEventListener("focus",()=>el.select());
-  el.addEventListener("change",()=>{
-    let p=parseInt(el.value,10);
-    if(isNaN(p)) {el.value=page+1;return;}
-    p=Math.max(1,Math.min(p,pages));
-    page=p-1;
-    render();
-  });
- }
-});
 
     if (!visible.length) {
       const query = $("search").value.trim();
@@ -764,6 +757,30 @@ footer {
   });
   ["previousTop","previousBottom"].forEach(id => $(id).addEventListener("click", () => turnPage(-1)));
   ["nextTop","nextBottom"].forEach(id => $(id).addEventListener("click", () => turnPage(1)));
+  ["pageJumpTop","pageJumpBottom"].forEach(id => {
+    const input = $(id);
+    input.addEventListener("focus", () => input.select());
+    input.addEventListener("keydown", event => {
+      if (event.key !== "Enter") return;
+      event.preventDefault();
+      const pages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+      const requested = Number.parseInt(input.value, 10);
+      if (!Number.isFinite(requested)) { render(); return; }
+      page = Math.max(0, Math.min(requested - 1, pages - 1));
+      saveExplorerState();
+      render();
+      $("browser").scrollIntoView({behavior:"smooth", block:"start"});
+      input.blur();
+    });
+    input.addEventListener("change", () => {
+      const pages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+      const requested = Number.parseInt(input.value, 10);
+      if (!Number.isFinite(requested)) { render(); return; }
+      page = Math.max(0, Math.min(requested - 1, pages - 1));
+      saveExplorerState();
+      render();
+    });
+  });
 
   const params = new URLSearchParams(location.search);
   const requestedSearch = params.get("search");
