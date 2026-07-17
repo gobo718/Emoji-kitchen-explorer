@@ -21,6 +21,11 @@
     hasSeen:(l,r)=>seen.has(BillyMashups.id(l,r)),
     toggleFavorite:(l,r)=>{const k=BillyMashups.id(l,r);favorites.has(k)?favorites.delete(k):favorites.add(k);write(KEYS.favorites,[...favorites]);return favorites.has(k)},
     isFavorite:(l,r)=>favorites.has(BillyMashups.id(l,r)),
+    getSeen:()=>seen,
+    getFavorites:()=>favorites,
+    getMashupId:(l,r)=>BillyMashups.id(l,r),
+    replaceSeen:values=>{seen.clear();for(const v of values)seen.add(canonicalizeLegacy(v));write(KEYS.seen,[...seen]);write(legacy.seen,[...seen]);},
+    replaceFavorites:values=>{favorites.clear();for(const v of values)favorites.add(canonicalizeLegacy(v));write(KEYS.favorites,[...favorites]);write(legacy.favorites,[...favorites]);},
     snapshot:()=>({seen:[...seen],favorites:[...favorites]})
   };
   window.BillyProgress=api;

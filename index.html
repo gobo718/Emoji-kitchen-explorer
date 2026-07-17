@@ -449,7 +449,7 @@ footer {
     </div>
 
     <div class="footer-right">
-      <div>Made by Billy 💜 · v1.9.0</div>
+      <div>Made by Billy 💜 · v1.9.2</div>
       <div>Made with 🧪 and 💜</div>
     </div>
   </footer>
@@ -484,14 +484,20 @@ footer {
   }
 
 
-  const seen = window.BILLY_PROGRESS.getSeen();
-  $("homeSeenCount").textContent = seen.size.toLocaleString();
-  $("homePercent").textContent = `${((seen.size / all.length) * 100).toFixed(seen.size ? 2 : 0)}%`;
-
   if (!all.length) {
     $("loading").textContent = "The kitchen data could not be loaded.";
     return;
   }
+
+  // Daily Pick must never disappear because progress storage is unavailable.
+  let seen = new Set();
+  try {
+    seen = window.BillyProgress?.getSeen?.() || new Set();
+  } catch (error) {
+    console.warn("Progress could not be read on the home page.", error);
+  }
+  $("homeSeenCount").textContent = seen.size.toLocaleString();
+  $("homePercent").textContent = `${((seen.size / all.length) * 100).toFixed(seen.size ? 2 : 0)}%`;
 
   const row = all[dailyIndex(all.length)];
   $("dailyImage").src = row[4];
@@ -513,8 +519,15 @@ footer {
   const detailUrl = `mashup.html?left=${encodeURIComponent(row[0])}&right=${encodeURIComponent(row[1])}`;
   $("viewPick").href = `explorer.html?search=${encodeURIComponent(row[0] + " " + row[1])}`;
 
-  const dailyKey = window.BILLY_PROGRESS.getMashupId(row[0], row[1]);
-  const dailyFavorites = window.BILLY_PROGRESS.getFavorites();
+  const dailyKey = window.BillyProgress?.getMashupId?.(row[0], row[1])
+    || window.BillyMashups?.id?.(row[0], row[1])
+    || [row[0], row[1]].sort().join("|");
+  let dailyFavorites = new Set();
+  try {
+    dailyFavorites = window.BillyProgress?.getFavorites?.() || new Set();
+  } catch (error) {
+    console.warn("Favorites could not be read on the home page.", error);
+  }
   const sayDaily = (message, error = false) => {
     $("dailyStatus").textContent = message;
     $("dailyStatus").style.color = error ? "#ff9ea8" : "#8df0b2";
@@ -526,7 +539,15 @@ footer {
 
   $("dailyFavorite").addEventListener("click", () => {
     dailyFavorites.has(dailyKey) ? dailyFavorites.delete(dailyKey) : dailyFavorites.add(dailyKey);
-    window.BILLY_MASHUPS.writeSet("ek-favorites", dailyFavorites);
+    try {
+      if (window.BillyProgress?.replaceFavorites) {
+        window.BillyProgress.replaceFavorites(dailyFavorites);
+      } else {
+        localStorage.setItem("ek-favorites", JSON.stringify([...dailyFavorites]));
+      }
+    } catch (error) {
+      console.warn("Favorite could not be saved.", error);
+    }
     updateDailyFavorite();
     sayDaily(dailyFavorites.has(dailyKey) ? "Added to favorites." : "Removed from favorites.");
   });

@@ -1,7 +1,15 @@
+
+## v1.9.2 — Daily Pick Resilience Hotfix
+
+- Restored Billy’s Daily Pick on the public home page.
+- Made the Daily Pick render independently of progress and favorites storage.
+- Added safe fallbacks so a storage migration or progress-engine error cannot hide the entire feature.
+- Preserved the v1.9.1 discovery repair and public/dev Curator separation.
+
 # Billy Labs — Project Log
 
 ## Current Version
-v1.9.0 — Collection Control Room Foundation
+v1.9.1 — Collection Control Room Foundation
 
 ## Phase Status
 - Phase 1 — Museum: complete
@@ -9,7 +17,7 @@ v1.9.0 — Collection Control Room Foundation
 - Collection Manager: first functional release
 - Collection Book, living trophies, Trophy Room, achievements, badges, stickers, powers, and community systems: planned
 
-## v1.9.0 — Collection Control Room Foundation
+## v1.9.1 — Collection Control Room Foundation
 
 ### Added
 - `mashup-core.js`: one canonical, unordered two-item mashup ID. Duplicate ingredients remain valid (`🐷|🐷`). Release date is metadata, never identity.
@@ -75,6 +83,6 @@ The Curator is the museum control room, not a separate duplicate management prod
 4. Implement living, version-based trophies.
 5. Build the Trophy Room shell and personalization model.
 
-## 2026-07-17 — Corrected v1.9.0 build provenance
+## 2026-07-17 — Corrected v1.9.1 build provenance
 
 This package was rebuilt from the verified v1.8.0 foundation branch rather than the older v1.7.2d branch. The v1.8.0 public site behavior and working Discovery flow are retained. Curator controls remain hidden on ordinary public hosts and are available on development hosts or with the explicit `?curator=1` query parameter.

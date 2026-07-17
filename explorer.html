@@ -578,8 +578,8 @@ footer {
 (() => {
   const PAGE_SIZE = 100;
   const all = window.EMOJI_KITCHEN_DATA || [];
-  const seen = window.BILLY_PROGRESS.getSeen();
-  const favorites = window.BILLY_PROGRESS.getFavorites();
+  const seen = window.BillyProgress.getSeen();
+  const favorites = window.BillyProgress.getFavorites();
   const curatorEntries = (() => {
     try { return JSON.parse(localStorage.getItem("billy-curator-entries-v1") || "{}"); }
     catch { return {}; }
@@ -588,15 +588,15 @@ footer {
   let filtered = all.slice();
 
   const $ = id => document.getElementById(id);
-  const keyOf = row => window.BILLY_PROGRESS.getMashupId(row[0], row[1]);
+  const keyOf = row => window.BillyProgress.getMashupId(row[0], row[1]);
   const prettyDate = s => `${s.slice(0,4)}-${s.slice(4,6)}-${s.slice(6,8)}`;
   const escapeHtml = s => String(s).replace(/[&<>"']/g, c => ({
     "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
   })[c]);
 
   function save() {
-    localStorage.setItem("ek-seen", JSON.stringify([...seen]));
-    localStorage.setItem("ek-favorites", JSON.stringify([...favorites]));
+    window.BillyProgress.replaceSeen(seen);
+    window.BillyProgress.replaceFavorites(favorites);
   }
 
   function saveExplorerState() {

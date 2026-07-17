@@ -1,26 +1,13 @@
-Billy Labs v1.9.0 — Corrected Collection Control Room
+Billy Labs v1.9.2 — Daily Pick Resilience Hotfix
 
-BASELINE
-- Verified Billy Labs v1.8.0 foundation branch
+Baseline: v1.9.1 Discovery Repair
 
-ADDED
-- mashup-core.js
-- progress-engine.js
-- collections-data.js
-- RELEASE-MANIFEST.txt
-
-MODIFIED
-- curator/index.html
-- mashup.html
+Modified:
 - index.html
 - PROJECTLOG.md
+- RELEASE-MANIFEST.txt
+- version labels in HTML files
 
-PRESERVED FROM v1.8.0
-- explorer.html and its working Show Me Something New flow
-- public/dev Curator separation
-- all museum pages and data files
-
-VERIFICATION
-- JavaScript syntax checked
-- ZIP extraction tested
-- visible site version: v1.9.0
+Fixes:
+- Billy’s Daily Pick no longer disappears when progress/favorites storage throws an error.
+- Daily Pick data and artwork initialize before optional progress integrations.
