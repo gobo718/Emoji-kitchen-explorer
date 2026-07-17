@@ -63,6 +63,8 @@ a { color:inherit; }
 .pair { font-size:2.5rem; }
 h1 { margin:10px 0 4px; font-size:clamp(1.8rem,6vw,3rem); }
 .meta { color:var(--muted); }
+.public-blurblet { margin:.35rem 0 .75rem; text-align:right; font-style:italic; color:#d8cee3; }
+.public-blurblet[hidden] { display:none; }
 .billyism {
   margin-top:12px; color:#c9bfd4; font-size:.78rem;
   font-style:italic;
@@ -213,6 +215,7 @@ button, .action-link {
         <div class="pair" id="pair"></div>
         <h1 id="title"></h1>
         <div class="meta" id="release"></div>
+        <div class="public-blurblet" id="publicBlurblet" hidden></div>
         <div class="billyism" id="billyism" hidden></div>
 
         <div class="actions">
@@ -285,6 +288,16 @@ button, .action-link {
   $("pair").innerHTML = `<a class="emoji-link" href="emoji.html?emoji=${encodeURIComponent(row[0])}" aria-label="Explore ${row[0]}">${row[0]}</a> + <a class="emoji-link" href="emoji.html?emoji=${encodeURIComponent(row[1])}" aria-label="Explore ${row[1]}">${row[1]}</a>`;
   $("title").textContent = prettyName(row[2]);
   $("release").textContent = `Released ${prettyDate(row[3])}`;
+  const curatorPairKey = [row[0], row[1]].sort().join("|");
+  const curatorEntries = (() => {
+    try { return JSON.parse(localStorage.getItem("billy-curator-entries-v1") || "{}"); }
+    catch { return {}; }
+  })();
+  const publicBlurblet = curatorEntries[curatorPairKey]?.blurblet?.trim() || "";
+  if (publicBlurblet) {
+    $("publicBlurblet").textContent = publicBlurblet;
+    $("publicBlurblet").hidden = false;
+  }
   document.title = `${row[0]} + ${row[1]} · Emoji Kitchen Explorer`;
 
   const note = noteFor(row[0],row[1]);
@@ -381,7 +394,7 @@ button, .action-link {
     <h2>🔬 Billy Labs Curator</h2>
     <button id="curatorClose" type="button" aria-label="Close Curator">×</button>
   </div>
-  <p class="curator-note">Saved privately in this browser on this device.</p><section id="publicBlurblet" style="display:none;margin:.35rem 18px .75rem auto;text-align:right;"><p id="publicBlurbletText" style="margin:0;font-style:italic;"></p></section>
+  <p class="curator-note">Saved privately in this browser on this device.</p>
   <h3>Exhibits</h3>
   <div id="exhibitList"></div>
   <button id="createExhibit" class="smallbtn" type="button">➕ Create New Exhibit</button>
@@ -439,8 +452,10 @@ button, .action-link {
     renderExhibits(entry.exhibits || []);
     blurblet.value = entry.blurblet || '';
     notes.value = entry.notes || '';
-    const pub=document.getElementById('publicBlurblet'); const pubt=document.getElementById('publicBlurbletText');
-    if(entry.blurblet){pub.style.display='block';pubt.textContent=entry.blurblet;}else{pub.style.display='none';pubt.textContent='';}
+    const pub = document.getElementById('publicBlurblet');
+    const text = (entry.blurblet || '').trim();
+    pub.textContent = text;
+    pub.hidden = !text;
     status.textContent = entry.updatedAt ? `Last saved ${new Date(entry.updatedAt).toLocaleString()}` : '';
   }
 
@@ -485,6 +500,10 @@ button, .action-link {
       updatedAt: new Date().toISOString()
     };
     localStorage.setItem(ENTRY_KEY, JSON.stringify(entries));
+    const pub = document.getElementById('publicBlurblet');
+    const text = entries[pairKey].blurblet;
+    pub.textContent = text;
+    pub.hidden = !text;
     status.textContent = 'Saved on this device. ✓';
   });
 

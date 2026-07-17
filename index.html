@@ -160,6 +160,8 @@ a { color:inherit; text-decoration:none; }
   font-size:clamp(1.7rem,5vw,2.5rem);
 }
 .name { color:var(--muted); font-size:1rem; }
+.daily-blurblet { margin:.35rem 0 .75rem; text-align:right; font-style:italic; color:#d8cee3; }
+.daily-blurblet[hidden] { display:none; }
 .release { margin-top:8px; color:#9f97ad; font-size:.8rem; }
 .billyism {
   margin-top:9px;
@@ -337,6 +339,7 @@ footer {
           <h2 id="dailyTitle"></h2>
           <div class="name" id="dailyName"></div>
           <div class="release" id="dailyRelease"></div>
+          <div class="daily-blurblet" id="dailyBlurblet" hidden></div>
           <div class="billyism" id="dailyBillyism" hidden></div>
           <a class="explore-button" id="viewPick" href="explorer.html">View in Explorer →</a>
         </div>
@@ -404,7 +407,7 @@ footer {
     </div>
 
     <div class="footer-right">
-      <div>Made by Billy 💜 · v1.7.1</div>
+      <div>Made by Billy 💜 · v1.7.2b</div>
       <div>Made with 🧪 and 💜</div>
     </div>
   </footer>
@@ -452,6 +455,16 @@ footer {
   $("dailyTitle").textContent = titleCase(row[2]);
   $("dailyName").textContent = "One tiny experiment, completely overproduced.";
   $("dailyRelease").textContent = `Released ${prettyDate(row[3])}`;
+  const curatorEntries = (() => {
+    try { return JSON.parse(localStorage.getItem("billy-curator-entries-v1") || "{}"); }
+    catch { return {}; }
+  })();
+  const dailyPairKey = [row[0], row[1]].sort().join("|");
+  const dailyBlurblet = curatorEntries[dailyPairKey]?.blurblet?.trim() || "";
+  if (dailyBlurblet) {
+    $("dailyBlurblet").textContent = dailyBlurblet;
+    $("dailyBlurblet").hidden = false;
+  }
   $("viewPick").href = `explorer.html?search=${encodeURIComponent(row[0] + " " + row[1])}`;
 
   const note = getNote(row[0],row[1]);
