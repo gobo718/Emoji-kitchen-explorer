@@ -37,6 +37,9 @@
     if (!copyLabel || !favoriteLabel || !blurblet || blurblet.hidden) return;
 
     blurblet.style.removeProperty('right');
+    blurblet.style.removeProperty('left');
+    blurblet.style.removeProperty('transform');
+    blurblet.style.removeProperty('width');
     blurblet.style.removeProperty('margin-left');
     blurblet.style.removeProperty('margin-right');
 
@@ -46,10 +49,16 @@
     const sameRow = Math.abs(copyRect.top - favoriteRect.top) < Math.max(copyRect.height, favoriteRect.height) * 0.6;
     if (!sameRow || groupRect.width < 360) return;
 
+    // Put the blurblet's RIGHT edge on the optical guide halfway
+    // between the rendered ends of the two button labels.
     const guideX = ((copyRect.right + favoriteRect.right) / 2) - groupRect.left;
-    const right = Math.max(0, groupRect.width - guideX);
-    blurblet.style.marginLeft = 'auto';
-    blurblet.style.marginRight = `${right}px`;
+    blurblet.style.width = 'max-content';
+    blurblet.style.maxWidth = `${Math.max(0, guideX)}px`;
+    blurblet.style.marginLeft = '0';
+    blurblet.style.marginRight = '0';
+    blurblet.style.position = 'relative';
+    blurblet.style.left = `${guideX}px`;
+    blurblet.style.transform = 'translateX(-100%)';
   }
 
   function observeBlurblet(group) {

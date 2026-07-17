@@ -535,7 +535,7 @@ footer {
     || [row[0], row[1]].sort().join("|");
   let dailyFavorites = new Set();
   try {
-    dailyFavorites = window.BillyProgress?.getFavorites?.() || new Set();
+    dailyFavorites = new Set(window.BillyProgress?.getFavorites?.() || []);
   } catch (error) {
     console.warn("Favorites could not be read on the home page.", error);
   }
