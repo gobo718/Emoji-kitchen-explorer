@@ -161,6 +161,17 @@ button, .action-link {
   .emoji-link { color:inherit; text-decoration:none; border-radius:12px; padding:.04em .08em; transition:background .15s ease, transform .15s ease; display:inline-block; }
   .emoji-link:hover,.emoji-link:focus-visible { background:rgba(139,92,255,.18); transform:translateY(-2px); outline:none; }
 </style>
+
+<style>
+#curatorFab{position:fixed;right:18px;bottom:18px;background:#8b4cff;color:#fff;border:none;border-radius:999px;padding:12px 16px;font-weight:bold;box-shadow:0 8px 24px #0008;cursor:pointer;z-index:9999}
+#curatorPanel{position:fixed;top:0;right:-380px;width:340px;height:100%;background:#111428;border-left:1px solid #7f5cff55;padding:18px;transition:right .3s;z-index:9998;overflow:auto}
+#curatorPanel.open{right:0}
+#curatorPanel h2{margin-top:0}
+#curatorPanel label{display:block;margin:8px 0}
+#curatorPanel textarea,#curatorPanel input{width:100%;background:#1b203b;color:#fff;border:1px solid #444;padding:8px;border-radius:8px}
+.smallbtn{width:100%;margin:10px 0;padding:8px;border-radius:8px;background:#2d365d;color:#fff;border:none}
+</style>
+
 </head>
 <body>
 <div class="shell">
@@ -353,5 +364,27 @@ button, .action-link {
   $("content").hidden = false;
 })();
 </script>
+
+<button id="curatorFab">🔬 Curator</button>
+<div id="curatorPanel">
+<h2>🔬 Billy Labs Curator</h2>
+<h3>Exhibits</h3>
+<label><input type="checkbox"> 🧬 Mutations</label>
+<label><input type="checkbox"> 🍽️ Forbidden Foods</label>
+<label><input type="checkbox"> 👁️ Extra Eyes</label>
+<label><input type="checkbox"> 👑 Unexpected Royalty</label>
+<button class="smallbtn">➕ Create New Exhibit</button>
+<h3>Blurblet</h3>
+<textarea rows="4" placeholder="Write a Billy Labs Blurblet..."></textarea>
+<h3>Curator Notes</h3>
+<textarea rows="6" placeholder="Private research notes..."></textarea>
+<button class="smallbtn">💾 Save (coming soon)</button>
+</div>
+<script>
+const fab=document.getElementById('curatorFab');
+const panel=document.getElementById('curatorPanel');
+fab.onclick=()=>panel.classList.toggle('open');
+</script>
+
 </body>
 </html>
