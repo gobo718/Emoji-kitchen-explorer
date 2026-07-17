@@ -1,18 +1,16 @@
-Billy Labs v1.9.2b — Final UI Polish
+Billy Labs v2.0.0 — The Collection Update
 
-Modified files:
-- index.html
-- explorer.html
-- mashup.html
-- mashup-core.js
-- action-ui.js
+Source baseline: Billy-Labs-v1.9.2b-final-polish-complete.zip
+
+New public feature:
+- collection-book.html
+- Emoji-keyboard category organization
+- Per-emoji album pages
+- Mashups indexed under both ingredient emoji
+- Discovered/revealed and undiscovered/shrouded states
+- Overall and per-page completion tracking
+
+Updated:
+- index.html (Collection entry point and visible v2.0.0)
 - PROJECTLOG.md
-- RELEASE-MANIFEST.txt
-
-Scope:
-- Surprise Me opens its selected mashup detail page directly using the existing random pool.
-- Public action blurblets use shared optical alignment based on Copy emojis and Favorite label endpoints, with a mobile fallback.
-- Branded Copy emojis and Favorite treatments remain consistent in Daily Pick and mashup detail views.
-- Successful copy actions show temporary Copied! feedback without shifting neighboring controls.
-- Favorite/Favorited uses the existing persistent favorite store and exposes aria-pressed state.
-- No collection, trophy, curator-selection, mashup-selection, or data-format changes.
+- Shared script URLs cache-busted for v2.0.0 where updated

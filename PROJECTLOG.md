@@ -1,4 +1,13 @@
-# Billy Labs — Project Log
+# Billy Labs Project Log
+
+## v2.0.0 — The Collection Update
+- Added the first public Collection Book at `collection-book.html`.
+- Organized Kitchen-compatible base emoji into familiar emoji-keyboard categories and order.
+- Every canonical mashup appears on both ingredient emoji pages without duplicating stored progress.
+- Collection pages reveal discovered mashups and shroud undiscovered ones.
+- Added per-emoji and overall completion progress, completed-page badges, search, and direct mashup links.
+- Added My Collection to the public homepage.
+- Added cache-busted shared script references for the 2.0.0 release.
 
 ## v1.9.2b — Final UI Polish
 
@@ -24,13 +33,14 @@
 - Preserved the v1.9.1 discovery repair and public/dev Curator separation.
 
 ## Current Version
-v1.9.2b — Final UI Polish
+v2.0.0 — The Collection Update
 
 ## Phase Status
 - Phase 1 — Museum: complete
 - Phase 2 — Progression: foundation active
 - Collection Manager: first functional release
-- Collection Book, living trophies, Trophy Room, achievements, badges, stickers, powers, and community systems: planned
+- Collection Book: first public release
+- Living trophies, Trophy Room, achievements, badges, stickers, powers, and community systems: planned
 
 ## v1.9.1 — Collection Control Room Foundation
 
@@ -93,8 +103,8 @@ The Curator is the museum control room, not a separate duplicate management prod
 
 ## Next Milestones
 1. Test and refine collection draft/publish workflow with real curation.
-2. Build visitor-facing Collection Book from published snapshots only.
-3. Add collection progress and points calculations to the shared progress engine.
+2. Refine the Collection Book with real-world testing.
+3. Add collection rewards and points calculations to the shared progress engine.
 4. Implement living, version-based trophies.
 5. Build the Trophy Room shell and personalization model.
 
