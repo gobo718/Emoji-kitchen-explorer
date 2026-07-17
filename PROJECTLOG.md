@@ -101,3 +101,7 @@ The Curator is the museum control room, not a separate duplicate management prod
 ## 2026-07-17 — Corrected v1.9.1 build provenance
 
 This package was rebuilt from the verified v1.8.0 foundation branch rather than the older v1.7.2d branch. The v1.8.0 public site behavior and working Discovery flow are retained. Curator controls remain hidden on ordinary public hosts and are available on development hosts or with the explicit `?curator=1` query parameter.
+
+### v1.9.2b final polish completion
+- Blurblets now keep normal document flow, wrap to any needed number of lines, and use the optical right-edge alignment on phones as well as larger screens.
+- Billy’s Daily Pick **View in Explorer** button now opens the selected mashup detail directly instead of a one-result Explorer page.

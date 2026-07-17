@@ -46,19 +46,22 @@
     const copyRect = copyLabel.getBoundingClientRect();
     const favoriteRect = favoriteLabel.getBoundingClientRect();
     const groupRect = group.getBoundingClientRect();
-    const sameRow = Math.abs(copyRect.top - favoriteRect.top) < Math.max(copyRect.height, favoriteRect.height) * 0.6;
-    if (!sameRow || groupRect.width < 360) return;
 
-    // Put the blurblet's RIGHT edge on the optical guide halfway
-    // between the rendered ends of the two button labels.
-    const guideX = ((copyRect.right + favoriteRect.right) / 2) - groupRect.left;
+    // Keep the blurblet in normal document flow so long text wraps and
+    // the card grows naturally. Its right edge sits on the optical guide
+    // halfway between the rendered ends of the two button labels.
+    const rawGuideX = ((copyRect.right + favoriteRect.right) / 2) - groupRect.left;
+    const guideX = Math.max(0, Math.min(groupRect.width, rawGuideX));
+    const rightSpace = Math.max(0, groupRect.width - guideX);
+
+    blurblet.style.position = 'static';
+    blurblet.style.left = 'auto';
+    blurblet.style.right = 'auto';
+    blurblet.style.transform = 'none';
     blurblet.style.width = 'max-content';
-    blurblet.style.maxWidth = `${Math.max(0, guideX)}px`;
-    blurblet.style.marginLeft = '0';
-    blurblet.style.marginRight = '0';
-    blurblet.style.position = 'relative';
-    blurblet.style.left = `${guideX}px`;
-    blurblet.style.transform = 'translateX(-100%)';
+    blurblet.style.maxWidth = `${guideX}px`;
+    blurblet.style.marginLeft = 'auto';
+    blurblet.style.marginRight = `${rightSpace}px`;
   }
 
   function observeBlurblet(group) {
