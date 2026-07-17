@@ -3,38 +3,26 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#7457e8">
+<meta name="theme-color" content="#080817">
+<meta name="color-scheme" content="dark">
 <title>Discovery Explorer · Emoji Kitchen Explorer</title>
 <style>
 :root {
   color-scheme: dark;
-  --bg:#f8f4ff;
-  --panel:rgba(255,255,255,.86);
-  --panel-strong:#ffffff;
-  --text:#201b2d;
-  --muted:#716a7e;
-  --accent:#7457e8;
-  --accent-2:#ff8ab3;
-  --accent-3:#ffd36e;
-  --border:rgba(84,62,120,.16);
-  --shadow:0 14px 35px rgba(74,50,120,.10);
-}
-@media (prefers-color-scheme:dark) {
-  :root {
-    --bg:#15111d;
-    --panel:rgba(34,28,44,.90);
-    --panel-strong:#241d2e;
-    --text:#f8f3ff;
-    --muted:#bdb4c9;
-    --accent:#b59cff;
-    --accent-2:#ff9fc1;
-    --accent-3:#ffd983;
-    --border:rgba(223,209,255,.14);
-    --shadow:0 14px 35px rgba(0,0,0,.22);
-  }
+  --bg:#050613;
+  --panel:rgba(20,18,39,.94);
+  --panel-strong:#17152e;
+  --text:#f8f3ff;
+  --muted:#bdb4c9;
+  --accent:#8b5cff;
+  --accent-2:#ff68aa;
+  --accent-3:#ffd983;
+  --border:rgba(223,209,255,.14);
+  --shadow:0 14px 35px rgba(0,0,0,.28);
 }
 * { box-sizing:border-box; }
 html { scroll-behavior:smooth; }
+html { background:#050613; }
 body {
   margin:0;
   font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
@@ -44,6 +32,7 @@ body {
     radial-gradient(circle at 88% 10%, color-mix(in srgb,var(--accent-2) 18%,transparent), transparent 22rem),
     radial-gradient(circle at 50% 40%, color-mix(in srgb,var(--accent-3) 12%,transparent), transparent 28rem),
     var(--bg);
+  background-color:#050613 !important;
 }
 button,input,select { font:inherit; }
 button { cursor:pointer; }
@@ -473,12 +462,6 @@ footer {
 </header>
 
   <section class="hero">
-    <div class="logo">
-      <span class="logo-mark">🧪</span>
-      <span>Emoji Kitchen Explorer</span>
-    </div>
-    <p class="tagline">Come see the weird little things Google made.</p>
-
     <div class="hero-actions">
       <button id="surpriseHero" class="hero-button primary" type="button">🎲 Surprise Me</button>
       <button id="unseenHero" class="hero-button" type="button">👀 Show Me Something New</button>
