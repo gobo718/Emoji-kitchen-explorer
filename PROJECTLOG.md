@@ -95,3 +95,58 @@ The Trophy page will publicly display the visitor's points. Future authenticated
 ### Next milestone
 
 Build the Collection Manager around permanent collection IDs and canonical mashup membership while keeping public collection data separate from private curator notes.
+
+---
+
+## 2026-07-17 — v1.8.1 Curator Collections Release
+
+### Curator becomes the museum control room
+
+The Curator dashboard now has three dedicated workspaces:
+
+1. Mashup Editor
+2. Collections
+3. Imports / Exports
+
+The existing mashup-page Curator panel and legacy exhibit assignments remain available. No existing curator workflow was removed.
+
+### Collection Manager added
+
+Curator can now create and edit local collection drafts with:
+
+- permanent collection ID,
+- name,
+- description,
+- rarity,
+- draft or published status,
+- sort order,
+- private curator notes,
+- canonical mashup membership.
+
+Permanent IDs are locked after the collection is first saved. Collection members use the canonical normalized two-ingredient mashup ID established in v1.8.0.
+
+The manager includes mashup search, member addition and removal, collection counts, and membership totals. These drafts remain private in the current browser until exported and added to the published site.
+
+### Public collection export
+
+Curator can export a generated `collections-data.js` containing only collections marked Published. Private curator notes and draft collections are excluded.
+
+### Backup improvements
+
+Private curator backups now:
+
+- use dated descriptive filenames,
+- identify the project and backup format version,
+- include export time and summary counts,
+- include collection drafts,
+- support Merge and Replace import modes.
+
+Example filename:
+
+```text
+BillyLabs-v1.8.1-CuratorBackup-2026-07-17.json
+```
+
+### Next milestone
+
+Test the collection-authoring workflow with the first real curated collection, then connect published collection data to collection progress calculations and the visitor-facing Collection Book.
