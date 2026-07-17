@@ -34,9 +34,10 @@
  const escapeHtml=s=>String(s).replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
  const present=new Set();all.forEach(r=>{present.add(r[0]);present.add(r[1]);});
  const fieldMap={'unicode-version':'unicodeVersion','unicode-date':'unicodeRelease','emoji-version':'emojiVersion','category':'category','subgroup':'subgroup'};
- const labelMap={'unicode-version':`Unicode ${value}`,'unicode-date':value?spokenDate(value):'Unicode release','emoji-version':`Emoji ${value}`,'category':value,'subgroup':value};
- const descriptionMap={'unicode-version':`Every Emoji Kitchen base emoji in Billy Labs that entered Unicode ${value}.`,'unicode-date':`Every Emoji Kitchen base emoji in Billy Labs with an official Unicode release date of ${value?spokenDate(value):value}.`,'emoji-version':`Every Emoji Kitchen base emoji in Billy Labs that joined the emoji set in Emoji ${value}.`,'category':`The ${value} category, gathered into one explorable Billy Labs collection.`,'subgroup':`Every Emoji Kitchen base emoji in the official ${value} subgroup.`};
  const field=fieldMap[type];
+ const collectionDate=type==='unicode-date'&&value?spokenDate(value):'';
+ const labelMap={'unicode-version':`Unicode ${value}`,'unicode-date':collectionDate||'Unicode release','emoji-version':`Emoji ${value}`,'category':value,'subgroup':value};
+ const descriptionMap={'unicode-version':`Every Emoji Kitchen base emoji in Billy Labs that entered Unicode ${value}.`,'unicode-date':`Every Emoji Kitchen base emoji in Billy Labs with an official Unicode release date of ${collectionDate}.`,'emoji-version':`Every Emoji Kitchen base emoji in Billy Labs that joined the emoji set in Emoji ${value}.`,'category':`The ${value} category, gathered into one explorable Billy Labs collection.`,'subgroup':`Every Emoji Kitchen base emoji in the official ${value} subgroup.`};
  if(!field||!value){$('loading').textContent='That collection link is incomplete.';return;}
  const items=Object.entries(profiles).filter(([e,m])=>present.has(e)&&String(m[field])===value).map(([emoji,meta])=>({emoji,meta,count:all.reduce((n,r)=>n+(r[0]===emoji||r[1]===emoji?1:0),0)}));
  if(!items.length){$('loading').textContent='Billy Labs could not find any Kitchen emoji in that collection.';return;}
