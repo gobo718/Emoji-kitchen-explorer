@@ -63,7 +63,13 @@ a { color:inherit; }
 .pair { font-size:2.5rem; }
 h1 { margin:10px 0 4px; font-size:clamp(1.8rem,6vw,3rem); }
 .meta { color:var(--muted); }
-.public-blurblet { margin:.75rem 0 0; text-align:right; font-style:italic; color:#d8cee3; }
+.public-blurblet {
+  width:62%;
+  margin:.75rem auto 0 0;
+  text-align:right;
+  font-style:italic;
+  color:#d8cee3;
+}
 .public-blurblet[hidden] { display:none; }
 .billyism {
   margin-top:12px; color:#c9bfd4; font-size:.78rem;
@@ -236,6 +242,9 @@ button, .action-link {
 </div>
 
 <script src="emoji-data.js"></script>
+<script src="mashup-core.js"></script>
+<script src="progress-engine.js"></script>
+<script src="collections-data.js"></script>
 <script src="billyisms.js"></script>
 <script src="hidden-categories.js"></script>
 <script src="achievements.js"></script>
@@ -247,9 +256,9 @@ button, .action-link {
   const params = new URLSearchParams(location.search);
   const left = params.get("left") || "";
   const right = params.get("right") || "";
-  const keyOf = row => row[0] + "|" + row[1] + "|" + row[3];
-  const favorites = new Set(JSON.parse(localStorage.getItem("ek-favorites") || "[]"));
-  const seen = new Set(JSON.parse(localStorage.getItem("ek-seen") || "[]"));
+  const keyOf = row => window.BILLY_PROGRESS.getMashupId(row[0], row[1]);
+  const favorites = window.BILLY_PROGRESS.getFavorites();
+  const seen = window.BILLY_PROGRESS.getSeen();
 
   const prettyDate = s => `${s.slice(0,4)}-${s.slice(4,6)}-${s.slice(6,8)}`;
   const prettyName = s => s
@@ -281,7 +290,7 @@ button, .action-link {
 
   const key = keyOf(row);
   seen.add(key);
-  localStorage.setItem("ek-seen", JSON.stringify([...seen]));
+  window.BILLY_MASHUPS.writeSet("ek-seen", seen);
 
   $("image").src = row[4];
   $("image").alt = `${row[0]} plus ${row[1]} Emoji Kitchen mashup`;
@@ -313,7 +322,7 @@ button, .action-link {
 
   $("favorite").addEventListener("click", () => {
     favorites.has(key) ? favorites.delete(key) : favorites.add(key);
-    localStorage.setItem("ek-favorites", JSON.stringify([...favorites]));
+    window.BILLY_MASHUPS.writeSet("ek-favorites", favorites);
     updateFavorite();
     say(favorites.has(key) ? "Added to favorites." : "Removed from favorites.");
   });
