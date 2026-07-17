@@ -1,1 +1,38 @@
-
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Billy Labs Curator</title>
+<style>
+:root{color-scheme:dark;--bg:#050613;--card:#111428;--muted:#aaaec1;--purple:#8b4cff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#21114a 0,#050613 38%);color:white;font-family:system-ui,-apple-system,sans-serif;min-height:100vh;padding:24px}main{max-width:900px;margin:auto}.top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}a{color:#b89cff}.card{background:#111428;border:1px solid #ffffff14;padding:22px;border-radius:16px;box-shadow:0 18px 50px #0007;margin-top:18px}.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}.stat{background:#1b203b;padding:16px;border-radius:12px}.stat strong{display:block;font-size:1.8rem}.muted{color:var(--muted)}button{border:0;border-radius:10px;padding:11px 14px;background:#2d365d;color:#fff;font-weight:800;cursor:pointer}.primary{background:linear-gradient(90deg,#6d48ff,#a544ef)}.danger{background:#562a3d}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.entry{padding:14px 0;border-top:1px solid #ffffff12}.entry:first-child{border-top:0}.entry h3{margin:0 0 6px}.chips{display:flex;gap:6px;flex-wrap:wrap}.chip{background:#2a2149;padding:5px 8px;border-radius:999px;font-size:.82rem}.empty{padding:26px;text-align:center;color:var(--muted)}
+</style>
+</head>
+<body>
+<main>
+  <div class="top"><div><h1>🔬 Billy Labs Curator</h1><p class="muted">Your private, browser-saved catalog.</p></div><a href="../index.html">← Return to Billy Labs</a></div>
+  <section class="card stats"><div class="stat"><strong id="entryCount">0</strong><span class="muted">saved mashups</span></div><div class="stat"><strong id="exhibitCount">4</strong><span class="muted">exhibits</span></div></section>
+  <section class="card"><h2>Curator data</h2><p class="muted">This release saves to this browser only. Export a backup before clearing browser data or changing devices.</p><div class="toolbar"><button id="exportBtn" class="primary">⬇ Export backup</button><button id="importBtn">⬆ Import backup</button><input id="importFile" type="file" accept="application/json" hidden><button id="clearBtn" class="danger">Clear curator data</button></div><p id="status" class="muted" aria-live="polite"></p></section>
+  <section class="card"><h2>Saved entries</h2><div id="entries"></div></section>
+</main>
+<script>
+(() => {
+const ENTRY_KEY='billy-curator-entries-v1', EXHIBIT_KEY='billy-curator-exhibits-v1';
+const defaults=['🧬 Mutations','🍽️ Forbidden Foods','👁️ Extra Eyes','👑 Unexpected Royalty'];
+const $=id=>document.getElementById(id);
+const read=(key,fallback)=>{try{return JSON.parse(localStorage.getItem(key)||JSON.stringify(fallback))}catch{return fallback}};
+function render(){
+ const entries=read(ENTRY_KEY,{}), custom=read(EXHIBIT_KEY,[]), rows=Object.values(entries).sort((a,b)=>(b.updatedAt||'').localeCompare(a.updatedAt||''));
+ $('entryCount').textContent=rows.length; $('exhibitCount').textContent=new Set([...defaults,...custom]).size;
+ $('entries').innerHTML=rows.length?rows.map(e=>`<article class="entry"><h3>${escapeHtml(e.left)} + ${escapeHtml(e.right)}</h3><div class="chips">${(e.exhibits||[]).map(x=>`<span class="chip">${escapeHtml(x)}</span>`).join('')}</div>${e.blurblet?`<p><strong>Blurblet:</strong> ${escapeHtml(e.blurblet)}</p>`:''}<p class="muted">Updated ${e.updatedAt?new Date(e.updatedAt).toLocaleString():'unknown'}</p><a href="../mashup.html?left=${encodeURIComponent(e.left)}&right=${encodeURIComponent(e.right)}">Open mashup →</a></article>`).join(''):'<div class="empty">No curator entries saved yet. Open a mashup and tap Curator.</div>';
+}
+function escapeHtml(value){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+$('exportBtn').onclick=()=>{const data={version:1,exportedAt:new Date().toISOString(),entries:read(ENTRY_KEY,{}),customExhibits:read(EXHIBIT_KEY,[])};const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='billy-labs-curator-backup.json';a.click();URL.revokeObjectURL(url);$('status').textContent='Backup exported.'};
+$('importBtn').onclick=()=>$('importFile').click();
+$('importFile').onchange=async e=>{const file=e.target.files[0];if(!file)return;try{const data=JSON.parse(await file.text());if(!data||typeof data.entries!=='object')throw new Error();localStorage.setItem(ENTRY_KEY,JSON.stringify(data.entries));localStorage.setItem(EXHIBIT_KEY,JSON.stringify(Array.isArray(data.customExhibits)?data.customExhibits:[]));$('status').textContent='Backup imported.';render()}catch{$('status').textContent='That file is not a valid Billy Labs backup.'}e.target.value=''};
+$('clearBtn').onclick=()=>{if(confirm('Delete all locally saved curator entries and custom exhibits?')){localStorage.removeItem(ENTRY_KEY);localStorage.removeItem(EXHIBIT_KEY);$('status').textContent='Curator data cleared.';render()}};
+render();
+})();
+</script>
+</body></html>
