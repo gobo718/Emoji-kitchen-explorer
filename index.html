@@ -369,15 +369,15 @@ footer {
     <h2 class="quick-title">⚡ Quick Links ⚡</h2>
 
     <section class="quick">
-      <a class="quick-card" href="explorer.html?search=🤪">
+      <a class="quick-card" href="explorer.html?search=🤪&jump=results">
         <div class="icon">🤪</div>
         <div><strong>Complete Zany</strong><span>Browse every zany-face creation</span></div>
       </a>
-      <a class="quick-card" href="explorer.html?search=🪵">
+      <a class="quick-card" href="explorer.html?search=🪵&jump=results">
         <div class="icon">🪵</div>
         <div><strong>Wooden Things</strong><span>Enter the baffling world of carved mashups</span></div>
       </a>
-      <a class="quick-card" href="explorer.html?sort=newest">
+      <a class="quick-card" href="explorer.html?sort=newest&jump=results">
         <div class="icon">🆕</div>
         <div><strong>Newest Additions</strong><span>See what’s new</span></div>
       </a>
@@ -388,7 +388,7 @@ footer {
         <div class="continue-icon">🧭</div>
         <div><strong>Pick up where you left off?</strong><span id="continueText">Return to the explorer</span></div>
       </div>
-      <a class="continue-button" href="explorer.html">Continue Exploring →</a>
+      <a class="continue-button" id="continueButton" href="explorer.html?resume=1">Continue Exploring →</a>
     </section>
   </main>
 
@@ -404,7 +404,7 @@ footer {
     </div>
 
     <div class="footer-right">
-      <div>Made by Billy 💜 · v1.2</div>
+      <div>Made by Billy 💜 · v1.3</div>
       <div>Made with 🧪 and 💜</div>
     </div>
   </footer>
@@ -460,8 +460,16 @@ footer {
     $("dailyBillyism").hidden = false;
   }
 
-  const lastPage = localStorage.getItem("ek-last-page");
-  if (lastPage) $("continueText").textContent = `You were on page ${Number(lastPage)+1}`;
+  const savedState = JSON.parse(localStorage.getItem("ek-explorer-state") || "null");
+  if (savedState) {
+    const pieces = [];
+    if (savedState.search) pieces.push(`searching for ${savedState.search}`);
+    if (savedState.sort === "favorites") pieces.push("viewing favorites");
+    else if (savedState.sort === "unseen") pieces.push("viewing unseen first");
+    pieces.push(`page ${Number(savedState.page || 0) + 1}`);
+    $("continueText").textContent = `Resume ${pieces.join(" · ")}`;
+    $("continueButton").href = "explorer.html?resume=1&jump=results";
+  }
 
   $("loading").hidden = true;
   $("dailyContent").hidden = false;

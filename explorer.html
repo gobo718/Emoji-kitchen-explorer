@@ -291,6 +291,28 @@ input,select {
   text-align:center;
   color:var(--muted);
 }
+.back-to-top {
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  z-index:90;
+  width:48px;
+  height:48px;
+  border:1px solid var(--border);
+  border-radius:50%;
+  color:white;
+  background:linear-gradient(135deg,var(--accent),var(--accent-2));
+  box-shadow:var(--shadow);
+  font-size:1.15rem;
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(8px);
+  transition:opacity .18s ease,transform .18s ease;
+}
+.back-to-top.show { opacity:1; pointer-events:auto; transform:none; }
+.empty strong { display:block; color:var(--text); font-size:1.05rem; margin-bottom:7px; }
+.empty span { display:block; max-width:460px; margin:auto; line-height:1.5; }
+.empty button { margin-top:14px; min-height:40px; border:0; border-radius:999px; padding:0 16px; background:var(--accent); color:white; font-weight:800; }
 footer {
   padding:28px 14px 42px;
   text-align:center;
@@ -531,9 +553,12 @@ footer {
 <footer>
   Artwork loads from Google’s public Emoji Kitchen image servers. Favorites and seen items stay on this device.
 </footer>
+<button class="back-to-top" id="backToTop" type="button" aria-label="Back to top">↑</button>
 <div class="toast" id="toast" role="status" aria-live="polite">✨ Discovered!</div>
 
 <script src="emoji-data.js"></script>
+<script src="hidden-categories.js"></script>
+<script src="achievements.js"></script>
 <script>
 (() => {
   const PAGE_SIZE = 100;
@@ -553,6 +578,20 @@ footer {
   function save() {
     localStorage.setItem("ek-seen", JSON.stringify([...seen]));
     localStorage.setItem("ek-favorites", JSON.stringify([...favorites]));
+  }
+
+  function saveExplorerState() {
+    localStorage.setItem("ek-explorer-state", JSON.stringify({
+      search: $("search").value,
+      sort: $("sort").value,
+      page
+    }));
+    localStorage.setItem("ek-last-page", String(page));
+  }
+
+  function loadExplorerState() {
+    try { return JSON.parse(localStorage.getItem("ek-explorer-state") || "null"); }
+    catch { return null; }
   }
 
   function celebrate(message = "✨ Discovered!") {
@@ -607,7 +646,19 @@ footer {
     ["nextTop","nextBottom"].forEach(id => $(id).disabled = page >= pages - 1);
 
     if (!visible.length) {
-      $("grid").innerHTML = '<div class="empty">Nothing matched that search.</div>';
+      const query = $("search").value.trim();
+      const favoritesOnly = $("sort").value === "favorites";
+      const heading = favoritesOnly ? "No favorites here yet." : "Nothing matched that search.";
+      const help = favoritesOnly
+        ? "Tap the star on any mashup and it will wait for you here."
+        : query ? `Try a different emoji or clear “${escapeHtml(query)}”.` : "Try another sort or search term.";
+      $("grid").innerHTML = `<div class="empty"><strong>${heading}</strong><span>${help}</span><button type="button" id="clearEmpty">Clear filters</button></div>`;
+      $("clearEmpty").addEventListener("click", () => {
+        $("search").value = "";
+        $("sort").value = "newest";
+        applyFilters();
+      });
+      saveExplorerState();
       updateMetrics();
       return;
     }
@@ -633,12 +684,13 @@ footer {
         <button class="seen-btn" type="button" data-action="seen">${isSeen ? "✓ Seen" : "Mark as seen"}</button>
       </article>`;
     }).join("");
+    saveExplorerState();
     updateMetrics();
   }
 
   function turnPage(delta) {
     page += delta;
-    localStorage.setItem("ek-last-page", String(page));
+    saveExplorerState();
     render();
     $("browser").scrollIntoView({behavior:"smooth", block:"start"});
   }
@@ -702,13 +754,24 @@ footer {
   const requestedSearch = params.get("search");
   const requestedMode = params.get("mode");
   const requestedSort = params.get("sort");
+  const shouldResume = params.get("resume") === "1";
+  const shouldJump = params.get("jump") === "results";
+  const savedState = shouldResume ? loadExplorerState() : null;
+
+  if (savedState) {
+    $("search").value = savedState.search || "";
+    $("sort").value = savedState.sort || "newest";
+  }
   if (requestedSearch) $("search").value = requestedSearch;
   if (requestedMode === "favorites") $("sort").value = "favorites";
   if (requestedMode === "unseen") $("sort").value = "unseen";
-  if (requestedSort === "newest") $("sort").value = "newest";
+  if (requestedSort && ["newest","oldest","unseen","favorites"].includes(requestedSort)) $("sort").value = requestedSort;
 
   applyFilters();
-  if (!requestedSearch && !requestedMode && !requestedSort) {
+  if (savedState && !requestedSearch && !requestedMode && !requestedSort) {
+    page = Math.min(Number(savedState.page || 0), Math.max(0, Math.ceil(filtered.length / PAGE_SIZE) - 1));
+    render();
+  } else if (!requestedSearch && !requestedMode && !requestedSort) {
     page = Math.min(Number(localStorage.getItem("ek-last-page") || "0"), Math.max(0, Math.ceil(filtered.length / PAGE_SIZE) - 1));
     render();
   }
@@ -716,6 +779,13 @@ footer {
   $("loading").hidden = true;
   $("app").hidden = false;
   updateMetrics();
+
+  const jumpToResults = () => $("grid").scrollIntoView({behavior:"smooth", block:"start"});
+  if (shouldJump) requestAnimationFrame(() => requestAnimationFrame(jumpToResults));
+
+  const backToTop = $("backToTop");
+  window.addEventListener("scroll", () => backToTop.classList.toggle("show", window.scrollY > 700), {passive:true});
+  backToTop.addEventListener("click", () => window.scrollTo({top:0, behavior:"smooth"}));
 
   if (requestedMode === "discover") showUnseen();
 })();
