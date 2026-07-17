@@ -54,6 +54,7 @@ a{color:inherit}.shell{width:min(1180px,calc(100% - 32px));margin:0 auto;padding
  const $=id=>document.getElementById(id);
  const emoji=new URLSearchParams(location.search).get('emoji')||'';
  const prettyDate=s=>`${s.slice(0,4)}-${s.slice(4,6)}-${s.slice(6,8)}`;
+ const spokenDate=s=>new Intl.DateTimeFormat('en-US',{year:'numeric',month:'long',day:'numeric',timeZone:'UTC'}).format(new Date(`${s.slice(0,4)}-${s.slice(4,6)}-${s.slice(6,8)}T00:00:00Z`));
  const titleCase=s=>s.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
  const escapeHtml=s=>String(s).replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
  const rows=all.filter(r=>r[0]===emoji||r[1]===emoji);
@@ -73,9 +74,13 @@ a{color:inherit}.shell{width:min(1180px,calc(100% - 32px));margin:0 auto;padding
  $('comboCount').textContent=rows.length.toLocaleString();
  $('unicodeVersion').textContent=meta.unicodeVersion?`Unicode ${meta.unicodeVersion}`:'Research pending';
  $('firstKitchen').textContent=prettyDate(first);
+ const countText=rows.length.toLocaleString();
+ const kitchenHistory=first===latest
+   ? `Every known mashup was released on ${spokenDate(first)}.`
+   : `They were released between ${spokenDate(first)} and ${spokenDate(latest)}.`;
  $('summary').textContent=meta.approvedDate
-   ? `${name} became official with ${meta.sourceLabel||('Unicode '+meta.unicodeVersion)} on ${meta.approvedDate}. Billy Labs currently knows about ${rows.length.toLocaleString()} Emoji Kitchen combinations featuring it, ranging from ${prettyDate(first)} through ${prettyDate(latest)}.`
-   : `Billy Labs currently knows about ${rows.length.toLocaleString()} Emoji Kitchen combinations featuring ${name}, ranging from ${prettyDate(first)} through ${prettyDate(latest)}. Its official Unicode history still needs research.`;
+   ? `${name} became official with ${meta.sourceLabel||('Unicode '+meta.unicodeVersion)} on ${meta.approvedDate}. Billy Labs currently knows about ${countText} Emoji Kitchen combinations featuring it. ${kitchenHistory}`
+   : `Billy Labs currently knows about ${countText} Emoji Kitchen combinations featuring ${name}. ${kitchenHistory} Its official Unicode history still needs research.`;
  document.title=`${emoji} ${name} · Billy Labs`;
  function render(){
    const q=$('search').value.trim().toLowerCase();
