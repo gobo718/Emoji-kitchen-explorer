@@ -63,7 +63,13 @@ a { color:inherit; }
 .pair { font-size:2.5rem; }
 h1 { margin:10px 0 4px; font-size:clamp(1.8rem,6vw,3rem); }
 .meta { color:var(--muted); }
-.public-blurblet { margin:.35rem 0 .75rem; text-align:right; font-style:italic; color:#d8cee3; }
+.public-blurblet {
+  width:62%;
+  margin:.75rem auto 0 0;
+  text-align:right;
+  font-style:italic;
+  color:#d8cee3;
+}
 .public-blurblet[hidden] { display:none; }
 .billyism {
   margin-top:12px; color:#c9bfd4; font-size:.78rem;
@@ -215,7 +221,6 @@ button, .action-link {
         <div class="pair" id="pair"></div>
         <h1 id="title"></h1>
         <div class="meta" id="release"></div>
-        <div class="public-blurblet" id="publicBlurblet" hidden></div>
         <div class="billyism" id="billyism" hidden></div>
 
         <div class="actions">
@@ -224,6 +229,7 @@ button, .action-link {
           <button class="secondary" id="copyLink" type="button">🔗 Copy link</button>
           <button id="favorite" type="button">☆ Favorite</button>
         </div>
+        <div class="public-blurblet" id="publicBlurblet" hidden></div>
         <div class="status" id="status" aria-live="polite"></div>
       </div>
     </section>

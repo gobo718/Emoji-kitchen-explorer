@@ -468,7 +468,14 @@ footer {
   .page-jump { width:5.2em; min-height:38px; padding:4px 8px; border:1px solid var(--border); border-radius:10px; background:var(--panel-strong); color:var(--text); font:inherit; font-weight:850; text-align:center; }
   .page-jump:focus { outline:2px solid var(--accent); outline-offset:2px; }
   .page-of { color:var(--muted); font-weight:750; }
-.card-blurblet { margin:.4rem 0 0; text-align:right; font-style:italic; color:#d8cee3; font-size:.86rem; }
+.card-blurblet {
+  width:62%;
+  margin:.65rem auto 0 0;
+  text-align:right;
+  font-style:italic;
+  color:#d8cee3;
+  font-size:.86rem;
+}
 </style>
 </head>
 <body>
@@ -695,9 +702,9 @@ footer {
           <div class="pair">${escapeHtml(row[0])} + ${escapeHtml(row[1])}</div>
           <div class="name">${escapeHtml(row[2])}</div>
           <div class="meta"><span>${prettyDate(row[3])}</span><span>${isSeen ? "Discovered" : "Unseen"}</span></div>
-          ${blurblet ? `<div class="card-blurblet">${escapeHtml(blurblet)}</div>` : ""}
         </a>
         <button class="seen-btn" type="button" data-action="seen">${isSeen ? "✓ Seen" : "Mark as seen"}</button>
+        ${blurblet ? `<div class="card-blurblet">${escapeHtml(blurblet)}</div>` : ""}
       </article>`;
     }).join("");
     saveExplorerState();
