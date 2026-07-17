@@ -1,5 +1,7 @@
-Billy Labs v1.9.0
-Release: Collection Control Room Foundation
+Billy Labs v1.9.0 — Corrected Collection Control Room
+
+BASELINE
+- Verified Billy Labs v1.8.0 foundation branch
 
 ADDED
 - mashup-core.js
@@ -8,12 +10,17 @@ ADDED
 - RELEASE-MANIFEST.txt
 
 MODIFIED
-- mashup.html
 - curator/index.html
+- mashup.html
+- index.html
 - PROJECTLOG.md
 
-CORE BEHAVIOR
-- Canonical unordered pair IDs preserve duplicate ingredients.
-- Legacy seen/favorite IDs migrate automatically.
-- Collections use private drafts and explicit versioned publishing.
-- Creating a collection from a mashup preserves context and adds that mashup first.
+PRESERVED FROM v1.8.0
+- explorer.html and its working Show Me Something New flow
+- public/dev Curator separation
+- all museum pages and data files
+
+VERIFICATION
+- JavaScript syntax checked
+- ZIP extraction tested
+- visible site version: v1.9.0

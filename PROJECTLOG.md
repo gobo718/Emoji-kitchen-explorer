@@ -74,3 +74,7 @@ The Curator is the museum control room, not a separate duplicate management prod
 3. Add collection progress and points calculations to the shared progress engine.
 4. Implement living, version-based trophies.
 5. Build the Trophy Room shell and personalization model.
+
+## 2026-07-17 — Corrected v1.9.0 build provenance
+
+This package was rebuilt from the verified v1.8.0 foundation branch rather than the older v1.7.2d branch. The v1.8.0 public site behavior and working Discovery flow are retained. Curator controls remain hidden on ordinary public hosts and are available on development hosts or with the explicit `?curator=1` query parameter.

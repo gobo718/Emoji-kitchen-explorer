@@ -449,7 +449,7 @@ footer {
     </div>
 
     <div class="footer-right">
-      <div>Made by Billy 💜 · v1.7.2d</div>
+      <div>Made by Billy 💜 · v1.9.0</div>
       <div>Made with 🧪 and 💜</div>
     </div>
   </footer>
@@ -458,6 +458,7 @@ footer {
 <script src="emoji-data.js"></script>
 <script src="mashup-core.js"></script>
 <script src="progress-engine.js"></script>
+<script src="collections-data.js"></script>
 <script src="billyisms.js"></script>
 <script>
 (() => {
@@ -483,7 +484,7 @@ footer {
   }
 
 
-  const seen = new Set(JSON.parse(localStorage.getItem("ek-seen") || "[]"));
+  const seen = window.BILLY_PROGRESS.getSeen();
   $("homeSeenCount").textContent = seen.size.toLocaleString();
   $("homePercent").textContent = `${((seen.size / all.length) * 100).toFixed(seen.size ? 2 : 0)}%`;
 
@@ -512,8 +513,8 @@ footer {
   const detailUrl = `mashup.html?left=${encodeURIComponent(row[0])}&right=${encodeURIComponent(row[1])}`;
   $("viewPick").href = `explorer.html?search=${encodeURIComponent(row[0] + " " + row[1])}`;
 
-  const dailyKey = row[0] + "|" + row[1] + "|" + row[3];
-  const dailyFavorites = new Set(JSON.parse(localStorage.getItem("ek-favorites") || "[]"));
+  const dailyKey = window.BILLY_PROGRESS.getMashupId(row[0], row[1]);
+  const dailyFavorites = window.BILLY_PROGRESS.getFavorites();
   const sayDaily = (message, error = false) => {
     $("dailyStatus").textContent = message;
     $("dailyStatus").style.color = error ? "#ff9ea8" : "#8df0b2";
@@ -525,7 +526,7 @@ footer {
 
   $("dailyFavorite").addEventListener("click", () => {
     dailyFavorites.has(dailyKey) ? dailyFavorites.delete(dailyKey) : dailyFavorites.add(dailyKey);
-    localStorage.setItem("ek-favorites", JSON.stringify([...dailyFavorites]));
+    window.BILLY_MASHUPS.writeSet("ek-favorites", dailyFavorites);
     updateDailyFavorite();
     sayDaily(dailyFavorites.has(dailyKey) ? "Added to favorites." : "Removed from favorites.");
   });

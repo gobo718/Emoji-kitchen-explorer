@@ -571,14 +571,15 @@ footer {
 <script src="emoji-data.js"></script>
 <script src="mashup-core.js"></script>
 <script src="progress-engine.js"></script>
+<script src="collections-data.js"></script>
 <script src="hidden-categories.js"></script>
 <script src="achievements.js"></script>
 <script>
 (() => {
   const PAGE_SIZE = 100;
   const all = window.EMOJI_KITCHEN_DATA || [];
-  const seen = new Set(JSON.parse(localStorage.getItem("ek-seen") || "[]"));
-  const favorites = new Set(JSON.parse(localStorage.getItem("ek-favorites") || "[]"));
+  const seen = window.BILLY_PROGRESS.getSeen();
+  const favorites = window.BILLY_PROGRESS.getFavorites();
   const curatorEntries = (() => {
     try { return JSON.parse(localStorage.getItem("billy-curator-entries-v1") || "{}"); }
     catch { return {}; }
@@ -587,7 +588,7 @@ footer {
   let filtered = all.slice();
 
   const $ = id => document.getElementById(id);
-  const keyOf = row => `${row[0]}|${row[1]}|${row[3]}`;
+  const keyOf = row => window.BILLY_PROGRESS.getMashupId(row[0], row[1]);
   const prettyDate = s => `${s.slice(0,4)}-${s.slice(4,6)}-${s.slice(6,8)}`;
   const escapeHtml = s => String(s).replace(/[&<>"']/g, c => ({
     "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
@@ -705,7 +706,6 @@ footer {
           <div class="name">${escapeHtml(row[2])}</div>
           <div class="meta"><span>${prettyDate(row[3])}</span><span>${isSeen ? "Discovered" : "Unseen"}</span></div>
         </a>
-        <button class="seen-btn" type="button" data-action="seen">${isSeen ? "✓ Seen" : "Mark as seen"}</button>
         ${blurblet ? `<div class="card-blurblet">${escapeHtml(blurblet)}</div>` : ""}
       </article>`;
     }).join("");
@@ -739,24 +739,15 @@ footer {
       return;
     }
     const row = unseen[Math.floor(Math.random() * unseen.length)];
-    seen.add(keyOf(row));
-    save();
-    focusRow(row);
-    celebrate();
+    location.href = `mashup.html?left=${encodeURIComponent(row[0])}&right=${encodeURIComponent(row[1])}`;
   }
 
   $("grid").addEventListener("click", event => {
     const button = event.target.closest("button[data-action]");
     if (!button) return;
     const key = button.closest(".card").dataset.key;
-    if (button.dataset.action === "favorite") {
-      favorites.has(key) ? favorites.delete(key) : favorites.add(key);
-    } else if (seen.has(key)) {
-      seen.delete(key);
-    } else {
-      seen.add(key);
-      celebrate();
-    }
+    if (button.dataset.action !== "favorite") return;
+    favorites.has(key) ? favorites.delete(key) : favorites.add(key);
     save();
     render();
   });
