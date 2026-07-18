@@ -1,4 +1,4 @@
-/* Billy Labs repository layer — v2
+/* Billy Labs repository layer — v3
    Page controllers use these domain repositories instead of storage keys.
    Storage implementation remains local-first behind BillyStorage. */
 (() => {
@@ -72,8 +72,11 @@
     downloadPublishedScript: () => window.BillyCuratorData?.downloadPublishedScript()
   };
 
+  const sync = window.BillySyncManager || null;
+  if (sync) sync.register('favorites', {pull: progress.cloud.pullFavorites, push: progress.cloud.pushFavorites});
+
   window.BillyRepositories = Object.freeze({
-    version: 2,
+    version: 3,
     settings: Object.freeze(settings),
     explorer: Object.freeze(explorer),
     profile: Object.freeze(profile),

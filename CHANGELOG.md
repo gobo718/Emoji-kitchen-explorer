@@ -1,11 +1,19 @@
-## v2.2.4 — Favorites Cloud Vertical Slice
+## v2.2.5 — Cloud Sync Framework
+
+- Added a generic local-first SyncManager with repository registration and explicit sync states.
+- Registered Favorites as the first sync-capable repository.
+- Added a diagnostics page for app version, API mode, Worker reachability, D1 binding, and sync status.
+- Sync remains disabled until explicitly configured; no automatic data transmission was added.
+- Updated the visible website version to v2.2.5.
+
+## v2.2.5 — Favorites Cloud Vertical Slice
 
 - Added the first end-to-end cloud persistence path for mashup favorites.
 - Added GET and PUT Worker endpoints backed by the existing D1 `mashup_progress` table.
 - Added a browser cloud API client that remains disabled until an API URL is explicitly configured.
 - Extended the progress repository with explicit push, pull, and fetch operations for cloud favorites.
 - Added Worker and browser-client tests for the new path.
-- Updated the visible site version and curator backup metadata to v2.2.4.
+- Updated the visible site version and curator backup metadata to v2.2.5.
 - The normal website remains local-first and does not transmit data automatically.
 
 ## v2.2.3 — D1 Schema Foundation

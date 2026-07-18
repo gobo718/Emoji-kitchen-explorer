@@ -1,13 +1,12 @@
-Billy Labs v2.2.4 — Favorites Cloud Vertical Slice
+Billy Labs v2.2.5 — Cloud Sync Framework
 
-Baseline: v2.2.3 D1 Schema Foundation
+Baseline: v2.2.4 Favorites Cloud Vertical Slice
 
 Included:
-- Cloud API browser client
-- Favorites GET/PUT Worker endpoints
-- D1 favorites persistence through mashup_progress
-- Repository push/pull/fetch methods
-- Explicit opt-in configuration; no automatic transmission
-- Visible site version v2.2.4
+- Generic SyncManager and lifecycle states
+- Favorites sync repository registration
+- Local-only default and explicit opt-in configuration
+- Developer diagnostics page
+- Visible site version v2.2.5
 - Updated changelog and project log
-- Browser and Worker regression tests
+- Sync manager, browser, repository, storage, and Worker regression tests

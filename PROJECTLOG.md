@@ -1,4 +1,8 @@
-## v2.2.4 — Favorites Cloud Vertical Slice
+## v2.2.5 — Cloud Sync Framework
+
+Built the reusable sync orchestration layer and a developer diagnostics surface. Favorites now proves the registration contract while remaining local-first and opt-in.
+
+## v2.2.5 — Favorites Cloud Vertical Slice
 
 - Connected one real domain—favorites—from the browser repository boundary through the Worker to D1.
 - Kept cloud access explicit and inactive by default, preserving the current local-first behavior.
