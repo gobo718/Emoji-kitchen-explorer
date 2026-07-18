@@ -1,10 +1,10 @@
-## v2.2.9 — Live Blurblet Publishing
+## v2.3.0 — Live Blurblet Publishing
 Billy Labs can now publish an individual curator blurblet directly through the Worker into D1. The public mashup page reads the published value from the cloud when configured, while static-file publishing remains available as a fallback.
 
-## v2.2.9 — Device Identity Foundation
+## v2.3.0 — Device Identity Foundation
 Built the first anonymous identity layer from the verified v2.2.6 baseline. Identity remains local unless cloud registration is deliberately invoked.
 
-## v2.2.9 — Progress Cloud Sync
+## v2.3.0 — Progress Cloud Sync
 
 Built again from the verified v2.2.5 baseline. Added the first unified progress synchronization path for seen and favorite mashups, with batching, offline retention, merge behavior, Worker/D1 support, diagnostics, and regression coverage.
 
@@ -201,5 +201,5 @@ This package was rebuilt from the verified v1.8.0 foundation branch rather than 
 - Profile Collection card opens My Collection; Top 8 items remain independently clickable.
 - My Best IMHO and Community Blurblet Vote now display the mashup each Blurblet references.
 
-## 2026-07-18 — v2.2.9 Live Blurblet Activation
+## 2026-07-18 — v2.3.0 Live Blurblet Activation
 Completed the final connection layer between Curator, the deployed Worker, D1, and public blurblet display. The deployment still requires a one-time Cloudflare setup, but subsequent blurblet updates do not require a Billy Labs rebuild.

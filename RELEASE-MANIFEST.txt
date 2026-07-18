@@ -1,10 +1,10 @@
-Billy Labs v2.2.9 — Live Blurblet Activation
-Baseline: v2.2.8
-Build: BL-229
+Billy Labs v2.3.0 — Discovery Thumbnail Polish
+Baseline: v2.2.9
+Build: BL-230
 Verification phrase: Purple Monkeys
 
-Key additions:
-- Curator cloud connection settings
-- One-time public config generator
-- Live homepage blurblet retrieval
-- Complete Worker/D1 activation guide
+Key changes:
+- Surprise Me opens a selected mashup directly
+- Newest results stay grouped newest-to-oldest while randomizing within each release date
+- Explorer thumbnail overlay buttons and rank badges removed
+- Larger, cleaner, fully clickable mashup thumbnails
