@@ -1,4 +1,4 @@
-const API_VERSION = '2.2.8';
+const API_VERSION = '2.2.9';
 const SCHEMA_VERSION = 3;
 const corsHeaders = {'access-control-allow-origin':'*','access-control-allow-methods':'GET, PUT, POST, OPTIONS','access-control-allow-headers':'content-type, x-curator-key'};
 const json=(body,init={})=>new Response(JSON.stringify(body),{...init,headers:{...corsHeaders,'content-type':'application/json; charset=utf-8',...(init.headers||{})}});
