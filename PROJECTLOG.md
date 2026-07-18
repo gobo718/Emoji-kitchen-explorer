@@ -1,5 +1,13 @@
 # Billy Labs Project Log
 
+## v2.1.2 — Hide Empty Slots
+- Added a persistent Hide empty slots view option to individual Collection album pages.
+- The filtered view renders only discovered mashups and shows a clear empty state when none have been discovered.
+- Preserved the full shrouded-slot album view as the default.
+- Moved Profile Blurblet vote persistence behind BillyStorage.
+- No mashup data, progress rules, or collection calculations changed.
+
+
 ## v2.0.1 — Storage Foundation
 - Added `billy-storage.js` as the single low-level gateway for browser persistence.
 - Added `curator-data.js` to own curator blurblets and private-note storage.

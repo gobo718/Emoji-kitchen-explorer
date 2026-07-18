@@ -1,23 +1,21 @@
-Billy Labs v2.0.1 — Storage Foundation
+Billy Labs v2.1.2 — Hide Empty Slots
 
-Source baseline: Billy-Labs-v2.0.0-Collection-Update-1.zip
+Source baseline: Billy-Labs-v2.1.1-profile-navigation-blurblet-context.zip
 
 Added:
-- billy-storage.js
-- curator-data.js
-- tests/storage-foundation.test.js
-- docs/audit.md
+- Persistent Hide empty slots toggle on individual My Collection emoji pages.
+- Empty-state message when the filtered page has no discovered mashups.
 
 Updated:
-- progress-engine.js (shared storage gateway; no legacy writes)
-- collections-data.js (shared storage gateway)
-- index.html (shared repositories and v2.0.1 label)
-- explorer.html (shared repositories for all persistence)
-- mashup.html (curator repository)
-- collection-book.html (v2.0.1 label and cache busting)
-- curator/index.html (repository-backed backup and v2.0.1 metadata)
+- collection-book.html
+- profile.html
+- profile.js
+- CHANGELOG.md
 - PROJECTLOG.md
 
+Architecture cleanup:
+- Profile community votes now use BillyStorage instead of direct localStorage access.
+
 Behavioral scope:
-- Internal storage refactor only.
-- No intentional UI, mashup selection, discovery, or collection behavior changes.
+- Full album view remains the default.
+- No mashup eligibility, canonical identity, progress calculation, or collection membership changes.

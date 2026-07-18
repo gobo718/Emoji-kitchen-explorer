@@ -1,3 +1,11 @@
+## v2.1.2 — Hide Empty Slots
+
+- Added a remembered **Hide empty slots** option to individual My Collection emoji pages.
+- When enabled, album pages show only discovered mashups and remove all undiscovered placeholders.
+- Preserved the complete album view as the default for users who want to see missing slots.
+- Routed Profile community-vote persistence through the shared BillyStorage gateway, removing the final direct page-level localStorage access.
+- No mashup identity, eligibility, discovery, collection membership, or navigation behavior changed.
+
 ## v2.1.1 — Profile Navigation & Blurblet Context
 
 - Replaced the Home-page My Collection quick link with My Profile.
