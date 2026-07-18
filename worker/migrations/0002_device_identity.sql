@@ -10,4 +10,4 @@ CREATE TABLE IF NOT EXISTS devices (
 CREATE INDEX IF NOT EXISTS idx_devices_user ON devices(user_id);
 INSERT OR REPLACE INTO schema_meta (key, value) VALUES
   ('schema_version', '2'),
-  ('app_version', '2.2.7');
+  ('app_version', '2.2.8');
