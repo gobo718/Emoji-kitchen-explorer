@@ -1,0 +1,6 @@
+name = "billy-labs-api"
+main = "src/index.js"
+compatibility_date = "2026-07-18"
+
+# D1 bindings will be added in the database-schema milestone.
+# This release intentionally contains no production secrets or account IDs.
