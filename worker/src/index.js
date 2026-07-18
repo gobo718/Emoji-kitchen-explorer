@@ -1,4 +1,4 @@
-const API_VERSION = '2.2.4';
+const API_VERSION = '2.2.5';
 const SCHEMA_VERSION = 1;
 
 const corsHeaders = {
