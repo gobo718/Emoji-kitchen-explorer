@@ -24,6 +24,7 @@
 <script src="published-curator-data.js?v=2.1.3"></script>
 <script src="curator-data.js?v=2.1.3"></script>
 <script src="progress-engine.js?v=2.1.2"></script>
+<script src="billy-repositories.js?v=2.2.0"></script>
 <script>
 (()=>{
  const all=window.EMOJI_KITCHEN_DATA||[], meta=window.EMOJI_PROFILE_METADATA||{}, seen=window.BillyProgress?.getSeen?.()||new Set(), app=document.getElementById('app');
@@ -49,11 +50,11 @@
  function detail(){
    const item=emojis.find(x=>x.emoji===selected);if(!item){overview();return;}const sorted=[...item.rows].sort((a,b)=>{const ao=a[0]===selected?a[1]:a[0],bo=b[0]===selected?b[1]:b[0];const ai=emojis.findIndex(x=>x.emoji===ao),bi=emojis.findIndex(x=>x.emoji===bo);return ai-bi||b[3].localeCompare(a[3])});
    document.title=`${item.emoji} ${nameOf(item.emoji)} Collection · Billy Labs`;
-   const settingKey='billy.collection.hideEmptySlots', hideEmpty=!!BillyStorage.get(settingKey,false);
+   const settingKey='collectionHideEmptySlots', hideEmpty=!!BillyRepositories.settings.get(settingKey,false);
    app.innerHTML=`<a class="back" href="collection-book.html">← All emoji</a><section class="hero"><div class="detail-head"><div class="detail-glyph">${esc(item.emoji)}</div><div class="detail-copy"><div class="eyebrow">Emoji album page</div><h1>${esc(nameOf(item.emoji))}</h1><p>Every known mashup involving ${esc(item.emoji)} appears here. Discovered stickers are revealed; the rest stay shrouded.</p></div></div><div class="progress-wrap"><div class="progress-copy"><strong>${item.found} / ${item.total}</strong><span>${item.percent.toFixed(item.found?1:0)}% complete</span></div><div class="progress"><span style="width:${item.percent}%"></span></div></div>${item.found===item.total?'<div class="stat" style="margin-top:16px;border-color:rgba(255,214,107,.55)"><strong>✨ Page complete!</strong><span>This emoji is ready for its future Trophy Room reward.</span></div>':''}</section><div class="toolbar"><div><h2>${esc(item.emoji)} mashups</h2><p>${item.total-item.found} still hidden.</p></div><div class="toolbar-actions"><label class="view-toggle"><input id="hideEmptySlots" type="checkbox" ${hideEmpty?'checked':''}> Hide empty slots</label></div></div><section class="mashup-grid" id="mashupGrid"></section>`;
    const toggle=document.getElementById('hideEmptySlots'),grid=document.getElementById('mashupGrid');
    function renderMashups(){const onlyFound=toggle.checked;const visible=onlyFound?sorted.filter(row=>seen.has(BillyMashups.id(row[0],row[1]))):sorted;grid.innerHTML=visible.map(row=>{const id=BillyMashups.id(row[0],row[1]),found=seen.has(id),partner=row[0]===selected?row[1]:row[0];return found?`<a class="mashup-card" href="${esc(BillyMashups.buildUrl(row))}"><span class="found-tag">Discovered</span><div class="art"><img src="${esc(row[4])}" alt="${esc(row[0])} plus ${esc(row[1])} mashup" loading="lazy"></div><div class="copy"><div class="pair">${esc(item.emoji)} + ${esc(partner)}</div><div class="mashup-name">${esc(row[2].replace(/_/g,' '))}</div></div></a>`:`<div class="mashup-card unknown" aria-label="Undiscovered mashup"><div class="art">?</div><div class="copy"><div class="pair">${esc(item.emoji)} + ?</div><div class="mashup-name">Undiscovered</div></div></div>`}).join('')||(onlyFound?'<div class="empty">No discovered mashups on this page yet.</div>':'');}
-   toggle.addEventListener('change',()=>{BillyStorage.set(settingKey,toggle.checked);renderMashups()});renderMashups();
+   toggle.addEventListener('change',()=>{BillyRepositories.settings.set(settingKey,toggle.checked);renderMashups()});renderMashups();
  }
  if(!all.length){app.innerHTML='<div class="empty">The Emoji Kitchen data could not be loaded.</div>';return;}selected?detail():overview();
 })();

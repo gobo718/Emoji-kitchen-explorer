@@ -1,4 +1,4 @@
-Billy Labs v2.1.3 — Blurblet-Only Publishing
+Billy Labs v2.2.0 — Blurblet-Only Publishing
 Baseline: Billy-Labs-v2.1.2-hide-empty-slots.zip
 
 Changed:

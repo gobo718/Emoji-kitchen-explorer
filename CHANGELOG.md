@@ -1,5 +1,12 @@
 # Changelog
 
+## v2.2.0 — Repository Foundation
+
+- Added `billy-repositories.js`, a single domain-oriented data-access layer for settings, Explorer state, Profile votes, progress, collections, and curator content.
+- Removed remaining direct `BillyStorage` access from page controllers.
+- Preserved the v2.1.3 interface, local-first behavior, collection filtering, and blurblet-only publishing workflow.
+- Added repository contract tests.
+
 ## v2.1.3 — Blurblet-Only Publishing
 
 - Added **Update Blurblet Only** to the mashup Curator panel.

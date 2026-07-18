@@ -1,3 +1,12 @@
+# Project Log
+
+## v2.2.0 — Repository Foundation
+
+- Promoted v2.1.3 as the sole development baseline.
+- Added a shared repository facade so page controllers no longer own storage keys.
+- Routed Collection view settings, Explorer state, and Profile voting through repositories.
+- Kept domain storage modules local-first in preparation for later Worker/D1 adapters.
+
 # Billy Labs Project Log
 
 ## v2.1.2 — Hide Empty Slots
