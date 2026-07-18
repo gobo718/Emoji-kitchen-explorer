@@ -1,4 +1,4 @@
-/* Billy Labs cloud configuration — v2.3.0
+/* Billy Labs cloud configuration — v2.2.9
    Set the public Worker URL here once, or use Curator → Settings to create a configured replacement file. */
 (() => {
   const normalize = value => String(value || '').trim().replace(/\/+$/, '');

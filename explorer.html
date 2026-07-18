@@ -192,7 +192,7 @@ input,select {
   border:1px solid var(--border);
   border-radius:20px;
   background:var(--panel-strong);
-  padding:8px;
+  padding:10px;
   transition:transform .16s ease, box-shadow .16s ease, opacity .16s ease;
 }
 .card:hover {
@@ -202,8 +202,7 @@ input,select {
 .card.seen { opacity:.70; }
 .art {
   position:relative;
-  overflow:hidden;
-  border-radius:16px;
+  border-radius:15px;
   background:
     linear-gradient(145deg,
       color-mix(in srgb,var(--accent) 8%,var(--panel-strong)),
@@ -214,11 +213,38 @@ input,select {
   width:100%;
   aspect-ratio:1;
   object-fit:contain;
-  padding:0;
-  transform:scale(1.035);
-  transition:transform .18s ease;
+  padding:4px;
 }
-.card:hover img { transform:scale(1.07);
+.rank {
+  position:absolute;
+  top:8px;
+  left:8px;
+  z-index:2;
+  padding:4px 7px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  background:var(--panel);
+  backdrop-filter:blur(10px);
+  font-size:.68rem;
+  font-weight:900;
+}
+.favorite {
+  position:absolute;
+  right:8px;
+  top:8px;
+  z-index:2;
+  width:37px;
+  height:37px;
+  border-radius:50%;
+  border:1px solid var(--border);
+  background:var(--panel);
+  color:var(--text);
+  font-size:1.15rem;
+}
+.favorite.active {
+  background:var(--accent-2);
+  color:#fff;
+  border:0;
 }
 .pair {
   margin-top:8px;
@@ -554,7 +580,6 @@ footer {
 (() => {
   const PAGE_SIZE = 100;
   const all = window.EMOJI_KITCHEN_DATA || [];
-  const newestOrder = shuffleWithinReleaseDates(all);
   const seen = window.BillyProgress.getSeen();
   const favorites = window.BillyProgress.getFavorites();
   const curatorEntries = (() => {
@@ -598,25 +623,6 @@ footer {
     window.__ekToastTimer = setTimeout(() => toast.classList.remove("show"), 1400);
   }
 
-  function shuffleWithinReleaseDates(rows) {
-    const groups = new Map();
-    rows.forEach(row => {
-      const date = row[3];
-      if (!groups.has(date)) groups.set(date, []);
-      groups.get(date).push(row);
-    });
-    return [...groups.keys()]
-      .sort((a, b) => b.localeCompare(a))
-      .flatMap(date => {
-        const group = [...groups.get(date)];
-        for (let i = group.length - 1; i > 0; i -= 1) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [group[i], group[j]] = [group[j], group[i]];
-        }
-        return group;
-      });
-  }
-
   function updateMetrics() {
     const discovered = seen.size;
     const remaining = Math.max(0, all.length - discovered);
@@ -633,13 +639,13 @@ footer {
   function applyFilters(resetPage = true) {
     const query = $("search").value.trim().toLowerCase();
     const sort = $("sort").value;
-    filtered = newestOrder.filter(row => {
+    filtered = all.filter(row => {
       if (sort === "favorites" && !favorites.has(keyOf(row))) return false;
       if (!query) return true;
       return `${row[0]} ${row[1]} ${row[2]} ${row[3]} ${prettyDate(row[3])}`
         .toLowerCase().includes(query);
     });
-    if (sort === "oldest") filtered.sort((a, b) => a[3].localeCompare(b[3]));
+    if (sort === "oldest") filtered.reverse();
     if (sort === "unseen") {
       filtered.sort((a,b) => Number(seen.has(keyOf(a))) - Number(seen.has(keyOf(b))) || b[3].localeCompare(a[3]));
     }
@@ -685,11 +691,14 @@ footer {
     $("grid").innerHTML = visible.map((row,index) => {
       const key = keyOf(row);
       const isSeen = seen.has(key);
+      const isFavorite = favorites.has(key);
       const detailUrl = BillyMashups.buildUrl(row);
       const curatorPairKey = [row[0], row[1]].sort().join("|");
       const blurblet = curatorEntries[curatorPairKey]?.blurblet?.trim() || "";
       return `<article class="card ${isSeen ? "seen" : ""}" data-key="${escapeHtml(key)}">
         <div class="art">
+          <div class="rank">#${(start + index + 1).toLocaleString()}</div>
+          <button class="favorite ${isFavorite ? "active" : ""}" type="button" data-action="favorite" aria-label="Favorite">${isFavorite ? "★" : "☆"}</button>
           <a class="card-link" href="${detailUrl}" aria-label="Open ${escapeHtml(row[0] + " plus " + row[1])}">
             <img loading="lazy" src="${escapeHtml(row[4])}" alt="${escapeHtml(row[0] + " plus " + row[1] + " Emoji Kitchen mashup")}">
           </a>
@@ -735,6 +744,15 @@ footer {
     BillyMashups.open(row);
   }
 
+  $("grid").addEventListener("click", event => {
+    const button = event.target.closest("button[data-action]");
+    if (!button) return;
+    const key = button.closest(".card").dataset.key;
+    if (button.dataset.action !== "favorite") return;
+    favorites.has(key) ? favorites.delete(key) : favorites.add(key);
+    save();
+    render();
+  });
 
   $("search").addEventListener("input", () => applyFilters());
   $("sort").addEventListener("change", () => applyFilters());

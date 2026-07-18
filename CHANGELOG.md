@@ -1,35 +1,26 @@
-# Changelog
-
-## v2.3.0 — Discovery Thumbnail Polish
-
-- Confirmed **Surprise Me** opens the selected mashup detail page directly, skipping the one-result Explorer screen.
-- Randomized mashup order inside each release-date group while preserving newest-to-oldest date order.
-- Removed rank and favorite overlay buttons from Explorer thumbnails. Favorites remain available from mashup detail pages.
-- Enlarged and polished thumbnail artwork while keeping the whole card directly clickable.
-
-## v2.3.0 — Live Blurblet Publishing
+## v2.2.9 — Live Blurblet Publishing
 - Added public Worker endpoint for retrieving published curator blurblets.
 - Added publish-key-protected Curator endpoint for immediate D1 publishing.
 - Mashup pages now prefer live cloud blurblets when the API is configured.
 - Retained the downloadable JavaScript file as a safe manual fallback.
 - Added BUILDINFO.json release lineage metadata.
-- Updated the visible website version to v2.3.0.
+- Updated the visible website version to v2.2.9.
 
-## v2.3.0 — Device Identity Foundation
+## v2.2.9 — Device Identity Foundation
 - Added stable anonymous device IDs stored locally.
 - Added opt-in Worker device registration and D1 devices migration.
 - Added masked identity and registration state to Diagnostics.
 - Progress sync can use the device ID as its anonymous user ID.
-- Updated the visible website version to v2.3.0.
+- Updated the visible website version to v2.2.9.
 
-## v2.3.0 — Progress Cloud Sync
+## v2.2.9 — Progress Cloud Sync
 
 - Added a unified Worker endpoint for seen and favorite progress.
 - Added a persistent, batched sync queue with online retry.
 - Added local/cloud union merging for progress restoration.
 - Kept the favorites endpoint backward compatible.
 - Expanded Diagnostics with queued batch count.
-- Updated the visible website version to v2.3.0.
+- Updated the visible website version to v2.2.9.
 
 ## v2.2.5 — Cloud Sync Framework
 
@@ -117,7 +108,7 @@
 - Built the first HTML browser showing the newest 100 mashups.
 - Planned pagination, collections, achievements, and discovery modes.
 
-## v2.3.0 — Live Blurblet Activation
+## v2.2.9 — Live Blurblet Activation
 - Added a public cloud configuration bootstrap.
 - Added Curator Settings for Worker URL, publish key, health testing, and one-time public config generation.
 - Added live D1 blurblet retrieval to the homepage Daily Pick.
