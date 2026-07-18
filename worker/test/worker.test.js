@@ -30,7 +30,7 @@ const makeDb = (seed = []) => {
 test('health endpoint reports the D1-ready API state', async () => {
   const response = await worker.fetch(new Request('https://example.test/api/health'));
   assert.equal(response.status, 200);
-  assert.deepEqual(await response.json(), {ok:true, service:'Billy Labs API', version:'2.2.4', schemaVersion:1, storage:'d1-not-bound'});
+  assert.deepEqual(await response.json(), {ok:true, service:'Billy Labs API', version:'2.2.5', schemaVersion:1, storage:'d1-not-bound'});
 });
 
 test('favorites can be read from D1', async () => {
