@@ -1,17 +1,21 @@
 # Billy Labs Cloudflare Worker
 
-This directory is the deployable API scaffold introduced in v2.2.2.
+This directory contains the Billy Labs API and the first D1 schema, introduced in v2.2.3.
 
-Current endpoint:
+## Included
 
-- `GET /api/health` — confirms the Worker is running and reports that persistent storage is not connected yet.
+- `GET /api/health`
+- D1 binding name: `DB`
+- Initial migration: `migrations/0001_initial.sql`
+- Tables for users, settings, mashup progress, blurblet votes, collections, collection items, and curator blurblets
 
-No D1 database, account IDs, secrets, or public-site integration are included in this milestone. Those belong to the next cloud-storage milestones.
+## Before the first Cloudflare deployment
 
-## Local commands
+1. Run `npm install`.
+2. Run `npm run db:create`.
+3. Copy the returned database ID into `wrangler.toml`.
+4. Run `npm run db:migrate:local` to test locally.
+5. Run `npm run db:migrate:remote` when the production database is ready.
+6. Run `npm run deploy`.
 
-```sh
-npm install
-npm test
-npm run dev
-```
+The static website still uses local browser storage in this release. No user data is sent to D1 yet.

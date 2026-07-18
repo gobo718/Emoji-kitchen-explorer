@@ -2,5 +2,8 @@ name = "billy-labs-api"
 main = "src/index.js"
 compatibility_date = "2026-07-18"
 
-# D1 bindings will be added in the database-schema milestone.
-# This release intentionally contains no production secrets or account IDs.
+[[d1_databases]]
+binding = "DB"
+database_name = "billy-labs"
+database_id = "REPLACE_WITH_CLOUDFLARE_D1_DATABASE_ID"
+migrations_dir = "migrations"
