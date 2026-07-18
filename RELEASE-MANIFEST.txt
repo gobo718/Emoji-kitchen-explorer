@@ -1,13 +1,10 @@
-Billy Labs v2.2.8 — Live Blurblet Publishing
+Billy Labs v2.2.9 — Live Blurblet Activation
+Baseline: v2.2.8
+Build: BL-229
+Verification phrase: Purple Monkeys
 
-Baseline: verified v2.2.7 Device Identity Foundation
-
-Includes:
-- Live public blurblet GET endpoint
-- Curator-only blurblet PUT endpoint protected by CURATOR_PUBLISH_KEY
-- Cloud API blurblet client methods
-- Mashup pages load cloud-published blurblets when configured
-- Manual published-curator-data.js download retained as fallback
-- D1 migration 0003_live_blurblet_publishing.sql
-- BUILDINFO.json with Billy Labs lineage metadata
-- Visible website version v2.2.8
+Key additions:
+- Curator cloud connection settings
+- One-time public config generator
+- Live homepage blurblet retrieval
+- Complete Worker/D1 activation guide

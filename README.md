@@ -1,3 +1,3 @@
-Billy Labs v2.2.8 — Live Blurblet Publishing
+# Billy Labs v2.2.9
 
-See RELEASE-MANIFEST.txt and BUILDINFO.json.
+Live Blurblet Activation release. See `worker/README.md` for the one-time Cloudflare connection steps.

@@ -1,9 +1,9 @@
 {
   "project": "Billy Labs",
-  "version": "2.2.8",
-  "baseline": "2.2.7",
-  "build": "BL-228",
+  "version": "2.2.9",
+  "baseline": "2.2.8",
+  "build": "BL-229",
   "channel": "development",
   "verificationPhrase": "Purple Monkeys",
-  "release": "Live Blurblet Publishing"
+  "release": "Live Blurblet Activation"
 }

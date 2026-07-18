@@ -1,7 +1,9 @@
-/* Billy Labs cloud API client — v4 */
+/* Billy Labs cloud API client — v5 */
 (() => {
   const normalizeBase = value => String(value || '').trim().replace(/\/+$/, '');
-  let apiBase = normalizeBase(window.BILLY_CLOUD_API_BASE || '');
+  let storedBase = '';
+  try { storedBase = localStorage.getItem('billy-cloud-api-base') || ''; } catch {}
+  let apiBase = normalizeBase(storedBase || window.BILLY_CLOUD_API_BASE || '');
   const request = async (path, init = {}) => {
     if (!apiBase) throw new Error('Billy Labs cloud API is not configured');
     const response = await fetch(`${apiBase}${path}`, {...init, headers:{'content-type':'application/json',...(init.headers||{})}});
@@ -12,7 +14,7 @@
   const unique = values => [...new Set((values || []).filter(value => typeof value === 'string' && value))];
   const userPath = (userId, resource) => `/api/users/${encodeURIComponent(userId)}/${resource}`;
   window.BillyCloudApi = Object.freeze({
-    version:4, isConfigured:()=>!!apiBase, getBaseUrl:()=>apiBase, configure:value=>(apiBase=normalizeBase(value)),
+    version:5, isConfigured:()=>!!apiBase, getBaseUrl:()=>apiBase, configure:value=>{apiBase=normalizeBase(value);window.BILLY_CLOUD_API_BASE=apiBase;return apiBase;},
     health:()=>request('/api/health',{method:'GET'}),
     registerDevice:(deviceId, metadata={})=>request('/api/devices/register',{method:'POST',body:JSON.stringify({deviceId,metadata})}),
     getDevice:deviceId=>request(`/api/devices/${encodeURIComponent(deviceId)}`,{method:'GET'}),
