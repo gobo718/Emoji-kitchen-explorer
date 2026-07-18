@@ -127,3 +127,10 @@ This package was rebuilt from the verified v1.8.0 foundation branch rather than 
 ### v1.9.2b final polish completion
 - Blurblets now keep normal document flow, wrap to any needed number of lines, and use the optical right-edge alignment on phones as well as larger screens.
 - Billy’s Daily Pick **View in Explorer** button now opens the selected mashup detail directly instead of a one-result Explorer page.
+
+## Profile Prototype
+- Added `profile.html`, `profile.css`, `profile.js`, and `profile-data.js`.
+- Added a responsive Fellow profile with avatar, Birth Form, mashup-linked Blurblets, Community Blurblet voting, ranked/latest Blurblets, rotating Microflex, Top 8, awards, and Trophy Room doorway.
+- Added `blurblets.html` and `trophy-room.html` prototype destinations.
+- Added a Profile shortcut to the home page.
+- Voting is locally functional through `localStorage`; public accounts and server-backed community data remain future infrastructure.
