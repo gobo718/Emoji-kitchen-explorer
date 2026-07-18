@@ -1,4 +1,4 @@
-/* Billy Labs repository layer — v3
+/* Billy Labs repository layer — v4
    Page controllers use these domain repositories instead of storage keys.
    Storage implementation remains local-first behind BillyStorage. */
 (() => {
@@ -33,10 +33,25 @@
 
   const cloud = window.BillyCloudApi || null;
 
+  const sync = window.BillySyncManager || null;
+  const queueProgress = () => {
+    if (!sync) return;
+    sync.enqueue('progress', window.BillyProgress?.snapshot?.() || {seen:[], favorites:[]});
+  };
+  const mergeProgress = remote => {
+    const local = window.BillyProgress?.snapshot?.() || {seen:[], favorites:[]};
+    const merged = {
+      seen: [...new Set([...(local.seen || []), ...(remote?.seen || [])])],
+      favorites: [...new Set([...(local.favorites || []), ...(remote?.favorites || [])])]
+    };
+    window.BillyProgress?.replaceSeen?.(merged.seen);
+    window.BillyProgress?.replaceFavorites?.(merged.favorites);
+    return merged;
+  };
   const progress = {
-    markSeen: (left, right) => window.BillyProgress?.markSeen(left, right),
+    markSeen: (left, right) => { const result=window.BillyProgress?.markSeen(left, right); queueProgress(); return result; },
     hasSeen: (left, right) => !!window.BillyProgress?.hasSeen(left, right),
-    toggleFavorite: (left, right) => window.BillyProgress?.toggleFavorite(left, right),
+    toggleFavorite: (left, right) => { const result=window.BillyProgress?.toggleFavorite(left, right); queueProgress(); return result; },
     isFavorite: (left, right) => !!window.BillyProgress?.isFavorite(left, right),
     getSeen: () => window.BillyProgress?.getSeen() || new Set(),
     getFavorites: () => window.BillyProgress?.getFavorites() || new Set(),
@@ -50,6 +65,16 @@
         const result = await cloud.getFavorites(userId);
         window.BillyProgress?.replaceFavorites?.(result.favorites || []);
         return result;
+      },
+      fetchProgress: userId => cloud?.getProgress(userId),
+      pushProgress: (userId, payload) => {
+        if (!cloud) throw new Error('Billy Labs cloud API is unavailable');
+        return cloud.putProgress(userId, payload || window.BillyProgress?.snapshot?.() || {seen:[], favorites:[]});
+      },
+      pullProgress: async userId => {
+        if (!cloud) throw new Error('Billy Labs cloud API is unavailable');
+        const result = await cloud.getProgress(userId);
+        return {...result, ...mergeProgress(result)};
       }
     })
   };
@@ -72,11 +97,13 @@
     downloadPublishedScript: () => window.BillyCuratorData?.downloadPublishedScript()
   };
 
-  const sync = window.BillySyncManager || null;
-  if (sync) sync.register('favorites', {pull: progress.cloud.pullFavorites, push: progress.cloud.pushFavorites});
+  if (sync) {
+    sync.register('favorites', {pull: progress.cloud.pullFavorites, push: progress.cloud.pushFavorites});
+    sync.register('progress', {pull: progress.cloud.pullProgress, push: progress.cloud.pushProgress});
+  }
 
   window.BillyRepositories = Object.freeze({
-    version: 3,
+    version: 4,
     settings: Object.freeze(settings),
     explorer: Object.freeze(explorer),
     profile: Object.freeze(profile),

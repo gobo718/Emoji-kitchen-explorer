@@ -1,3 +1,12 @@
+## v2.2.6 — Progress Cloud Sync
+
+- Added a unified Worker endpoint for seen and favorite progress.
+- Added a persistent, batched sync queue with online retry.
+- Added local/cloud union merging for progress restoration.
+- Kept the favorites endpoint backward compatible.
+- Expanded Diagnostics with queued batch count.
+- Updated the visible website version to v2.2.6.
+
 ## v2.2.5 — Cloud Sync Framework
 
 - Added a generic local-first SyncManager with repository registration and explicit sync states.

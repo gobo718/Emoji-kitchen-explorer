@@ -1,3 +1,7 @@
+## v2.2.6 — Progress Cloud Sync
+
+Built again from the verified v2.2.5 baseline. Added the first unified progress synchronization path for seen and favorite mashups, with batching, offline retention, merge behavior, Worker/D1 support, diagnostics, and regression coverage.
+
 ## v2.2.5 — Cloud Sync Framework
 
 Built the reusable sync orchestration layer and a developer diagnostics surface. Favorites now proves the registration contract while remaining local-first and opt-in.

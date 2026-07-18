@@ -1,12 +1,15 @@
-Billy Labs v2.2.5 — Cloud Sync Framework
+Billy Labs v2.2.6 — Progress Cloud Sync
 
-Baseline: v2.2.4 Favorites Cloud Vertical Slice
+Baseline: Billy Labs v2.2.5 Cloud Sync Framework
 
 Included:
-- Generic SyncManager and lifecycle states
-- Favorites sync repository registration
-- Local-only default and explicit opt-in configuration
-- Developer diagnostics page
-- Visible site version v2.2.5
-- Updated changelog and project log
-- Sync manager, browser, repository, storage, and Worker regression tests
+- Unified seen + favorites cloud progress endpoint
+- Persistent per-repository batch queue
+- Offline retry when the browser comes back online
+- Local/cloud union merge for progress restoration
+- Favorites endpoint retained for backward compatibility
+- Diagnostics queue count
+- Visible website version v2.2.6
+- Updated tests and release documentation
+
+Cloud sync remains disabled until an API URL, user ID, and enabled mode are explicitly configured.
