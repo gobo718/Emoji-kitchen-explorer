@@ -1,11 +1,13 @@
-Billy Labs v2.2.7 — Device Identity Foundation
+Billy Labs v2.2.8 — Live Blurblet Publishing
 
-Baseline: verified v2.2.6 Progress Cloud Sync
+Baseline: verified v2.2.7 Device Identity Foundation
 
 Includes:
-- billy-device-identity.js
-- Anonymous local device identity
-- Opt-in device registration API
-- D1 migration 0002_device_identity.sql
-- Device diagnostics
-- Visible website version v2.2.7
+- Live public blurblet GET endpoint
+- Curator-only blurblet PUT endpoint protected by CURATOR_PUBLISH_KEY
+- Cloud API blurblet client methods
+- Mashup pages load cloud-published blurblets when configured
+- Manual published-curator-data.js download retained as fallback
+- D1 migration 0003_live_blurblet_publishing.sql
+- BUILDINFO.json with Billy Labs lineage metadata
+- Visible website version v2.2.8
