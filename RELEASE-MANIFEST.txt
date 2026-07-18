@@ -1,21 +1,17 @@
-Billy Labs v2.1.2 — Hide Empty Slots
+Billy Labs v2.1.3 — Blurblet-Only Publishing
+Baseline: Billy-Labs-v2.1.2-hide-empty-slots.zip
 
-Source baseline: Billy-Labs-v2.1.1-profile-navigation-blurblet-context.zip
-
-Added:
-- Persistent Hide empty slots toggle on individual My Collection emoji pages.
-- Empty-state message when the filtered page has no discovered mashups.
-
-Updated:
+Changed:
+- mashup.html
+- curator-data.js
+- published-curator-data.js (new)
+- index.html
+- explorer.html
 - collection-book.html
-- profile.html
-- profile.js
 - CHANGELOG.md
-- PROJECTLOG.md
 
-Architecture cleanup:
-- Profile community votes now use BillyStorage instead of direct localStorage access.
-
-Behavioral scope:
-- Full album view remains the default.
-- No mashup eligibility, canonical identity, progress calculation, or collection membership changes.
+Behavior:
+- Save Mashup & Draft Memberships remains private.
+- Update Blurblet Only publishes only the current blurblet.
+- Collection drafts are untouched.
+- Because Curator and public sites are separate static origins, the button downloads published-curator-data.js for replacement in the public deployment.

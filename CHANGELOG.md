@@ -1,3 +1,13 @@
+# Changelog
+
+## v2.1.3 — Blurblet-Only Publishing
+
+- Added **Update Blurblet Only** to the mashup Curator panel.
+- Saving a mashup now keeps its blurblet and collection memberships private as drafts.
+- Publishing a blurblet does not publish or alter any collection draft.
+- Added a dedicated public blurblet dataset (`published-curator-data.js`) that excludes private curator notes.
+- Blurblet-only publishing downloads the updated public dataset for replacement on the separately hosted public site.
+
 ## v2.1.2 — Hide Empty Slots
 
 - Added a remembered **Hide empty slots** option to individual My Collection emoji pages.
