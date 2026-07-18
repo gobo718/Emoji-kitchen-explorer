@@ -1,4 +1,5 @@
-const API_VERSION = '2.2.2';
+const API_VERSION = '2.2.3';
+const SCHEMA_VERSION = 1;
 
 const json = (body, init = {}) => {
   const headers = new Headers(init.headers || {});
@@ -11,7 +12,7 @@ const json = (body, init = {}) => {
 };
 
 export default {
-  async fetch(request) {
+  async fetch(request, env = {}) {
     const url = new URL(request.url);
 
     if (request.method === 'OPTIONS') {
@@ -31,14 +32,11 @@ export default {
         ok: true,
         service: 'Billy Labs API',
         version: API_VERSION,
-        storage: 'not-connected'
+        schemaVersion: SCHEMA_VERSION,
+        storage: env.DB ? 'd1-bound' : 'd1-not-bound'
       });
     }
 
-    return json({
-      ok: false,
-      error: 'Not found',
-      path: url.pathname
-    }, {status: 404});
+    return json({ok: false, error: 'Not found', path: url.pathname}, {status: 404});
   }
 };
