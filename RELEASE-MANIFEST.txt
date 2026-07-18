@@ -1,15 +1,11 @@
-Billy Labs v2.2.6 — Progress Cloud Sync
+Billy Labs v2.2.7 — Device Identity Foundation
 
-Baseline: Billy Labs v2.2.5 Cloud Sync Framework
+Baseline: verified v2.2.6 Progress Cloud Sync
 
-Included:
-- Unified seen + favorites cloud progress endpoint
-- Persistent per-repository batch queue
-- Offline retry when the browser comes back online
-- Local/cloud union merge for progress restoration
-- Favorites endpoint retained for backward compatibility
-- Diagnostics queue count
-- Visible website version v2.2.6
-- Updated tests and release documentation
-
-Cloud sync remains disabled until an API URL, user ID, and enabled mode are explicitly configured.
+Includes:
+- billy-device-identity.js
+- Anonymous local device identity
+- Opt-in device registration API
+- D1 migration 0002_device_identity.sql
+- Device diagnostics
+- Visible website version v2.2.7
