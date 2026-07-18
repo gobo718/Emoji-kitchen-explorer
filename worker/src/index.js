@@ -1,94 +1,14 @@
-const API_VERSION = '2.2.5';
-const SCHEMA_VERSION = 1;
-
-const corsHeaders = {
-  'access-control-allow-origin': '*',
-  'access-control-allow-methods': 'GET, PUT, OPTIONS',
-  'access-control-allow-headers': 'content-type'
-};
-
-const json = (body, init = {}) => {
-  const headers = new Headers(init.headers || {});
-  headers.set('content-type', 'application/json; charset=utf-8');
-  headers.set('cache-control', 'no-store');
-  for (const [key, value] of Object.entries(corsHeaders)) headers.set(key, value);
-  return new Response(JSON.stringify(body), {...init, headers});
-};
-
-const userIdFromPath = pathname => {
-  const match = pathname.match(/^\/api\/users\/([^/]+)\/favorites$/);
-  return match ? decodeURIComponent(match[1]) : null;
-};
-
-const validUserId = value => typeof value === 'string' && /^[A-Za-z0-9._:-]{1,128}$/.test(value);
-const validFavorites = value => Array.isArray(value) && value.every(id => typeof id === 'string' && id.length > 0 && id.length <= 256);
-
-const requireDb = env => {
-  if (!env.DB) throw new Error('D1 database is not bound');
-  return env.DB;
-};
-
-async function getFavorites(env, userId) {
-  const db = requireDb(env);
-  const result = await db.prepare(
-    'SELECT mashup_id FROM mashup_progress WHERE user_id = ?1 AND favorite = 1 ORDER BY mashup_id'
-  ).bind(userId).all();
-  return (result.results || []).map(row => row.mashup_id);
-}
-
-async function putFavorites(env, userId, favorites) {
-  const db = requireDb(env);
-  const unique = [...new Set(favorites)];
-  const statements = [
-    db.prepare("INSERT INTO users (id, display_name) VALUES (?1, '') ON CONFLICT(id) DO UPDATE SET updated_at = CURRENT_TIMESTAMP").bind(userId),
-    db.prepare('UPDATE mashup_progress SET favorite = 0, updated_at = CURRENT_TIMESTAMP WHERE user_id = ?1 AND favorite = 1').bind(userId),
-    ...unique.map(mashupId => db.prepare(
-      `INSERT INTO mashup_progress (user_id, mashup_id, favorite, updated_at)
-       VALUES (?1, ?2, 1, CURRENT_TIMESTAMP)
-       ON CONFLICT(user_id, mashup_id) DO UPDATE SET favorite = 1, updated_at = CURRENT_TIMESTAMP`
-    ).bind(userId, mashupId))
-  ];
-  await db.batch(statements);
-  return unique.sort();
-}
-
-export default {
-  async fetch(request, env = {}) {
-    const url = new URL(request.url);
-
-    if (request.method === 'OPTIONS') {
-      return new Response(null, {status: 204, headers: {...corsHeaders, 'access-control-max-age': '86400'}});
-    }
-
-    if (request.method === 'GET' && url.pathname === '/api/health') {
-      return json({
-        ok: true,
-        service: 'Billy Labs API',
-        version: API_VERSION,
-        schemaVersion: SCHEMA_VERSION,
-        storage: env.DB ? 'd1-bound' : 'd1-not-bound'
-      });
-    }
-
-    const userId = userIdFromPath(url.pathname);
-    if (userId !== null) {
-      if (!validUserId(userId)) return json({ok: false, error: 'Invalid user ID'}, {status: 400});
-      try {
-        if (request.method === 'GET') {
-          return json({ok: true, userId, favorites: await getFavorites(env, userId)});
-        }
-        if (request.method === 'PUT') {
-          const body = await request.json().catch(() => null);
-          if (!body || !validFavorites(body.favorites)) return json({ok: false, error: 'favorites must be an array of mashup IDs'}, {status: 400});
-          return json({ok: true, userId, favorites: await putFavorites(env, userId, body.favorites)});
-        }
-        return json({ok: false, error: 'Method not allowed'}, {status: 405, headers: {allow: 'GET, PUT'}});
-      } catch (error) {
-        const status = error.message === 'D1 database is not bound' ? 503 : 500;
-        return json({ok: false, error: error.message}, {status});
-      }
-    }
-
-    return json({ok: false, error: 'Not found', path: url.pathname}, {status: 404});
-  }
-};
+const API_VERSION = '2.2.7';
+const SCHEMA_VERSION = 2;
+const corsHeaders = {'access-control-allow-origin':'*','access-control-allow-methods':'GET, PUT, POST, OPTIONS','access-control-allow-headers':'content-type'};
+const json=(body,init={})=>new Response(JSON.stringify(body),{...init,headers:{...corsHeaders,'content-type':'application/json; charset=utf-8',...(init.headers||{})}});
+const requireDb=env=>{if(!env.DB)throw new Error('D1 database is not bound');return env.DB};
+const validId=value=>typeof value==='string'&&/^[A-Za-z0-9_-]{1,128}$/.test(value);
+const validIds=values=>Array.isArray(values)&&values.every(validId);
+const userRoute=path=>{const m=path.match(/^\/api\/users\/([^/]+)\/(favorites|progress)$/);return m?{userId:decodeURIComponent(m[1]),resource:m[2]}:null};
+const deviceRoute=path=>{const m=path.match(/^\/api\/devices\/([^/]+)$/);return m?decodeURIComponent(m[1]):null};
+const getProgress=async(env,userId)=>{const result=await requireDb(env).prepare('SELECT mashup_id, seen, favorite FROM mashup_progress WHERE user_id = ?1 AND (seen = 1 OR favorite = 1) ORDER BY mashup_id').bind(userId).all();const seen=[],favorites=[];for(const row of result.results||[]){if(row.seen)seen.push(row.mashup_id);if(row.favorite)favorites.push(row.mashup_id)}return{seen,favorites}};
+const putProgress=async(env,userId,progress)=>{const db=requireDb(env),seen=[...new Set(progress.seen)],favorites=[...new Set(progress.favorites)],ids=[...new Set([...seen,...favorites])],seenSet=new Set(seen),favoriteSet=new Set(favorites);const statements=[db.prepare("INSERT INTO users (id, display_name) VALUES (?1, '') ON CONFLICT(id) DO UPDATE SET updated_at=CURRENT_TIMESTAMP").bind(userId),db.prepare('UPDATE mashup_progress SET seen=0, favorite=0, updated_at=CURRENT_TIMESTAMP WHERE user_id=?1').bind(userId),...ids.map(id=>db.prepare('INSERT INTO mashup_progress (user_id,mashup_id,seen,favorite,first_seen_at,updated_at) VALUES (?1,?2,?3,?4,CASE WHEN ?3=1 THEN CURRENT_TIMESTAMP ELSE NULL END,CURRENT_TIMESTAMP) ON CONFLICT(user_id,mashup_id) DO UPDATE SET seen=?3,favorite=?4,first_seen_at=CASE WHEN ?3=1 THEN COALESCE(mashup_progress.first_seen_at,CURRENT_TIMESTAMP) ELSE mashup_progress.first_seen_at END,updated_at=CURRENT_TIMESTAMP').bind(userId,id,seenSet.has(id)?1:0,favoriteSet.has(id)?1:0))];await db.batch(statements);return{seen:seen.sort(),favorites:favorites.sort()}};
+const registerDevice=async(env,deviceId,metadata={})=>{const db=requireDb(env);await db.batch([db.prepare("INSERT INTO users (id, provider, display_name) VALUES (?1, 'anonymous-device', '') ON CONFLICT(id) DO UPDATE SET updated_at=CURRENT_TIMESTAMP").bind(deviceId),db.prepare('INSERT INTO devices (id,user_id,metadata_json,last_seen_at) VALUES (?1,?1,?2,CURRENT_TIMESTAMP) ON CONFLICT(id) DO UPDATE SET metadata_json=?2,last_seen_at=CURRENT_TIMESTAMP').bind(deviceId,JSON.stringify(metadata||{}))]);return{deviceId,userId:deviceId,status:'registered'}};
+const getDevice=async(env,deviceId)=>{const row=await requireDb(env).prepare('SELECT id,user_id,created_at,last_seen_at FROM devices WHERE id=?1').bind(deviceId).first();return row||null};
+export default{async fetch(request,env={}){const url=new URL(request.url);if(request.method==='OPTIONS')return new Response(null,{status:204,headers:{...corsHeaders,'access-control-max-age':'86400'}});if(request.method==='GET'&&url.pathname==='/api/health')return json({ok:true,service:'Billy Labs API',version:API_VERSION,schemaVersion:SCHEMA_VERSION,storage:env.DB?'d1-bound':'d1-not-bound'});try{if(request.method==='POST'&&url.pathname==='/api/devices/register'){const body=await request.json().catch(()=>null);if(!body||!validId(body.deviceId))return json({ok:false,error:'Invalid device ID'},{status:400});return json({ok:true,...await registerDevice(env,body.deviceId,body.metadata)});}const deviceId=deviceRoute(url.pathname);if(deviceId&&request.method==='GET'){if(!validId(deviceId))return json({ok:false,error:'Invalid device ID'},{status:400});const device=await getDevice(env,deviceId);return device?json({ok:true,device}):json({ok:false,error:'Device not found'},{status:404});}const matched=userRoute(url.pathname);if(matched){const{userId,resource}=matched;if(!validId(userId))return json({ok:false,error:'Invalid user ID'},{status:400});if(request.method==='GET'){const progress=await getProgress(env,userId);return resource==='favorites'?json({ok:true,userId,favorites:progress.favorites}):json({ok:true,userId,...progress});}if(request.method==='PUT'){const body=await request.json().catch(()=>null);if(resource==='favorites'){if(!body||!validIds(body.favorites))return json({ok:false,error:'favorites must be an array of mashup IDs'},{status:400});const current=await getProgress(env,userId),progress=await putProgress(env,userId,{seen:current.seen,favorites:body.favorites});return json({ok:true,userId,favorites:progress.favorites});}if(!body||!validIds(body.seen)||!validIds(body.favorites))return json({ok:false,error:'seen and favorites must be arrays of mashup IDs'},{status:400});return json({ok:true,userId,...await putProgress(env,userId,body)});}return json({ok:false,error:'Method not allowed'},{status:405});}}catch(error){return json({ok:false,error:error.message},{status:error.message==='D1 database is not bound'?503:500});}return json({ok:false,error:'Not found',path:url.pathname},{status:404});}};
