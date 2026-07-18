@@ -1,6 +1,6 @@
 {
   "name": "billy-labs-worker",
-  "version": "2.2.5",
+  "version": "2.2.7",
   "private": true,
   "type": "module",
   "scripts": {
