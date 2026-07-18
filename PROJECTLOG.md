@@ -134,3 +134,10 @@ This package was rebuilt from the verified v1.8.0 foundation branch rather than 
 - Added `blurblets.html` and `trophy-room.html` prototype destinations.
 - Added a Profile shortcut to the home page.
 - Voting is locally functional through `localStorage`; public accounts and server-backed community data remain future infrastructure.
+
+
+## 2026-07-18 — v2.1.1 Profile navigation and Blurblet context
+- Home Quick Links now routes to My Profile instead of directly to My Collection.
+- Removed the floating Profile button from Home.
+- Profile Collection card opens My Collection; Top 8 items remain independently clickable.
+- My Best IMHO and Community Blurblet Vote now display the mashup each Blurblet references.
