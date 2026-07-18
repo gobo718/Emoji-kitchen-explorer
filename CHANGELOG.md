@@ -1,4 +1,20 @@
+## v2.2.2 — Cloudflare Worker Scaffold
+
+- Added a deployable Cloudflare Worker project under `worker/`.
+- Added `GET /api/health`, structured JSON 404 responses, and CORS preflight handling.
+- Added Worker tests without connecting production storage or D1.
+- Restored the visible website release number and updated it to v2.2.2.
+- Updated curator backup filenames and metadata to the current release number.
+- No mashup rules, saved data, or user-facing behavior changed.
+
 # Changelog
+
+## v2.2.1 — Storage Adapter Foundation
+- Added a swappable storage-adapter layer beneath `BillyStorage`.
+- Added local-storage and in-memory adapters.
+- Repositories and page controllers remain unchanged and local-first.
+- Added adapter-switching regression tests.
+- No visual or user-facing behavior changes.
 
 ## v2.2.0 — Repository Foundation
 

@@ -1,17 +1,14 @@
-Billy Labs v2.2.0 — Blurblet-Only Publishing
-Baseline: Billy-Labs-v2.1.2-hide-empty-slots.zip
+Billy Labs v2.2.2 — Cloudflare Worker Scaffold
+Baseline: Billy Labs v2.2.1 Storage Adapter Foundation
 
-Changed:
-- mashup.html
-- curator-data.js
-- published-curator-data.js (new)
-- index.html
-- explorer.html
-- collection-book.html
-- CHANGELOG.md
+Included:
+- Complete static Billy Labs website
+- Repository and storage-adapter foundations
+- Deployable Cloudflare Worker scaffold
+- Health endpoint, CORS handling, and Worker tests
+- Visible site version updated to v2.2.2
 
-Behavior:
-- Save Mashup & Draft Memberships remains private.
-- Update Blurblet Only publishes only the current blurblet.
-- Collection drafts are untouched.
-- Because Curator and public sites are separate static origins, the button downloads published-curator-data.js for replacement in the public deployment.
+Not included:
+- Cloudflare deployment credentials
+- D1 schema or bindings
+- Accounts, synchronization, or live cloud persistence

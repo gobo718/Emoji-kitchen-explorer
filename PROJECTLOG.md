@@ -1,3 +1,16 @@
+## v2.2.2 — Cloudflare Worker Scaffold
+
+- Created the first deployable Cloudflare Worker boundary for Billy Labs.
+- The scaffold exposes a health endpoint and predictable JSON/CORS behavior, but deliberately has no database binding yet.
+- Added isolated Worker tests so API development can proceed without changing the static site.
+- Reinstated a visible, release-synchronized website version marker; the current site now displays v2.2.2.
+- Next architectural milestone: define the D1 schema and bind it to the Worker.
+
+## v2.2.1 — Storage Adapter Foundation
+- Inserted a swappable raw-persistence adapter beneath BillyStorage.
+- Kept localStorage active by default and added an in-memory test adapter.
+- Verified repositories continue working across adapter changes.
+
 # Project Log
 
 ## v2.2.0 — Repository Foundation
