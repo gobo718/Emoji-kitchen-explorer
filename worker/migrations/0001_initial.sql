@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS schema_meta (
 
 INSERT OR REPLACE INTO schema_meta (key, value) VALUES
   ('schema_version', '1'),
-  ('app_version', '2.2.3');
+  ('app_version', '2.2.4');
 
 CREATE TABLE IF NOT EXISTS users (
   id TEXT PRIMARY KEY,
