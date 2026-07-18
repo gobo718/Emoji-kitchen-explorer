@@ -1,5 +1,17 @@
 # Billy Labs Project Log
 
+## v2.0.1 — Storage Foundation
+- Added `billy-storage.js` as the single low-level gateway for browser persistence.
+- Added `curator-data.js` to own curator blurblets and private-note storage.
+- Routed progress and collection persistence through `BillyStorage`.
+- Removed direct domain-state `localStorage` access from page controllers.
+- Kept Explorer search and paging state device-local through the shared storage gateway.
+- Stopped writing legacy progress keys after migration. Legacy values are still read and normalized.
+- Updated Curator backup metadata and filenames to v2.0.1.
+- Added regression tests for canonical identity, duplicate ingredients, progress migration, favorites, collections, and curator entries.
+- Added the v2.0.0 architecture audit to `docs/audit.md`.
+- No mashup eligibility, collection behavior, visual design, or discovery behavior was intentionally changed.
+
 ## v2.0.0 — The Collection Update
 - Added the first public Collection Book at `collection-book.html`.
 - Organized Kitchen-compatible base emoji into familiar emoji-keyboard categories and order.
@@ -33,7 +45,7 @@
 - Preserved the v1.9.1 discovery repair and public/dev Curator separation.
 
 ## Current Version
-v2.0.0 — The Collection Update
+v2.0.1 — Storage Foundation
 
 ## Phase Status
 - Phase 1 — Museum: complete

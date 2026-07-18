@@ -464,18 +464,20 @@ footer {
     </div>
 
     <div class="footer-right">
-      <div>Made by Billy 💜 · v2.0.0</div>
+      <div>Made by Billy 💜 · v2.0.1</div>
       <div>Made with 🧪 and 💜</div>
     </div>
   </footer>
 </div>
 
-<script src="emoji-data.js?v=2.0.0"></script>
-<script src="mashup-core.js?v=2.0.0"></script>
-<script src="action-ui.js?v=2.0.0"></script>
-<script src="progress-engine.js?v=2.0.0"></script>
-<script src="collections-data.js?v=2.0.0"></script>
-<script src="billyisms.js?v=2.0.0"></script>
+<script src="emoji-data.js?v=2.0.1"></script>
+<script src="mashup-core.js?v=2.0.1"></script>
+<script src="billy-storage.js?v=2.0.1"></script>
+<script src="curator-data.js?v=2.0.1"></script>
+<script src="action-ui.js?v=2.0.1"></script>
+<script src="progress-engine.js?v=2.0.1"></script>
+<script src="collections-data.js?v=2.0.1"></script>
+<script src="billyisms.js?v=2.0.1"></script>
 <script>
 (() => {
   const all = window.EMOJI_KITCHEN_DATA || [];
@@ -523,10 +525,10 @@ footer {
   $("dailyName").textContent = "One tiny experiment, completely overproduced.";
   $("dailyRelease").textContent = `Released ${prettyDate(row[3])}`;
   const curatorEntries = (() => {
-    try { return JSON.parse(localStorage.getItem("billy-curator-entries-v1") || "{}"); }
+    try { return BillyCuratorData.list(); }
     catch { return {}; }
   })();
-  const dailyPairKey = [row[0], row[1]].sort().join("|");
+  const dailyPairKey = BillyMashups.id(row[0], row[1]);
   const dailyBlurblet = curatorEntries[dailyPairKey]?.blurblet?.trim() || "";
   if (dailyBlurblet) {
     $("dailyBlurblet").textContent = dailyBlurblet;
@@ -564,7 +566,7 @@ footer {
       if (window.BillyProgress?.replaceFavorites) {
         window.BillyProgress.replaceFavorites(dailyFavorites);
       } else {
-        localStorage.setItem("ek-favorites", JSON.stringify([...dailyFavorites]));
+        BillyProgress.replaceFavorites([...dailyFavorites]);
       }
     } catch (error) {
       console.warn("Favorite could not be saved.", error);
@@ -622,7 +624,7 @@ footer {
     $("dailyBillyism").hidden = false;
   }
 
-  const savedState = JSON.parse(localStorage.getItem("ek-explorer-state") || "null");
+  const savedState = BillyStorage.get("ek-explorer-state", null);
   if (savedState) {
     const pieces = [];
     if (savedState.search) pieces.push(`searching for ${savedState.search}`);

@@ -1,16 +1,23 @@
-Billy Labs v2.0.0 — The Collection Update
+Billy Labs v2.0.1 — Storage Foundation
 
-Source baseline: Billy-Labs-v1.9.2b-final-polish-complete.zip
+Source baseline: Billy-Labs-v2.0.0-Collection-Update-1.zip
 
-New public feature:
-- collection-book.html
-- Emoji-keyboard category organization
-- Per-emoji album pages
-- Mashups indexed under both ingredient emoji
-- Discovered/revealed and undiscovered/shrouded states
-- Overall and per-page completion tracking
+Added:
+- billy-storage.js
+- curator-data.js
+- tests/storage-foundation.test.js
+- docs/audit.md
 
 Updated:
-- index.html (Collection entry point and visible v2.0.0)
+- progress-engine.js (shared storage gateway; no legacy writes)
+- collections-data.js (shared storage gateway)
+- index.html (shared repositories and v2.0.1 label)
+- explorer.html (shared repositories for all persistence)
+- mashup.html (curator repository)
+- collection-book.html (v2.0.1 label and cache busting)
+- curator/index.html (repository-backed backup and v2.0.1 metadata)
 - PROJECTLOG.md
-- Shared script URLs cache-busted for v2.0.0 where updated
+
+Behavioral scope:
+- Internal storage refactor only.
+- No intentional UI, mashup selection, discovery, or collection behavior changes.

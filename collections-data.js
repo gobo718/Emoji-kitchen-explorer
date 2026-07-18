@@ -1,20 +1,20 @@
-/* Billy Labs curated collection schema + storage — v1 */
+/* Billy Labs curated collection schema + storage — v2 */
 (() => {
+  if (!window.BillyStorage) throw new Error('collections-data.js requires billy-storage.js');
   const KEY='billy-collections-v1';
-  const ENTRY_KEY='billy-curator-entries-v1';
   const LEGACY_EXHIBITS='billy-curator-exhibits-v1';
   const defaults=[
     ['mutations','🧬','Mutations'],['forbidden-foods','🍽️','Forbidden Foods'],
     ['extra-eyes','👁️','Extra Eyes'],['unexpected-royalty','👑','Unexpected Royalty']
   ];
-  const read=(key,fallback)=>{try{return JSON.parse(localStorage.getItem(key)||JSON.stringify(fallback))}catch{return fallback}};
   const now=()=>new Date().toISOString();
   const slug=s=>String(s||'collection').toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,60)||'collection';
   const blank=(name='Untitled Collection',icon='🗂️')=>({id:`${slug(name)}-${Date.now().toString(36)}`,name,icon,description:'',banner:'',tier:'standard',points:100,sortOrder:0,secret:false,notes:'',status:'draft',publishedVersion:0,published:null,draft:{members:[]},createdAt:now(),updatedAt:now()});
   function migrate(){
-    let rows=read(KEY,[]);
+    let rows=BillyStorage.get(KEY,[]);
     if(rows.length)return rows;
-    const entries=read(ENTRY_KEY,{}), legacy=read(LEGACY_EXHIBITS,[]);
+    const entries=window.BillyCuratorData?.list?.()||{};
+    const legacy=BillyStorage.get(LEGACY_EXHIBITS,[]);
     const names=[...defaults.map(x=>`${x[1]} ${x[2]}`),...legacy];
     rows=names.map((label,i)=>{
       const match=defaults.find(x=>label.includes(x[2]));
@@ -24,8 +24,8 @@
       c.draft.members=Object.entries(entries).filter(([,e])=>(e.exhibits||[]).includes(label)).map(([id])=>id);
       return c;
     });
-    localStorage.setItem(KEY,JSON.stringify(rows));return rows;
+    BillyStorage.set(KEY,rows);return rows;
   }
-  const save=rows=>localStorage.setItem(KEY,JSON.stringify(rows));
-  window.BillyCollections={version:1,key:KEY,blank,list:migrate,save,find:id=>migrate().find(x=>x.id===id),slug};
+  const save=rows=>BillyStorage.set(KEY,rows);
+  window.BillyCollections={version:2,key:KEY,blank,list:migrate,save,find:id=>migrate().find(x=>x.id===id),slug};
 })();
