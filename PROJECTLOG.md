@@ -1,3 +1,12 @@
+## v2.2.3 — D1 Schema Foundation
+
+- Established schema version 1 as a Wrangler-managed SQL migration.
+- Preserved canonical mashup IDs as text so unordered pairs and duplicate-ingredient mashups remain valid.
+- Designed user-owned progress, settings, votes, and collections for future accounts and synchronized progress.
+- Added curator draft and published blurblet fields without exposing private notes through the public site.
+- Configured the Worker for a `DB` binding; the real Cloudflare database ID still must be inserted after database creation.
+- Next milestone: create the D1 database and connect the first repository/API route.
+
 ## v2.2.2 — Cloudflare Worker Scaffold
 
 - Created the first deployable Cloudflare Worker boundary for Billy Labs.

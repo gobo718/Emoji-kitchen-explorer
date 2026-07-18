@@ -1,3 +1,12 @@
+## v2.2.3 — D1 Schema Foundation
+
+- Added the first versioned D1 migration under `worker/migrations/0001_initial.sql`.
+- Defined cloud-ready tables for accounts, settings, mashup progress, blurblet votes, collections, collection membership, and curator blurblets.
+- Added the `DB` binding configuration and local/remote migration commands.
+- Updated the Worker health response to report API version, schema version, and D1 binding availability.
+- Updated the visible website version and curator backup metadata to v2.2.3.
+- The public site remains local-first; no user data is transmitted to Cloudflare in this release.
+
 ## v2.2.2 — Cloudflare Worker Scaffold
 
 - Added a deployable Cloudflare Worker project under `worker/`.

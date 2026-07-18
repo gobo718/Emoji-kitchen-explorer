@@ -1,14 +1,16 @@
-Billy Labs v2.2.2 — Cloudflare Worker Scaffold
-Baseline: Billy Labs v2.2.1 Storage Adapter Foundation
+Billy Labs v2.2.3 — D1 Schema Foundation
+Baseline: Billy Labs v2.2.2 Cloudflare Worker Scaffold
 
 Included:
 - Complete static Billy Labs website
 - Repository and storage-adapter foundations
-- Deployable Cloudflare Worker scaffold
-- Health endpoint, CORS handling, and Worker tests
-- Visible site version updated to v2.2.2
+- Cloudflare Worker scaffold
+- D1 schema migration version 1
+- D1 Worker binding template and migration commands
+- Worker and schema tests
+- Visible site version updated to v2.2.3
 
 Not included:
-- Cloudflare deployment credentials
-- D1 schema or bindings
-- Accounts, synchronization, or live cloud persistence
+- A real Cloudflare D1 database ID or production credentials
+- Live API persistence or repository synchronization
+- Accounts or login UI
