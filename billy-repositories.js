@@ -1,4 +1,4 @@
-/* Billy Labs repository layer — v1
+/* Billy Labs repository layer — v2
    Page controllers use these domain repositories instead of storage keys.
    Storage implementation remains local-first behind BillyStorage. */
 (() => {
@@ -31,6 +31,8 @@
     saveVotes: votes => storage.set('billy.profile.votes', votes || {})
   };
 
+  const cloud = window.BillyCloudApi || null;
+
   const progress = {
     markSeen: (left, right) => window.BillyProgress?.markSeen(left, right),
     hasSeen: (left, right) => !!window.BillyProgress?.hasSeen(left, right),
@@ -38,7 +40,18 @@
     isFavorite: (left, right) => !!window.BillyProgress?.isFavorite(left, right),
     getSeen: () => window.BillyProgress?.getSeen() || new Set(),
     getFavorites: () => window.BillyProgress?.getFavorites() || new Set(),
-    snapshot: () => window.BillyProgress?.snapshot() || {seen: [], favorites: []}
+    snapshot: () => window.BillyProgress?.snapshot() || {seen: [], favorites: []},
+    cloud: Object.freeze({
+      isConfigured: () => !!cloud?.isConfigured?.(),
+      fetchFavorites: userId => cloud?.getFavorites(userId),
+      pushFavorites: userId => cloud?.putFavorites(userId, [...(window.BillyProgress?.getFavorites() || [])]),
+      pullFavorites: async userId => {
+        if (!cloud) throw new Error('Billy Labs cloud API is unavailable');
+        const result = await cloud.getFavorites(userId);
+        window.BillyProgress?.replaceFavorites?.(result.favorites || []);
+        return result;
+      }
+    })
   };
 
   const collections = {
@@ -60,7 +73,7 @@
   };
 
   window.BillyRepositories = Object.freeze({
-    version: 1,
+    version: 2,
     settings: Object.freeze(settings),
     explorer: Object.freeze(explorer),
     profile: Object.freeze(profile),

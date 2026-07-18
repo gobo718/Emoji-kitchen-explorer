@@ -1,3 +1,13 @@
+## v2.2.4 — Favorites Cloud Vertical Slice
+
+- Added the first end-to-end cloud persistence path for mashup favorites.
+- Added GET and PUT Worker endpoints backed by the existing D1 `mashup_progress` table.
+- Added a browser cloud API client that remains disabled until an API URL is explicitly configured.
+- Extended the progress repository with explicit push, pull, and fetch operations for cloud favorites.
+- Added Worker and browser-client tests for the new path.
+- Updated the visible site version and curator backup metadata to v2.2.4.
+- The normal website remains local-first and does not transmit data automatically.
+
 ## v2.2.3 — D1 Schema Foundation
 
 - Added the first versioned D1 migration under `worker/migrations/0001_initial.sql`.

@@ -1,3 +1,9 @@
+## v2.2.4 — Favorites Cloud Vertical Slice
+
+- Connected one real domain—favorites—from the browser repository boundary through the Worker to D1.
+- Kept cloud access explicit and inactive by default, preserving the current local-first behavior.
+- Established the request/validation/CORS pattern that later progress and account APIs can reuse.
+
 ## v2.2.3 — D1 Schema Foundation
 
 - Established schema version 1 as a Wrangler-managed SQL migration.

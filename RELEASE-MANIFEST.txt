@@ -1,16 +1,13 @@
-Billy Labs v2.2.3 — D1 Schema Foundation
-Baseline: Billy Labs v2.2.2 Cloudflare Worker Scaffold
+Billy Labs v2.2.4 — Favorites Cloud Vertical Slice
+
+Baseline: v2.2.3 D1 Schema Foundation
 
 Included:
-- Complete static Billy Labs website
-- Repository and storage-adapter foundations
-- Cloudflare Worker scaffold
-- D1 schema migration version 1
-- D1 Worker binding template and migration commands
-- Worker and schema tests
-- Visible site version updated to v2.2.3
-
-Not included:
-- A real Cloudflare D1 database ID or production credentials
-- Live API persistence or repository synchronization
-- Accounts or login UI
+- Cloud API browser client
+- Favorites GET/PUT Worker endpoints
+- D1 favorites persistence through mashup_progress
+- Repository push/pull/fetch methods
+- Explicit opt-in configuration; no automatic transmission
+- Visible site version v2.2.4
+- Updated changelog and project log
+- Browser and Worker regression tests
