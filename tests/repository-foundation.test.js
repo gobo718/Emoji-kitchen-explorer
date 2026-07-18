@@ -9,7 +9,7 @@ ctx.window.window=ctx.window;
 vm.createContext(ctx);
 for (const file of ['billy-storage.js','billy-sync-manager.js','billy-repositories.js']) vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),ctx,{filename:file});
 const repos=ctx.window.BillyRepositories;
-if (!repos || repos.version !== 3) throw new Error('Repository layer failed to initialize');
+if (!repos || repos.version !== 4) throw new Error('Repository layer failed to initialize');
 repos.settings.set('collection.hideEmptySlots',true);
 if (repos.settings.get('collection.hideEmptySlots',false)!==true) throw new Error('Settings repository failed');
 repos.explorer.saveState({query:'frog'});
