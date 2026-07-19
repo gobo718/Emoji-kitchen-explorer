@@ -1,3 +1,10 @@
+# Billy Labs v2.4.3a — Curator Access Patch
+
+- Restored a visible Curator launcher on the Home page for the development site.
+- Curator mode now persists after visiting with `?curator=1`.
+- Restored Curator access on mashup pages and moved the floating button above bottom navigation.
+- Preserved all v2.4.3 Home polish and Curator Research Lab behavior.
+
 ## v2.4.2 — Focused Discovery Cleanup
 
 - Replaced the public thumbnail-browser navigation with Surprise Me, Newly Created, and a reserved Billy’s Lab entry.
@@ -134,9 +141,9 @@
 - Removed the separate Billy’s Lab discovery tile; Lab remains available in persistent navigation.
 
 
-## v2.4.3 — Final Home Polish + Curator Combo Lookup
+## v2.4.3aa — Final Home Polish + Curator Combo Lookup
 - Tightened Daily Pick card spacing beneath short blurblets.
 - Made the Home blurblet card directly editable.
 - Added Submit confirmation with Submit Now, Studio handoff, and Cancel draft preservation.
 - Added Curator → Research Lab → Combo Lookup for all mashups containing a selected emoji.
-- Updated visible and internal version references to v2.4.3.
+- Updated visible and internal version references to v2.4.3aa.
