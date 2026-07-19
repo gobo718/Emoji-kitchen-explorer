@@ -1,4 +1,4 @@
-## v2.3.0 — Focused Discovery Cleanup
+## v2.4.0 — Focused Discovery Cleanup
 
 - Replaced the public thumbnail-browser navigation with Surprise Me, Newly Created, and a reserved Billy’s Lab entry.
 - Surprise Me now opens a random undiscovered mashup directly.
@@ -6,31 +6,31 @@
 - Removed public Home thumbnail browsing, quick category buttons, Continue Exploring, and Related Mashups thumbnails.
 - Preserved all classifications, category metadata, collections, progression logic, and reward foundations.
 - Included the working public cloud configuration for live Blurblets.
-- Updated the visible website version to v2.3.0.
+- Updated the visible website version to v2.4.0.
 
-## v2.3.0 — Live Blurblet Publishing
+## v2.4.0 — Live Blurblet Publishing
 - Added public Worker endpoint for retrieving published curator blurblets.
 - Added publish-key-protected Curator endpoint for immediate D1 publishing.
 - Mashup pages now prefer live cloud blurblets when the API is configured.
 - Retained the downloadable JavaScript file as a safe manual fallback.
 - Added BUILDINFO.json release lineage metadata.
-- Updated the visible website version to v2.3.0.
+- Updated the visible website version to v2.4.0.
 
-## v2.3.0 — Device Identity Foundation
+## v2.4.0 — Device Identity Foundation
 - Added stable anonymous device IDs stored locally.
 - Added opt-in Worker device registration and D1 devices migration.
 - Added masked identity and registration state to Diagnostics.
 - Progress sync can use the device ID as its anonymous user ID.
-- Updated the visible website version to v2.3.0.
+- Updated the visible website version to v2.4.0.
 
-## v2.3.0 — Progress Cloud Sync
+## v2.4.0 — Progress Cloud Sync
 
 - Added a unified Worker endpoint for seen and favorite progress.
 - Added a persistent, batched sync queue with online retry.
 - Added local/cloud union merging for progress restoration.
 - Kept the favorites endpoint backward compatible.
 - Expanded Diagnostics with queued batch count.
-- Updated the visible website version to v2.3.0.
+- Updated the visible website version to v2.4.0.
 
 ## v2.2.5 — Cloud Sync Framework
 
@@ -118,7 +118,7 @@
 - Built the first HTML browser showing the newest 100 mashups.
 - Planned pagination, collections, achievements, and discovery modes.
 
-## v2.3.0 — Live Blurblet Activation
+## v2.4.0 — Live Blurblet Activation
 - Added a public cloud configuration bootstrap.
 - Added Curator Settings for Worker URL, publish key, health testing, and one-time public config generation.
 - Added live D1 blurblet retrieval to the homepage Daily Pick.

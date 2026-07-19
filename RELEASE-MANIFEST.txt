@@ -1,4 +1,4 @@
-Billy Labs v2.3.0 — Focused Discovery Cleanup
+Billy Labs v2.4.0 — Focused Discovery Cleanup
 
 Built from Billy-Labs-v2.2.9-live-blurblet-activation.
 Includes working live Blurblet public cloud configuration.

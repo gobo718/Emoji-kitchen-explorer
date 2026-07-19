@@ -318,7 +318,7 @@ People should be able to search when they know what they want.
 
 More importantly, the app should help them discover things they never would have thought to search for.
 
-## Discovery and Progression Separation (v2.3.0)
+## Discovery and Progression Separation (v2.4.0)
 
 Discovery and progression are separate systems. Discovery answers how a player finds a mashup; progression answers why they continue collecting. Categories and classifications remain foundational game data for collection completion, trophies, rewards, statistics, and future challenges. They are not deleted merely because category shortcut buttons are removed from the public Home interface.
 
