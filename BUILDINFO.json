@@ -1,9 +1,10 @@
 {
   "project": "Billy Labs",
-  "version": "2.2.9",
+  "version": "2.3.0",
   "baseline": "2.2.8",
   "build": "BL-229",
   "channel": "development",
   "verificationPhrase": "Purple Monkeys",
-  "release": "Live Blurblet Activation"
+  "release": "Live Blurblet Activation",
+  "name": "Focused Discovery Cleanup"
 }

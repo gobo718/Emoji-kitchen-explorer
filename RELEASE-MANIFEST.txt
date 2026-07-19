@@ -1,10 +1,5 @@
-Billy Labs v2.2.9 — Live Blurblet Activation
-Baseline: v2.2.8
-Build: BL-229
-Verification phrase: Purple Monkeys
+Billy Labs v2.3.0 — Focused Discovery Cleanup
 
-Key additions:
-- Curator cloud connection settings
-- One-time public config generator
-- Live homepage blurblet retrieval
-- Complete Worker/D1 activation guide
+Built from Billy-Labs-v2.2.9-live-blurblet-activation.
+Includes working live Blurblet public cloud configuration.
+Preserves classifications, categories, collections, progression, and curator systems.
