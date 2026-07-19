@@ -1,10 +1,10 @@
 {
   "project": "Billy Labs",
-  "version": "2.4.2",
-  "baseline": "2.2.8",
-  "build": "BL-229",
+  "version": "2.4.3",
+  "baseline": "2.4.2",
+  "build": "BL-243",
   "channel": "development",
   "verificationPhrase": "Purple Monkeys",
-  "release": "Live Blurblet Activation",
-  "name": "Focused Discovery Cleanup"
+  "release": "Final Home Polish + Curator Combo Lookup",
+  "name": "Final Home Polish"
 }

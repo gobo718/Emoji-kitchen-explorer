@@ -199,6 +199,7 @@ a { color:inherit; text-decoration:none; }
   text-align:right;
   font-style:italic;
   color:#d8cee3;
+  padding-bottom:1.35em;
 }
 .daily-status {
   min-height:24px;
@@ -393,7 +394,7 @@ footer {
   background:linear-gradient(145deg,rgba(30,25,65,.94),rgba(12,13,30,.96));
   box-shadow:var(--shadow);
 }
-.community-card h2{margin:0 0 14px;font-size:1.2rem}.vote-stage{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center}.vote-arrow{width:42px;height:42px;border-radius:50%;border:1px solid var(--border);background:#17152e;color:#fff;font-size:1.5rem;cursor:pointer}.blurblet-card{min-height:175px;padding:18px;border-radius:20px;background:#f8efcf;color:#292331;display:grid;grid-template-columns:72px 1fr;gap:14px;align-items:center;box-shadow:inset 0 0 0 2px #6f5c8b33}.blurblet-card img,.write-postit img{width:72px;height:72px;object-fit:contain}.blurblet-text{font:800 1rem/1.35 Georgia,serif}.blurblet-author{margin-top:10px;font:800 .84rem/1 system-ui;color:#6044a8;opacity:0;transform:translateY(4px);transition:.25s}.blurblet-author.revealed{opacity:1;transform:none}.blurblet-author a{color:inherit}.reaction-row{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin-top:12px}.reaction-row button{min-width:0;padding:9px 2px;border:1px solid var(--border);border-radius:12px;background:#17152e;color:#fff;font-size:1.15rem;cursor:pointer}.reaction-row button.active{background:#6f43cc}.write-template{min-height:175px;padding:18px;border-radius:20px;background:#fff;color:#2a2633;position:relative}.write-lines{height:92px;border-radius:12px;background:repeating-linear-gradient(#fff 0 25px,#ddd 26px 27px)}.write-postit{position:absolute;right:12px;bottom:12px;width:112px;padding:9px;background:#ffe869;color:#332b12;transform:rotate(-3deg);box-shadow:0 8px 20px #0004;text-align:center;font-size:.75rem;font-weight:800}.write-postit img{width:64px;height:64px}.write-button{display:inline-flex;margin-top:14px;padding:12px 16px;border-radius:14px;background:linear-gradient(135deg,#8b5cff,#ff68aa);color:#fff;text-decoration:none;font-weight:900}
+.community-card h2{margin:0 0 14px;font-size:1.2rem}.vote-stage{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center}.vote-arrow{width:42px;height:42px;border-radius:50%;border:1px solid var(--border);background:#17152e;color:#fff;font-size:1.5rem;cursor:pointer}.blurblet-card{min-height:175px;padding:18px;border-radius:20px;background:#f8efcf;color:#292331;display:grid;grid-template-columns:72px 1fr;gap:14px;align-items:center;box-shadow:inset 0 0 0 2px #6f5c8b33}.blurblet-card img,.write-postit img{width:72px;height:72px;object-fit:contain}.blurblet-text{font:800 1rem/1.35 Georgia,serif}.blurblet-author{margin-top:10px;font:800 .84rem/1 system-ui;color:#6044a8;opacity:0;transform:translateY(4px);transition:.25s}.blurblet-author.revealed{opacity:1;transform:none}.blurblet-author a{color:inherit}.reaction-row{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin-top:12px}.reaction-row button{min-width:0;padding:9px 2px;border:1px solid var(--border);border-radius:12px;background:#17152e;color:#fff;font-size:1.15rem;cursor:pointer}.reaction-row button.active{background:#6f43cc}.write-template{min-height:175px;padding:18px;border-radius:20px;background:#fff;color:#2a2633;position:relative}.write-lines{width:calc(100% - 128px);min-height:132px;border:0;border-radius:12px;padding:3px 8px;resize:vertical;background:repeating-linear-gradient(#fff 0 25px,#ddd 26px 27px);color:#2a2633;font:800 1rem/27px Georgia,serif;outline:none}.write-lines:focus{box-shadow:0 0 0 3px #8b5cff55}.write-postit{position:absolute;right:12px;bottom:12px;width:112px;padding:9px;background:#ffe869;color:#332b12;transform:rotate(-3deg);box-shadow:0 8px 20px #0004;text-align:center;font-size:.75rem;font-weight:800}.write-postit img{width:64px;height:64px}.write-actions{display:flex;justify-content:flex-end;margin-top:14px}.write-button{display:inline-flex;border:0;cursor:pointer;padding:12px 16px;border-radius:14px;background:linear-gradient(135deg,#8b5cff,#ff68aa);color:#fff;text-decoration:none;font-weight:900}.home-modal-backdrop{position:fixed;inset:0;display:grid;place-items:center;padding:20px;background:#02030bd9;z-index:1000}.home-modal-backdrop[hidden]{display:none}.home-modal{width:min(520px,100%);padding:22px;border:1px solid #ffffff20;border-radius:22px;background:#111428;box-shadow:0 25px 80px #000b}.home-modal h2{margin-top:0}.home-modal-actions{display:grid;gap:10px;margin-top:20px}.home-modal-actions button{min-height:46px;border:1px solid var(--border);border-radius:14px;background:#252b4d;color:#fff;font:inherit;font-weight:900;cursor:pointer}.home-modal-actions .primary{background:linear-gradient(90deg,#6748ff,#a744ef);border:0}.home-modal-actions .secondary{background:linear-gradient(90deg,#2ea8ff,#3355d7);border:0}@media(max-width:520px){.write-lines{width:100%;padding-right:8px;padding-bottom:115px}.write-postit{bottom:16px}}
 @media(max-width:760px){
   .reaction-row{gap:5px}
   .discovery-tiles{grid-template-columns:repeat(2,minmax(0,1fr));margin-inline:14px;gap:10px}
@@ -484,11 +485,23 @@ footer {
       </article>
       <article class="community-card">
         <h2>✍️ Write a Blurblet</h2>
-        <div class="write-template"><div class="write-lines"></div><div class="write-postit"><img id="writeMashupImage" alt="Mashup from your Collection"><div id="writeMashupPair"></div></div></div>
-        <a class="write-button" id="writeBlurbletLink" href="studio.html">Open in Studio →</a>
+        <div class="write-template"><textarea class="write-lines" id="homeBlurbletDraft" maxlength="220" placeholder="Write something tiny and wonderful…"></textarea><div class="write-postit"><img id="writeMashupImage" alt="Mashup from your Collection"><div id="writeMashupPair"></div></div></div>
+        <div class="write-actions"><button class="write-button" id="homeBlurbletSubmit" type="button">Submit</button></div>
       </article>
     </section>
   </main>
+
+  <div class="home-modal-backdrop" id="homeSubmitModal" hidden>
+    <div class="home-modal" role="dialog" aria-modal="true" aria-labelledby="homeSubmitTitle">
+      <h2 id="homeSubmitTitle">Ready to submit your blurblet?</h2>
+      <p class="muted">Submit now, keep shaping it in Studio, or return to your draft.</p>
+      <div class="home-modal-actions">
+        <button class="primary" id="homeSubmitNow" type="button">Submit Now</button>
+        <button class="secondary" id="homeWorkMore" type="button">Work on It More in Studio</button>
+        <button id="homeSubmitCancel" type="button">Cancel</button>
+      </div>
+    </div>
+  </div>
 
   <footer>
     <div class="footer-left">
@@ -502,7 +515,7 @@ footer {
     </div>
 
     <div class="footer-right">
-      <div>Made by Billy 💜 · v2.4.2 · <a href="diagnostics.html">Diagnostics</a></div>
+      <div>Made by Billy 💜 · v2.4.3 · <a href="diagnostics.html">Diagnostics</a></div>
       <div>Made with 🧪 and 💜</div>
     </div>
   </footer>
@@ -518,7 +531,7 @@ footer {
 <script src="collections-data.js?v=2.0.1"></script>
 <script src="billy-cloud-config.js?v=2.2.9"></script><script src="billy-cloud-api.js?v=2.2.9"></script><script src="billy-repositories.js?v=2.2.4"></script>
 <script src="billyisms.js?v=2.0.1"></script>
-<script src="profile-data.js?v=2.4.2"></script>
+<script src="profile-data.js?v=2.4.3"></script>
 <script>
 (() => {
   const all = window.EMOJI_KITCHEN_DATA || [];
@@ -712,7 +725,24 @@ footer {
   const writingRow = ownedRows[Math.floor(Math.random()*ownedRows.length)] || row;
   $("writeMashupImage").src=writingRow[4];
   $("writeMashupPair").textContent=`${writingRow[0]} + ${writingRow[1]}`;
-  $("writeBlurbletLink").href=`studio.html?left=${encodeURIComponent(writingRow[0])}&right=${encodeURIComponent(writingRow[1])}`;
+  const homeDraft = $("homeBlurbletDraft");
+  const draftKey = `billy-home-blurblet:${BillyMashups.id(writingRow[0], writingRow[1])}`;
+  try { homeDraft.value = sessionStorage.getItem(draftKey) || ""; } catch {}
+  homeDraft.addEventListener("input", () => { try { sessionStorage.setItem(draftKey, homeDraft.value); } catch {} });
+  const modal = $("homeSubmitModal");
+  const openModal = () => { modal.hidden = false; $("homeSubmitNow").focus(); };
+  const closeModal = () => { modal.hidden = true; $("homeBlurbletSubmit").focus(); };
+  const openStudio = mode => {
+    try { sessionStorage.setItem("billy-studio-draft", JSON.stringify({left:writingRow[0],right:writingRow[1],text:homeDraft.value,mode})); } catch {}
+    const q = new URLSearchParams({left:writingRow[0],right:writingRow[1],from:"home",mode});
+    location.href = `studio.html?${q}`;
+  };
+  $("homeBlurbletSubmit").onclick = openModal;
+  $("homeSubmitCancel").onclick = closeModal;
+  $("homeWorkMore").onclick = () => openStudio("edit");
+  $("homeSubmitNow").onclick = () => openStudio("submit");
+  modal.addEventListener("click", event => { if (event.target === modal) closeModal(); });
+  document.addEventListener("keydown", event => { if (event.key === "Escape" && !modal.hidden) closeModal(); });
 
 
 
@@ -741,6 +771,6 @@ footer {
 })();
 </script>
 
-<script src="bottom-nav.js?v=2.4.2"></script>
+<script src="bottom-nav.js?v=2.4.3"></script>
 </body>
 </html>

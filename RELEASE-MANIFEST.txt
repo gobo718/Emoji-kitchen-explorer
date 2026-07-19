@@ -1,5 +1,5 @@
-Billy Labs v2.4.2 — Focused Discovery Cleanup
+Billy Labs v2.4.3 — Final Home Polish + Curator Combo Lookup
 
-Built from Billy-Labs-v2.2.9-live-blurblet-activation.
-Includes working live Blurblet public cloud configuration.
-Preserves classifications, categories, collections, progression, and curator systems.
+Built from Billy-Labs-v2.4.2-navigation-home-layout.zip.
+Includes adaptive Daily Pick spacing, direct Home blurblet drafting with confirmation and Studio handoff, and a Curator Research Lab combo lookup.
+Preserves the six-icon bottom navigation, discovery layout, collection behavior, blurblet voting, and existing mashup rules.

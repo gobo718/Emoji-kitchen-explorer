@@ -132,3 +132,11 @@
 - Kept Surprise Me and Newly Created side-by-side on mobile and aligned their two columns with the action-button grid above.
 - Stacked the Vote on a Blurblet and Write a Blurblet cards vertically at full width.
 - Removed the separate Billy’s Lab discovery tile; Lab remains available in persistent navigation.
+
+
+## v2.4.3 — Final Home Polish + Curator Combo Lookup
+- Tightened Daily Pick card spacing beneath short blurblets.
+- Made the Home blurblet card directly editable.
+- Added Submit confirmation with Submit Now, Studio handoff, and Cancel draft preservation.
+- Added Curator → Research Lab → Combo Lookup for all mashups containing a selected emoji.
+- Updated visible and internal version references to v2.4.3.
