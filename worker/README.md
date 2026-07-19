@@ -1,4 +1,4 @@
-# Billy Labs Worker — v2.2.9
+# Billy Labs Worker — v2.3.0
 
 This Worker powers live blurblet publishing and the existing cloud foundations.
 
