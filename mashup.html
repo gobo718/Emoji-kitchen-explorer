@@ -450,6 +450,6 @@ function saveCurrentDraft(){const rows=collections(),checked=new Set([...list.qu
 $('curatorSave').onclick=()=>{saveCurrentDraft();status.textContent='Draft saved. Nothing public changed.'};
 $('curatorPublishBlurblet').onclick=async()=>{saveCurrentDraft();const published=BillyCuratorData.publishBlurblet(pairKey),text=published?.blurblet||'';const pub=$('publicBlurblet');pub.textContent=text;pub.hidden=!text;if(window.BillyCloudApi?.isConfigured?.()){let key=localStorage.getItem('billy-curator-publish-key')||'';if(!key){key=prompt('Enter the Curator publish key. It stays in this browser only.')||'';if(key)localStorage.setItem('billy-curator-publish-key',key);}if(!key){status.textContent='Cloud publish cancelled. The local published copy is still saved.';return;}status.textContent='Publishing blurblet…';try{await BillyCloudApi.publishBlurblet(pairKey,text,key);status.textContent='Blurblet published live. Collection drafts were not published.';return;}catch(error){status.textContent=`Live publish failed: ${error.message}. Downloading the manual fallback file.`;}}BillyCuratorData.downloadPublishedScript();};})();
 </script>
-<script src="bottom-nav.js?v=2.4.1"></script>
+<script src="bottom-nav.js?v=2.4.2"></script>
 </body>
 </html>
