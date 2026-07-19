@@ -170,10 +170,11 @@ button, .action-link {
 
 .discovery-nav { display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:12px; margin:0 0 16px; }
 .discovery-nav strong { text-align:center; }
+.discovery-right{justify-self:end;display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}.discovery-right button{white-space:nowrap}
 .discovery-nav button { border:1px solid #ffffff26; border-radius:14px; padding:12px 14px; background:#17152e; color:#fff; font-weight:850; cursor:pointer; }
 .discovery-nav button:last-child { justify-self:end; }
 .discovery-nav button:disabled { opacity:.4; cursor:default; }
-@media (max-width:560px) { .discovery-nav { grid-template-columns:1fr 1fr; } .discovery-nav strong { grid-column:1/-1; grid-row:1; } }
+@media (max-width:700px) { .discovery-nav { grid-template-columns:1fr; } .discovery-nav>span{display:none}.discovery-right{justify-self:stretch;display:grid;grid-template-columns:1fr 1fr}.discovery-nav button{width:100%} }
 </style>
 
 <style>
@@ -215,10 +216,10 @@ button, .action-link {
   <main id="loading" class="empty">Finding that mashup…</main>
 
   <main id="content" hidden>
-    <nav class="discovery-nav" id="discoveryNav" hidden aria-label="Discovery navigation">
-      <button id="previousDiscovery" type="button">← Previous</button>
-      <strong id="discoveryMode"></strong>
-      <button id="nextDiscovery" type="button">Next →</button>
+    <nav class="discovery-nav" id="discoveryNav" aria-label="Mashup navigation">
+      <button id="viewInCollection" type="button">← View in My Collection</button>
+      <span></span>
+      <div class="discovery-right"><button id="surpriseDiscovery" type="button">Surprise Me →</button><button id="newlyDiscovery" type="button">Newly Created →</button></div>
     </nav>
     <section class="card">
       <div class="art-wrap">
@@ -397,71 +398,28 @@ button, .action-link {
 
 
   const mode = params.get("mode") || "";
-  const discoveryNav = $("discoveryNav");
   const goTo = (target, extras) => {
     const base = BillyMashups.buildUrl(target);
     location.href = base + (base.includes("?") ? "&" : "?") + extras;
   };
-
-  if (mode === "surprise") {
-    discoveryNav.hidden = false;
-    $("discoveryMode").textContent = "🎲 Surprise Me";
-    let history = [];
-    try { history = JSON.parse(sessionStorage.getItem("billy-surprise-history") || "[]"); } catch {}
-    const currentId = keyOf(row);
-    if (!history.includes(currentId)) history.push(currentId);
-    sessionStorage.setItem("billy-surprise-history", JSON.stringify(history.slice(-250)));
-    $("previousDiscovery").disabled = history.length < 2;
-    $("previousDiscovery").onclick = () => {
-      const previousId = history[history.length - 2];
-      const target = all.find(item => keyOf(item) === previousId);
-      if (target) {
-        history.pop();
-        sessionStorage.setItem("billy-surprise-history", JSON.stringify(history));
-        goTo(target, "mode=surprise");
-      }
-    };
-    $("nextDiscovery").onclick = () => {
-      const seenNow = BillyProgress.getSeen();
-      const used = new Set(history);
-      let pool = all.filter(item => !seenNow.has(keyOf(item)) && !used.has(keyOf(item)));
-      if (!pool.length) pool = all.filter(item => !used.has(keyOf(item)));
-      if (!pool.length) pool = all;
-      const target = pool[Math.floor(Math.random() * pool.length)];
-      goTo(target, "mode=surprise");
-    };
-  } else if (mode === "newly") {
-    discoveryNav.hidden = false;
-    $("discoveryMode").textContent = "🆕 Newly Created";
-    const dates = [...new Set(all.map(item => item[3]))].sort().reverse();
-    const requestedDate = params.get("date") || row[3];
-    const seed = Number(params.get("seed")) || 1;
-    const hash = value => {
-      let h = seed | 0;
-      for (let i = 0; i < value.length; i++) h = Math.imul(h ^ value.charCodeAt(i), 16777619);
-      return h >>> 0;
-    };
-    const groupFor = date => all.filter(item => item[3] === date).sort((a,b) => hash(keyOf(a)) - hash(keyOf(b)));
-    const group = groupFor(requestedDate);
-    let index = group.findIndex(item => keyOf(item) === keyOf(row));
-    if (index < 0) index = 0;
-    const dateIndex = dates.indexOf(requestedDate);
-    $("previousDiscovery").disabled = index === 0 && dateIndex === 0;
-    $("previousDiscovery").onclick = () => {
-      if (index > 0) return goTo(group[index-1], `mode=newly&date=${requestedDate}&seed=${seed}`);
-      if (dateIndex > 0) {
-        const priorDate = dates[dateIndex-1], prior = groupFor(priorDate);
-        goTo(prior[prior.length-1], `mode=newly&date=${priorDate}&seed=${seed}`);
-      }
-    };
-    $("nextDiscovery").onclick = () => {
-      if (index < group.length - 1) return goTo(group[index+1], `mode=newly&date=${requestedDate}&seed=${seed}`);
-      if (dateIndex < dates.length - 1) {
-        const nextDate = dates[dateIndex+1], next = groupFor(nextDate);
-        goTo(next[0], `mode=newly&date=${nextDate}&seed=${seed}`);
-      }
-    };
-  }
+  $("viewInCollection").onclick = () => {
+    location.href = `collection-book.html?emoji=${encodeURIComponent(row[0])}&pair=${encodeURIComponent(key)}#mashup-${encodeURIComponent(key)}`;
+  };
+  $("surpriseDiscovery").onclick = () => {
+    const seenNow = BillyProgress.getSeen();
+    let pool = all.filter(item => !seenNow.has(keyOf(item)) && keyOf(item)!==key);
+    if (!pool.length) pool = all.filter(item => keyOf(item)!==key);
+    const target = pool[Math.floor(Math.random()*pool.length)] || row;
+    goTo(target,"mode=surprise");
+  };
+  $("newlyDiscovery").onclick = () => {
+    const dates=[...new Set(all.map(item=>item[3]))].sort().reverse();
+    const newest=dates[0];
+    const seed=Date.now()%2147483647;
+    const group=all.filter(item=>item[3]===newest);
+    const target=group[Math.floor(Math.random()*group.length)] || row;
+    goTo(target,`mode=newly&date=${newest}&seed=${seed}`);
+  };
 
   $("loading").hidden = true;
   $("content").hidden = false;
@@ -492,5 +450,6 @@ function saveCurrentDraft(){const rows=collections(),checked=new Set([...list.qu
 $('curatorSave').onclick=()=>{saveCurrentDraft();status.textContent='Draft saved. Nothing public changed.'};
 $('curatorPublishBlurblet').onclick=async()=>{saveCurrentDraft();const published=BillyCuratorData.publishBlurblet(pairKey),text=published?.blurblet||'';const pub=$('publicBlurblet');pub.textContent=text;pub.hidden=!text;if(window.BillyCloudApi?.isConfigured?.()){let key=localStorage.getItem('billy-curator-publish-key')||'';if(!key){key=prompt('Enter the Curator publish key. It stays in this browser only.')||'';if(key)localStorage.setItem('billy-curator-publish-key',key);}if(!key){status.textContent='Cloud publish cancelled. The local published copy is still saved.';return;}status.textContent='Publishing blurblet…';try{await BillyCloudApi.publishBlurblet(pairKey,text,key);status.textContent='Blurblet published live. Collection drafts were not published.';return;}catch(error){status.textContent=`Live publish failed: ${error.message}. Downloading the manual fallback file.`;}}BillyCuratorData.downloadPublishedScript();};})();
 </script>
+<script src="bottom-nav.js?v=2.4.1"></script>
 </body>
 </html>
