@@ -477,6 +477,7 @@ footer {
   font-size:.86rem;
 }
 
+.curator-control-room-button{display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;box-sizing:border-box}
 .curator-status{display:inline-flex;align-items:center;gap:.35rem;margin-top:.55rem;padding:.28rem .55rem;border-radius:999px;font-size:.72rem;font-weight:850;background:#27243c;color:#ddd}.curator-status.draft{background:#5a4219;color:#ffe9a7}.curator-status.published{background:#173f32;color:#aef6d2}.curator-status.missing{background:#4a2230;color:#ffc4d6}.inspect-button{width:100%;margin-top:.65rem;padding:.65rem;border:1px solid #ffffff22;border-radius:12px;background:#252142;color:#fff;font-weight:850;cursor:pointer}.inspector{position:fixed;z-index:10001;inset:0 0 0 auto;width:min(420px,100%);padding:22px;box-sizing:border-box;background:#111428;border-left:1px solid #ffffff22;box-shadow:-20px 0 60px #000a;transform:translateX(105%);transition:transform .22s ease;overflow:auto}.inspector.open{transform:none}.inspector-head{display:flex;justify-content:space-between;align-items:center;gap:12px}.inspector-head button{width:40px;height:40px;border-radius:50%;border:1px solid #ffffff22;background:#242844;color:#fff;font-size:1.3rem}.inspector img{display:block;width:180px;height:180px;object-fit:contain;margin:18px auto}.inspector-actions{display:grid;gap:10px;margin-top:18px}.inspector-actions a{display:block;padding:12px 14px;border-radius:12px;text-decoration:none;text-align:center;font-weight:900;background:#302b55;color:#fff}.inspector-actions a.primary{background:linear-gradient(135deg,#8b5cff,#ff68aa)}
 </style>
 </head>
@@ -499,7 +500,7 @@ footer {
 
   <section class="hero">
     <div class="hero-actions">
-      <a class="hero-button primary" href="curator/" style="text-decoration:none;text-align:center;display:flex;align-items:center;justify-content:center">🔬 Curator Control Room</a>
+      <a class="hero-button primary curator-control-room-button" href="curator/">🔬 Curator Control Room</a>
       <button id="recentHero" class="hero-button" type="button">🆕 Recently Added</button>
       <button id="missingHero" class="hero-button" type="button">📝 Missing Blurblets</button>
     </div>

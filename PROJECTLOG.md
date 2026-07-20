@@ -203,3 +203,11 @@ This package was rebuilt from the verified v1.8.0 foundation branch rather than 
 
 ## 2026-07-18 — v2.4.0 Live Blurblet Activation
 Completed the final connection layer between Curator, the deployed Worker, D1, and public blurblet display. The deployment still requires a one-time Cloudflare setup, but subsequent blurblet updates do not require a Billy Labs rebuild.
+
+## v2.6.2 — Curator Navigation Restoration
+
+- Restored the development-mode Home Curator launcher as the entry to Museum Archive.
+- Established `explorer.html` as the Curator landing page and retained the Control Room as an Archive destination.
+- Removed the hidden Control Room shortcut from `mashup.html`.
+- Added `PROJECT_MAP.md` and synchronized release documentation and visible version metadata.
+

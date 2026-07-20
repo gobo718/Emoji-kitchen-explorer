@@ -1,4 +1,5 @@
-Billy Labs v2.6.1 — Curator Foundation Hotfix
-Canonical baseline: Billy Labs v2.6.0 Curator Explorer Foundation
-Includes updated NEXT STEPS roadmap and v2.6.1 hotfix changelog.
-Next major release: v2.7.0 Laboratory.
+Billy Labs v2.6.3 — Curator Control Room Redesign
+Canonical baseline: Billy Labs v2.6.2 Documentation Consolidation Review
+Redesigns the existing Curator Control Room as a clear departmental workspace for museum curation, research, and maintenance.
+Preserves current collection editing, publishing, combo lookup, diagnostics, settings, backup, import, and cloud connection behavior.
+Consolidates future AI analysis, metadata review, rare-trait discovery, collection suggestions, and safeguarded bulk operations under the Discovery Engine.

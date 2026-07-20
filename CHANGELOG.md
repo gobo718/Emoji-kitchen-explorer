@@ -1,3 +1,20 @@
+## v2.6.3 — Curator Control Room Redesign
+- Added a dedicated Control Room landing view with a purple laboratory door and concise substitute-curator orientation.
+- Organized the Curator into Collections & Publishing, Discovery Engine, Diagnostics, and Settings departments.
+- Renamed Research Lab to Discovery Engine while preserving the existing Combo Lookup tool.
+- Consolidated future AI analysis, metadata review, collection discovery, and safeguarded bulk operations under the Discovery Engine.
+- Preserved existing Curator collection, publishing, import/export, diagnostics, and cloud connection behavior.
+- Added a visible Curator v2.6.3 version marker.
+
+# v2.6.2 — Curator Navigation Restoration
+
+- Restored the development-mode **Curator** launcher on Home and routed it to the Museum Archive.
+- Confirmed Museum Archive as the Curator landing page.
+- Kept the Curator Control Room entry in Museum Archive and centered its button text vertically and horizontally.
+- Removed the hidden **Open Curator Control Room** shortcut from the mashup editor.
+- Added `PROJECT_MAP.md` as the repository architecture and navigation map.
+- Updated visible version labels, Curator export metadata, build metadata, release manifest, README, project log, and NEXT STEPS to v2.6.2.
+
 # v2.6.1 — Curator Foundation Hotfix
 
 - Removed `gobo718.github.io` from automatic Curator-launcher approval so ordinary public visitors do not see Curator controls.
