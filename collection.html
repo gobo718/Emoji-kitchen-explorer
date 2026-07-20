@@ -24,6 +24,7 @@
 </div>
 <script src="emoji-data.js"></script>
 <script src="emoji-metadata.js"></script>
+<script src="mashup-search.js?v=2.5.3"></script>
 <script>
 (()=>{
  try{
@@ -61,7 +62,7 @@
  const mashups=all.filter(r=>members.has(r[0])||members.has(r[1])).length;
  $('title').textContent=labelMap[type]||value;$('summary').textContent=descriptionMap[type]||'';$('emojiCount').textContent=items.length.toLocaleString();$('mashupCount').textContent=mashups.toLocaleString();document.title=`${labelMap[type]||value} · Billy Labs`;
  function render(){
-   const q=$('search').value.trim().toLowerCase();let shown=items.filter(x=>`${x.emoji} ${x.meta.name} ${x.meta.category} ${x.meta.subgroup}`.toLowerCase().includes(q));
+   const q=$('search').value;let shown=BillySearch.searchItems(items,q,x=>`${x.emoji} ${x.meta.name} ${x.meta.category} ${x.meta.subgroup}`);
    const sort=$('sort').value;shown.sort(sort==='mashups'?(a,b)=>b.count-a.count:sort==='newest'?(a,b)=>(b.meta.unicodeRelease||'').localeCompare(a.meta.unicodeRelease||''):(a,b)=>a.meta.name.localeCompare(b.meta.name));
    $('resultsCopy').textContent=`Showing ${shown.length.toLocaleString()} of ${items.length.toLocaleString()} emoji.`;
    $('grid').innerHTML=shown.length?shown.map(x=>`<a class="card" href="emoji.html?emoji=${encodeURIComponent(x.emoji)}"><div class="glyph">${escapeHtml(x.emoji)}</div><div class="name">${escapeHtml(x.meta.name)}</div><div class="meta">${x.count.toLocaleString()} mashup${x.count===1?'':'s'}</div></a>`).join(''):'<div class="empty">Nothing matched that search.</div>';

@@ -1,3 +1,7 @@
-# Billy Labs v2.4.3aa
+# Billy Labs v2.6.0
 
-Live Blurblet Activation release. See `worker/README.md` for the one-time Cloudflare connection steps.
+Engineering Pass 2.4 stabilizes exact mashup resolution behind the canonical identity engine. See the included engineering report for the contract and verification.
+
+
+## Curator Explorer
+The former public Explorer is now an internal Museum Archive for curator inventory search, blurblet-status filtering, inspection, and editor handoff.

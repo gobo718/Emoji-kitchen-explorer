@@ -1,5 +1,3 @@
-Billy Labs v2.4.3aa — Final Home Polish + Curator Combo Lookup
-
-Built from Billy-Labs-v2.4.2-navigation-home-layout.zip.
-Includes adaptive Daily Pick spacing, direct Home blurblet drafting with confirmation and Studio handoff, and a Curator Research Lab combo lookup.
-Preserves the six-icon bottom navigation, discovery layout, collection behavior, blurblet voting, and existing mashup rules.
+Billy Labs v2.6.0 — Curator Explorer Foundation
+Canonical baseline: Billy Labs v2.5.6 Engineering Pass 2.6
+Includes Curator Explorer Design Notes v0.1 and NEXT STEPS v0.1.

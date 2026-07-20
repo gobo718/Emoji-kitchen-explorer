@@ -252,7 +252,8 @@ button, .action-link {
 <script src="billyisms.js"></script>
 <script src="hidden-categories.js"></script>
 <script src="achievements.js"></script>
-<script src="mashup-core.js"></script><script src="billy-storage.js"></script><script src="billy-device-identity.js?v=2.2.7"></script><script src="billy-storage-adapters.js?v=2.2.1"></script><script src="published-curator-data.js?v=2.1.3"></script>
+<script src="mashup-core.js"></script>
+<script src="mashup-discovery.js"></script><script src="billy-storage.js"></script><script src="billy-device-identity.js?v=2.2.7"></script><script src="billy-storage-adapters.js?v=2.2.1"></script><script src="published-curator-data.js?v=2.1.3"></script>
 <script src="curator-data.js"></script>
 <script src="action-ui.js"></script>
 <script src="progress-engine.js"></script>
@@ -264,9 +265,8 @@ button, .action-link {
   const notes = window.BILLYISMS || {};
   const $ = id => document.getElementById(id);
   const params = new URLSearchParams(location.search);
-  const left = params.get("left") || "";
-  const right = params.get("right") || "";
-  const keyOf = row => BillyMashups.id(row[0], row[1]);
+  const [left, right] = BillyMashups.pairFromSearch(params);
+  const keyOf = row => BillyMashups.rowId(row);
 
   const prettyDate = s => `${s.slice(0,4)}-${s.slice(4,6)}-${s.slice(6,8)}`;
   const prettyName = s => s
@@ -274,12 +274,7 @@ button, .action-link {
     .replace(/\s*\+\s*/g," + ")
     .replace(/\b\w/g,c=>c.toUpperCase());
 
-  function findRow() {
-    return all.find(row =>
-      (row[0] === left && row[1] === right) ||
-      (row[0] === right && row[1] === left)
-    );
-  }
+  const findRow = () => BillyMashups.resolve(all, left, right);
 
   function noteFor(a,b) {
     return notes[a+b] || notes[b+a] || "";
@@ -304,7 +299,7 @@ button, .action-link {
   $("pair").innerHTML = `<a class="emoji-link" href="emoji.html?emoji=${encodeURIComponent(row[0])}" aria-label="Explore ${row[0]}">${row[0]}</a> + <a class="emoji-link" href="emoji.html?emoji=${encodeURIComponent(row[1])}" aria-label="Explore ${row[1]}">${row[1]}</a>`;
   $("title").textContent = prettyName(row[2]);
   $("release").textContent = `Released ${prettyDate(row[3])}`;
-  const curatorPairKey = [row[0], row[1]].sort().join("|");
+  const curatorPairKey = BillyMashups.id(row[0], row[1]);
   const curatorEntries = (() => {
     try { return BillyCuratorData.list(); }
     catch { return {}; }
@@ -407,18 +402,19 @@ button, .action-link {
   };
   $("surpriseDiscovery").onclick = () => {
     const seenNow = BillyProgress.getSeen();
-    let pool = all.filter(item => !seenNow.has(keyOf(item)) && keyOf(item)!==key);
-    if (!pool.length) pool = all.filter(item => keyOf(item)!==key);
-    const target = pool[Math.floor(Math.random()*pool.length)] || row;
+    const target = BillyDiscovery.selectRandom(all, {
+      preferUnseen: true,
+      seenIds: seenNow,
+      excludeIds: [key],
+      idOf: keyOf
+    }) || row;
     goTo(target,"mode=surprise");
   };
   $("newlyDiscovery").onclick = () => {
-    const dates=[...new Set(all.map(item=>item[3]))].sort().reverse();
-    const newest=dates[0];
-    const seed=Date.now()%2147483647;
-    const group=all.filter(item=>item[3]===newest);
-    const target=group[Math.floor(Math.random()*group.length)] || row;
-    goTo(target,`mode=newly&date=${newest}&seed=${seed}`);
+    const newest = BillyDiscovery.selectNewest(all);
+    const seed = BillyDiscovery.createSeed();
+    const target = newest.row || row;
+    goTo(target,`mode=newly&date=${encodeURIComponent(newest.date)}&seed=${seed}`);
   };
 
   $("loading").hidden = true;
@@ -442,7 +438,7 @@ button, .action-link {
 <div id="curatorStatus" aria-live="polite"></div>
 <a class="smallbtn" style="display:block;text-align:center;text-decoration:none;box-sizing:border-box" href="curator/">Open Curator Control Room →</a></aside>
 <script>
-(()=>{const $=id=>document.getElementById(id),fab=$('curatorFab'),panel=$('curatorPanel'),list=$('exhibitList'),status=$('curatorStatus');const params=new URLSearchParams(location.search),host=location.hostname.toLowerCase(),explicit=params.get('curator')==='1';if(explicit){try{localStorage.setItem('billyLabsCuratorMode','1')}catch{}}const remembered=(()=>{try{return localStorage.getItem('billyLabsCuratorMode')==='1'}catch{return false}})(),curatorEnabled=explicit||remembered||host==='localhost'||host==='127.0.0.1'||host.endsWith('.local')||host.includes('dev')||host.includes('staging')||host==='gobo718.github.io';if(!curatorEnabled){fab.remove();panel.remove();return;}const left=params.get('left')||'',right=params.get('right')||'',pairKey=BillyMashups.id(left,right);const drafts=()=>BillyCuratorData.draftList();
+(()=>{const $=id=>document.getElementById(id),fab=$('curatorFab'),panel=$('curatorPanel'),list=$('exhibitList'),status=$('curatorStatus');const params=new URLSearchParams(location.search),host=location.hostname.toLowerCase(),explicit=params.get('curator')==='1';if(explicit){try{localStorage.setItem('billyLabsCuratorMode','1')}catch{}}const remembered=(()=>{try{return localStorage.getItem('billyLabsCuratorMode')==='1'}catch{return false}})(),curatorEnabled=explicit||remembered||host==='localhost'||host==='127.0.0.1'||host.endsWith('.local')||host.includes('dev')||host.includes('staging')||host==='gobo718.github.io';if(!curatorEnabled){fab.remove();panel.remove();return;}const [left,right]=BillyMashups.pairFromSearch(params),pairKey=BillyMashups.id(left,right);const drafts=()=>BillyCuratorData.draftList();
 function collections(){return BillyCollections.list()}function render(){const selected=new Set(collections().filter(c=>(c.draft?.members||[]).includes(pairKey)).map(c=>c.id));list.innerHTML=collections().map(c=>`<label><input type="checkbox" value="${c.id}" ${selected.has(c.id)?'checked':''}> ${c.icon} ${c.name} <small>(${c.status==='published'?'published + draft':'draft'})</small></label>`).join('')||'<p class="curator-note">No collections yet.</p>';const e=drafts()[pairKey]||BillyCuratorData.get(pairKey)||{};$('curatorBlurblet').value=e.blurblet||'';$('curatorNotes').value=(drafts()[pairKey]||{}).notes||''}
 function open(v){panel.classList.toggle('open',v);fab.classList.toggle('hidden',v);panel.setAttribute('aria-hidden',String(!v))}fab.onclick=()=>{render();open(true)};$('curatorClose').onclick=()=>open(false);document.addEventListener('keydown',e=>{if(e.key==='Escape')open(false)});
 $('createExhibit').onclick=()=>{const raw=prompt('Name the new collection:');if(!raw?.trim())return;const rows=collections(),c=BillyCollections.blank(raw.trim(),'🗂️');c.draft.members=[pairKey];rows.push(c);BillyCollections.save(rows);render();status.textContent=`Created “${c.name}” as a private draft with this mashup as member #1.`};

@@ -1,45 +1,68 @@
-/* Billy Labs repository layer — v4
+/* Billy Labs repository layer — v5
    Page controllers use these domain repositories instead of storage keys.
-   Storage implementation remains local-first behind BillyStorage. */
+   Storage implementation remains local-first behind BillyStorage.
+
+   Extension rule: new domains (such as future curator metadata) should be
+   exposed as repositories here rather than reading or writing storage keys
+   directly from page controllers. */
 (() => {
   if (!window.BillyStorage) throw new Error('billy-repositories.js requires billy-storage.js');
 
   const storage = window.BillyStorage;
-  const settingKeys = Object.freeze({
-    collectionHideEmptySlots: 'billy.collection.hideEmptySlots'
+  const keys = Object.freeze({
+    settings: Object.freeze({
+      collectionHideEmptySlots: 'billy.collection.hideEmptySlots'
+    }),
+    explorer: Object.freeze({
+      state: 'ek-explorer-state',
+      lastPage: 'ek-last-page'
+    }),
+    profile: Object.freeze({
+      votes: 'billy.profile.votes'
+    })
   });
-  const resolveSettingKey = key => settingKeys[key] || `billy.setting.${key}`;
+
+  const emptyProgress = () => ({seen: [], favorites: []});
+  const progressSnapshot = () => window.BillyProgress?.snapshot?.() || emptyProgress();
+  const resolveSettingKey = key => keys.settings[key] || `billy.setting.${key}`;
+
   const settings = {
-    keys: settingKeys,
+    keys: keys.settings,
     get: (key, fallback = null) => storage.get(resolveSettingKey(key), fallback),
     set: (key, value) => storage.set(resolveSettingKey(key), value),
     remove: key => storage.remove(resolveSettingKey(key))
   };
 
   const explorer = {
-    stateKey: 'ek-explorer-state',
-    pageKey: 'ek-last-page',
-    getState: (fallback = null) => storage.get('ek-explorer-state', fallback),
-    saveState: state => storage.set('ek-explorer-state', state),
-    getLastPage: (fallback = 0) => storage.get('ek-last-page', fallback),
-    setLastPage: page => storage.set('ek-last-page', page)
+    stateKey: keys.explorer.state,
+    pageKey: keys.explorer.lastPage,
+    getState: (fallback = null) => storage.get(keys.explorer.state, fallback),
+    saveState: state => storage.set(keys.explorer.state, state),
+    getLastPage: (fallback = 0) => storage.get(keys.explorer.lastPage, fallback),
+    setLastPage: page => storage.set(keys.explorer.lastPage, page)
   };
 
   const profile = {
-    votesKey: 'billy.profile.votes',
-    getVotes: () => storage.get('billy.profile.votes', {}),
-    saveVotes: votes => storage.set('billy.profile.votes', votes || {})
+    votesKey: keys.profile.votes,
+    getVotes: () => storage.get(keys.profile.votes, {}),
+    saveVotes: votes => storage.set(keys.profile.votes, votes || {})
   };
 
   const cloud = window.BillyCloudApi || null;
-
   const sync = window.BillySyncManager || null;
+
+  const requireCloud = () => {
+    if (!cloud) throw new Error('Billy Labs cloud API is unavailable');
+    return cloud;
+  };
+
   const queueProgress = () => {
     if (!sync) return;
-    sync.enqueue('progress', window.BillyProgress?.snapshot?.() || {seen:[], favorites:[]});
+    sync.enqueue('progress', progressSnapshot());
   };
+
   const mergeProgress = remote => {
-    const local = window.BillyProgress?.snapshot?.() || {seen:[], favorites:[]};
+    const local = progressSnapshot();
     const merged = {
       seen: [...new Set([...(local.seen || []), ...(remote?.seen || [])])],
       favorites: [...new Set([...(local.favorites || []), ...(remote?.favorites || [])])]
@@ -48,32 +71,36 @@
     window.BillyProgress?.replaceFavorites?.(merged.favorites);
     return merged;
   };
+
   const progress = {
-    markSeen: (left, right) => { const result=window.BillyProgress?.markSeen(left, right); queueProgress(); return result; },
+    markSeen: (left, right) => {
+      const result = window.BillyProgress?.markSeen(left, right);
+      queueProgress();
+      return result;
+    },
     hasSeen: (left, right) => !!window.BillyProgress?.hasSeen(left, right),
-    toggleFavorite: (left, right) => { const result=window.BillyProgress?.toggleFavorite(left, right); queueProgress(); return result; },
+    toggleFavorite: (left, right) => {
+      const result = window.BillyProgress?.toggleFavorite(left, right);
+      queueProgress();
+      return result;
+    },
     isFavorite: (left, right) => !!window.BillyProgress?.isFavorite(left, right),
     getSeen: () => window.BillyProgress?.getSeen() || new Set(),
     getFavorites: () => window.BillyProgress?.getFavorites() || new Set(),
-    snapshot: () => window.BillyProgress?.snapshot() || {seen: [], favorites: []},
+    snapshot: progressSnapshot,
     cloud: Object.freeze({
       isConfigured: () => !!cloud?.isConfigured?.(),
       fetchFavorites: userId => cloud?.getFavorites(userId),
       pushFavorites: userId => cloud?.putFavorites(userId, [...(window.BillyProgress?.getFavorites() || [])]),
       pullFavorites: async userId => {
-        if (!cloud) throw new Error('Billy Labs cloud API is unavailable');
-        const result = await cloud.getFavorites(userId);
+        const result = await requireCloud().getFavorites(userId);
         window.BillyProgress?.replaceFavorites?.(result.favorites || []);
         return result;
       },
       fetchProgress: userId => cloud?.getProgress(userId),
-      pushProgress: (userId, payload) => {
-        if (!cloud) throw new Error('Billy Labs cloud API is unavailable');
-        return cloud.putProgress(userId, payload || window.BillyProgress?.snapshot?.() || {seen:[], favorites:[]});
-      },
+      pushProgress: (userId, payload) => requireCloud().putProgress(userId, payload || progressSnapshot()),
       pullProgress: async userId => {
-        if (!cloud) throw new Error('Billy Labs cloud API is unavailable');
-        const result = await cloud.getProgress(userId);
+        const result = await requireCloud().getProgress(userId);
         return {...result, ...mergeProgress(result)};
       }
     })
@@ -103,7 +130,8 @@
   }
 
   window.BillyRepositories = Object.freeze({
-    version: 4,
+    version: 5,
+    keys,
     settings: Object.freeze(settings),
     explorer: Object.freeze(explorer),
     profile: Object.freeze(profile),

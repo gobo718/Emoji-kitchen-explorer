@@ -1,3 +1,44 @@
+# v2.6.0 — Curator Explorer Foundation
+
+See `V2.6.0_CURATOR_EXPLORER_FOUNDATION_CHANGELOG.md`.
+
+# v2.5.6 — Engineering Pass 2.6: Performance & Scalability
+
+- Added cached canonical row IDs, ingredient indexes, search indexes, and newest-release analysis.
+- Consolidated discovery eligibility work while preserving live progress semantics.
+- Added repeatable performance benchmarking and regression coverage.
+- Preserved all user-facing behavior.
+
+# v2.5.5 — Engineering Pass 2.5: Discovery Engine
+
+- Centralized discovery selection in `mashup-discovery.js`.
+- Preserved Home, Explorer, and detail-page discovery policies.
+- Added deterministic regression coverage and engineering documentation.
+
+# Billy Labs Changelog
+
+## v2.5.4 — Engineering Pass 2.4: Mashup Resolution
+- Centralized exact pair-to-row resolution in the canonical mashup engine.
+- Added a cached canonical-ID index and full 147,000-row resolution verification.
+- Preserved presentation-only fallbacks for unresolved authored profile/demo pairs.
+
+## v2.5.3 — Engineering Pass 2.3: Search Architecture
+
+- Added `mashup-search.js` as the shared search and row-ordering contract.
+- Routed Explorer, emoji detail search, Collection Book emoji search, and Curator exact ingredient lookup through the shared module.
+- Preserved each surface's existing searchable fields, ordering, filtering, pagination, and empty-state copy.
+- Added search architecture regression tests.
+- No mashup records, canonical IDs, storage data, Worker routes, or public navigation were changed.
+
+
+- Consolidated storage, repository, cloud client, sync, and device identity stabilization.
+- Expanded infrastructure regression coverage.
+- Preserved existing storage keys, data shapes, cloud routes, Worker behavior, UI, and features.
+- Updated current release markers to v2.5.0.
+- Added consolidated engineering report and detailed pass changelog.
+
+---
+
 # Billy Labs v2.4.3a — Curator Access Patch
 
 - Restored a visible Curator launcher on the Home page for the development site.
@@ -147,3 +188,12 @@
 - Added Submit confirmation with Submit Now, Studio handoff, and Cancel draft preservation.
 - Added Curator → Research Lab → Combo Lookup for all mashups containing a selected emoji.
 - Updated visible and internal version references to v2.4.3aa.
+
+## v2.5.1 — Engineering Pass 2.1: Canonical Identity
+- Preserved the established canonical mashup ID format while removing independent identity builders.
+- Fixed Profile and Blurblet Gallery detail links and retained legacy URL compatibility.
+- Added a canonical identity contract and regression suite.
+
+## v2.5.2 — Engineering Pass 2.2: Data Integrity
+
+Added a repeatable integrity gate for the 147,000-row mashup inventory and its 619 ingredient metadata records. The audit found no core inventory defects. Five unique unresolved profile/demo pair concepts remain unchanged and are reported as warnings rather than silently rewritten.

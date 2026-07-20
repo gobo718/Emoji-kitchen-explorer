@@ -57,6 +57,7 @@ a{color:inherit}.shell{width:min(1180px,calc(100% - 32px));margin:0 auto;padding
 </div>
 <script src="emoji-data.js"></script>
 <script src="emoji-metadata.js"></script>
+<script src="mashup-search.js"></script>
 <script>
 (()=>{
  const all=window.EMOJI_KITCHEN_DATA||[];
@@ -67,7 +68,7 @@ a{color:inherit}.shell{width:min(1180px,calc(100% - 32px));margin:0 auto;padding
  const spokenDate=s=>new Intl.DateTimeFormat('en-US',{year:'numeric',month:'long',day:'numeric',timeZone:'UTC'}).format(new Date(`${s.slice(0,4)}-${s.slice(4,6)}-${s.slice(6,8)}T00:00:00Z`));
  const titleCase=s=>s.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
  const escapeHtml=s=>String(s).replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
- const rows=all.filter(r=>r[0]===emoji||r[1]===emoji);
+ const rows=BillySearch.rowsContaining(all,emoji);
  if(!emoji||!rows.length){$('loading').textContent='That emoji does not have any mashups in this collection yet.';return;}
  function inferredName(){
    const votes={};
@@ -111,12 +112,11 @@ a{color:inherit}.shell{width:min(1180px,calc(100% - 32px));margin:0 auto;padding
  $('summary').textContent=`${unicodeHistory} Billy Labs has discovered ${countText} Emoji Kitchen combination${rows.length===1?'':'s'} featuring it. ${kitchenHistory}`;
  document.title=`${emoji} ${name} · Billy Labs`;
  function render(){
-   const q=$('search').value.trim().toLowerCase();
-   let shown=rows.filter(r=>`${r[0]} ${r[1]} ${r[2]} ${r[3]}`.toLowerCase().includes(q));
+   const q=$('search').value;
    const sort=$('sort').value;
-   shown.sort(sort==='oldest'?(a,b)=>a[3].localeCompare(b[3]):sort==='name'?(a,b)=>a[2].localeCompare(b[2]):(a,b)=>b[3].localeCompare(a[3]));
+   const shown=BillySearch.sortRows(BillySearch.searchRows(rows,q),sort);
    $('resultsCopy').textContent=`Showing ${shown.length.toLocaleString()} of ${rows.length.toLocaleString()} mashups.`;
-   $('grid').innerHTML=shown.length?shown.map(r=>`<a class="card" href="mashup.html?left=${encodeURIComponent(r[0])}&right=${encodeURIComponent(r[1])}"><div class="art"><img loading="lazy" src="${escapeHtml(r[4])}" alt="${escapeHtml(r[0]+' plus '+r[1]+' mashup')}"></div><div class="card-copy"><div class="pair">${escapeHtml(r[0])} + ${escapeHtml(r[1])}</div><div class="name">${escapeHtml(titleCase(r[2]))}</div><div class="meta">Released ${prettyDate(r[3])}</div></div></a>`).join(''):'<div class="empty">Nothing matched that search.</div>';
+   $('grid').innerHTML=shown.length?shown.map(r=>`<a class="card" href="${escapeHtml(BillyMashups.buildUrl(r))}"><div class="art"><img loading="lazy" src="${escapeHtml(r[4])}" alt="${escapeHtml(r[0]+' plus '+r[1]+' mashup')}"></div><div class="card-copy"><div class="pair">${escapeHtml(r[0])} + ${escapeHtml(r[1])}</div><div class="name">${escapeHtml(titleCase(r[2]))}</div><div class="meta">Released ${prettyDate(r[3])}</div></div></a>`).join(''):'<div class="empty">Nothing matched that search.</div>';
  }
  const counts={};rows.forEach(r=>{const other=r[0]===emoji?r[1]:r[0];counts[other]=(counts[other]||0)+1;});
  const related=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,14);
