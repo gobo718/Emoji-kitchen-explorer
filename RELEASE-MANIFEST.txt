@@ -1,3 +1,4 @@
-Billy Labs v2.6.0 — Curator Explorer Foundation
-Canonical baseline: Billy Labs v2.5.6 Engineering Pass 2.6
-Includes Curator Explorer Design Notes v0.1 and NEXT STEPS v0.1.
+Billy Labs v2.6.1 — Curator Foundation Hotfix
+Canonical baseline: Billy Labs v2.6.0 Curator Explorer Foundation
+Includes updated NEXT STEPS roadmap and v2.6.1 hotfix changelog.
+Next major release: v2.7.0 Laboratory.

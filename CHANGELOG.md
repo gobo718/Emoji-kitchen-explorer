@@ -1,3 +1,11 @@
+# v2.6.1 — Curator Foundation Hotfix
+
+- Removed `gobo718.github.io` from automatic Curator-launcher approval so ordinary public visitors do not see Curator controls.
+- Preserved deliberate Curator activation through `?curator=1`, remembered curator mode, and approved local/development hosts.
+- Added prominent Museum Archive access to the Curator control room and its primary navigation.
+- Updated visible version labels and Curator backup metadata to v2.6.1.
+- Updated the living NEXT STEPS roadmap.
+
 # v2.6.0 — Curator Explorer Foundation
 
 See `V2.6.0_CURATOR_EXPLORER_FOUNDATION_CHANGELOG.md`.
